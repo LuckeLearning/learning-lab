@@ -1,0 +1,703 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Der Figurenflüsterer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,500;0,7..72,700;1,7..72,500&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700&display=swap">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+[hidden]{display:none!important}
+/* Layout: Akinator-Bühne – Schreibfeder links, Sprechblase mit Fragen rechts; Enthüllung als Fotokarte mit Banner "Ich sehe …" */
+:root{
+  --bg:#e6ebee; --bg2:#d3dde3; --card:#fbfcfc; --bubble:#ffffff;
+  --ink:#15303f; --muted:#556a77; --line:#c4d0d7; --chip:#dae3e8;
+  --band:#173f52; --band-fg:#f1f5f7; --btn:#173f52; --btn-hover:#205a73; --btn-fg:#ffffff;
+  --gold:#b88732; --gold-soft:#efe4cc;
+  --display:'Literata',Georgia,'Times New Roman',serif;
+  --body:'Nunito Sans','Segoe UI',system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0e1a21; --bg2:#14252e; --card:#172a34; --bubble:#1c3240;
+  --ink:#e3ebf0; --muted:#9fb2be; --line:#2d4553; --chip:#203743;
+  --band:#0c2c3b; --band-fg:#eef4f7; --btn:#2a6984; --btn-hover:#357e9e; --btn-fg:#ffffff;
+  --gold:#e0b25c; --gold-soft:#3a3122; color-scheme:dark;}}
+:root[data-theme="dark"]{
+  --bg:#0e1a21; --bg2:#14252e; --card:#172a34; --bubble:#1c3240;
+  --ink:#e3ebf0; --muted:#9fb2be; --line:#2d4553; --chip:#203743;
+  --band:#0c2c3b; --band-fg:#eef4f7; --btn:#2a6984; --btn-hover:#357e9e; --btn-fg:#ffffff;
+  --gold:#e0b25c; --gold-soft:#3a3122; color-scheme:dark;}
+body{background:var(--bg);background-image:radial-gradient(1200px 500px at 85% -10%,var(--bg2),transparent 70%),radial-gradient(900px 500px at -10% 110%,var(--bg2),transparent 70%);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55}
+.app{max-width:1000px;margin:0 auto;padding-block:18px 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand{font-family:var(--display);font-weight:700;font-size:1.3rem}
+.brand i{color:var(--gold)}
+.chapters{display:flex;gap:6px;flex-wrap:wrap}
+.chapters span{font-size:.72rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:4px 10px;border-radius:999px;background:var(--chip);color:var(--muted)}
+.chapters span.done{color:var(--ink)}
+.chapters span.on{background:var(--band);color:var(--band-fg)}
+.progress{height:5px;background:var(--chip);border-radius:6px;margin-top:14px;overflow:hidden}
+.progress b{display:block;height:100%;background:var(--gold);border-radius:6px;transition:width .4s ease}
+
+.stage{display:grid;grid-template-columns:minmax(160px,250px) minmax(0,1fr);gap:28px;align-items:center;margin-top:26px}
+.genie svg{width:100%;height:auto;display:block}
+.bubble{background:var(--bubble);border-radius:20px;padding:24px 26px;position:relative;box-shadow:0 10px 30px -18px rgba(10,40,60,.45);min-width:0}
+.bubble::before{content:"";position:absolute;left:-14px;top:42px;border:14px solid transparent;border-right-color:var(--bubble);border-left:0}
+.react{font-family:var(--display);font-style:italic;color:var(--gold);margin:0 0 4px;font-size:1rem;min-height:1.4em}
+.q{font-family:var(--display);font-weight:700;font-size:clamp(1.25rem,2.6vw,1.65rem);line-height:1.3;margin:0;text-wrap:balance}
+.hint{margin:8px 0 0;color:var(--muted);font-size:.92rem;max-width:62ch}
+.lead{margin:12px 0 0;color:var(--muted);max-width:60ch}
+.dots span{display:inline-block;animation:dot 1s infinite}
+.dots span:nth-child(2){animation-delay:.15s}.dots span:nth-child(3){animation-delay:.3s}
+@keyframes dot{0%,100%{transform:translateY(0);opacity:.4}50%{transform:translateY(-6px);opacity:1}}
+
+.answers{display:grid;gap:10px;margin-top:20px}
+.answers.two{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.answers.yn{max-width:340px}
+.ans{font:inherit;font-weight:700;font-size:1rem;background:var(--btn);color:var(--btn-fg);border:0;border-radius:12px;padding:11px 16px;text-align:left;cursor:pointer;display:flex;align-items:center;gap:12px;transition:transform .12s ease,background .12s ease}
+.ans .t{display:flex;flex-direction:column;gap:1px;min-width:0}
+.ans small{font-weight:600;font-size:.83rem;opacity:.8}
+.ans:hover{background:var(--btn-hover);transform:translateX(3px)}
+.ans:focus-visible,.pill:focus-visible,.link:focus-visible,.chipbtn:focus-visible,.thumb:focus-visible,.dice:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.ans.ghost{background:transparent;color:var(--ink);border:2px dashed var(--line)}
+.ans.ghost:hover{background:var(--chip)}
+.yn .ans{justify-content:center;text-align:center}
+.sw{width:22px;height:22px;border-radius:50%;flex:none;border:2px solid rgba(255,255,255,.85);box-shadow:0 0 0 1px rgba(0,0,0,.25)}
+.qfoot{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:18px;color:var(--muted);font-size:.9rem;flex-wrap:wrap}
+.link{font:inherit;font-weight:700;background:none;border:0;color:var(--muted);cursor:pointer;padding:4px 0;text-decoration:underline;text-underline-offset:3px}
+.link:hover{color:var(--ink)}
+.pill{font:inherit;font-weight:700;font-size:1.02rem;background:var(--btn);color:var(--btn-fg);border:0;border-radius:10px;padding:10px 22px;min-width:150px;cursor:pointer;transition:background .12s}
+.pill:hover{background:var(--btn-hover)}
+.pill.gold{background:var(--gold);color:#241703}
+.pill.gold:hover{filter:brightness(1.07)}
+.pill.soft{background:var(--chip);color:var(--ink)}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+
+.intro-grid{display:grid;grid-template-columns:minmax(0,1fr) 220px;gap:22px;align-items:start;margin-top:16px}
+.example{background:var(--card);border-radius:14px;padding:10px;text-align:center}
+.example svg{width:100%;height:auto;display:block;border-radius:8px}
+.example p{margin:8px 0 2px;font-size:.84rem;color:var(--muted)}
+.example b{font-family:var(--display);color:var(--ink);font-size:1rem;display:block}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px}
+.tags span{font-size:.8rem;font-weight:700;padding:3px 10px;border-radius:999px;background:var(--gold-soft);color:var(--ink)}
+
+.reveal{background:var(--card);border-radius:20px;overflow:hidden;margin-top:24px;box-shadow:0 14px 40px -24px rgba(10,40,60,.5)}
+.band{background:var(--band);color:var(--band-fg);text-align:center;font-family:var(--display);font-weight:700;font-size:1.3rem;letter-spacing:.12em;text-transform:uppercase;padding:12px 16px}
+.who{padding:20px 20px 22px;text-align:center;display:grid;gap:6px;justify-items:center}
+.namewrap{display:flex;align-items:center;gap:8px;justify-content:center;max-width:100%}
+.name-in{font-family:var(--display);font-weight:700;font-size:clamp(1.5rem,4.2vw,2.1rem);color:var(--ink);background:transparent;border:0;border-bottom:2px dashed var(--line);text-align:center;width:min(100%,420px);padding:2px 4px}
+.name-in:focus{outline:none;border-bottom-color:var(--gold)}
+.dice{font:inherit;background:var(--chip);border:0;border-radius:10px;width:40px;height:40px;cursor:pointer;color:var(--ink);flex:none;display:grid;place-items:center}
+.dice:hover{background:var(--line)}
+.sub{color:var(--muted);font-size:1.02rem;margin:0}
+.ask{font-family:var(--display);font-weight:700;margin:10px 0 2px}
+.yn-row{display:flex;gap:18px;justify-content:center;align-items:center;flex-wrap:wrap}
+.yn-row .diamond{width:9px;height:9px;background:var(--line);transform:rotate(45deg)}
+.portrait{background:var(--bg2);padding:26px 16px;display:flex;flex-direction:column;align-items:center;gap:12px}
+.portrait svg{width:min(100%,380px);height:auto;display:block;border-radius:6px;box-shadow:0 18px 30px -16px rgba(10,30,50,.55)}
+
+.change{padding:20px;border-top:1px solid var(--line)}
+.change h3,.sheet h3{font-family:var(--display);margin:0 0 12px;font-size:1.25rem}
+.chips{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px}
+.chipbtn{font:inherit;text-align:left;background:var(--chip);color:var(--ink);border:0;border-radius:10px;padding:8px 12px;cursor:pointer;display:flex;flex-direction:column}
+.chipbtn small{font-size:.72rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:700}
+.chipbtn:hover{background:var(--line)}
+
+.sheet{padding:22px 20px 26px;border-top:1px solid var(--line);display:grid;gap:22px}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.box{background:var(--bg);border-radius:14px;padding:16px 18px;min-width:0}
+.box h4{margin:0 0 8px;font-family:var(--display);font-size:1.05rem;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.box h4 span{font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;background:var(--band);color:var(--band-fg);padding:2px 8px;border-radius:999px;font-family:var(--body)}
+.box.key{background:var(--gold-soft)}
+dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px}
+dt{font-weight:700;color:var(--muted);font-size:.9rem}
+dd{margin:0}
+.plan{display:grid;gap:0;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.plan>div{display:grid;grid-template-columns:150px minmax(0,1fr);border-top:1px solid var(--line)}
+.plan>div:first-child{border-top:0}
+.plan b{background:var(--bg);padding:12px 14px;font-family:var(--display)}
+.plan p{margin:0;padding:12px 14px}
+.plan em{font-family:var(--display)}
+@media (max-width:560px){.plan>div{grid-template-columns:1fr}}
+.tip{border:2px dashed var(--line);border-radius:14px;padding:14px 18px}
+.tip p{margin:4px 0}
+.tip .bad{text-decoration:line-through;color:var(--muted)}
+.toast{font-weight:700;color:var(--gold)}
+
+.gallery{margin-top:30px}
+.gallery h3{font-family:var(--display);margin:0 0 10px}
+.thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px}
+.thumb{font:inherit;background:var(--card);border:0;border-radius:12px;padding:8px;cursor:pointer;color:var(--ink);text-align:center}
+.thumb svg{width:100%;height:auto;display:block;border-radius:6px}
+.thumb span{display:block;font-family:var(--display);font-weight:700;font-size:.9rem;margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.thumb:hover{outline:2px solid var(--line)}
+textarea.copybox{width:100%;min-height:160px;font:inherit;font-size:.85rem;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);padding:10px}
+
+/* Feder */
+.n-float{animation:float 5s ease-in-out infinite}
+.n-eye{animation:blink 6s infinite;transform-box:fill-box;transform-origin:center}
+.n-iris{transition:transform .35s ease}
+[data-mood="think"] .n-iris{transform:translate(-3px,-3px)}
+.n-happy{display:none}
+[data-mood="happy"] .n-happy{display:inline}
+[data-mood="happy"] .n-open{display:none}
+.n-drop{opacity:0;transform-box:fill-box;transform-origin:50% 0}
+[data-mood="think"] .n-drop{animation:drip 1.1s ease-in infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes blink{0%,94%,100%{transform:scaleY(1)}97%{transform:scaleY(.1)}}
+@keyframes drip{0%{opacity:0;transform:scale(.3)}40%{opacity:1;transform:scale(1)}100%{opacity:0;transform:translateY(14px) scale(.9)}}
+.pop{animation:pop .45s ease both}
+@keyframes pop{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+@media (max-width:700px){
+  .stage{grid-template-columns:1fr;gap:10px}
+  .genie{max-width:130px;margin:0 auto}
+  .bubble::before{left:50%;top:-14px;transform:translateX(-50%);border:14px solid transparent;border-bottom-color:var(--bubble);border-top:0}
+  .intro-grid{grid-template-columns:1fr}
+  .example{max-width:250px;margin:0 auto}
+  .answers.yn{max-width:none}
+}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="brand">Der Figuren<i>flüsterer</i></div>
+    <div class="chapters" id="chapters"></div>
+  </header>
+  <div class="progress" id="progress" hidden><b id="bar" style="width:0%"></b></div>
+  <main id="view"></main>
+  <section class="gallery" id="gallery" hidden></section>
+</div>
+
+<script>
+/* ---------- Hilfsfunktionen ---------- */
+function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const pick=(arr,r=Math.random)=>arr[Math.floor(r()*arr.length)];
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+const reduced=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+const h2r=h=>{const n=parseInt(h.slice(1),16);return[n>>16,n>>8&255,n&255]};
+const r2h=a=>'#'+a.map(v=>Math.max(0,Math.min(255,Math.round(v))).toString(16).padStart(2,'0')).join('');
+const mix=(a,b,t)=>{const A=h2r(a),B=h2r(b);return r2h(A.map((v,i)=>v+(B[i]-v)*t))};
+const shade=(h,p)=>p<0?mix(h,'#000000',-p):mix(h,'#ffffff',p);
+const F=n=>(+n).toFixed(1);
+
+/* ---------- Daten ---------- */
+const CHAPTERS=['Grundlagen','Äusseres','Inneres','Umfeld','Kurzgeschichte'];
+const ROLLE=[
+ {v:'held',l:'Hauptfigur',d:'Aus ihrer Sicht erlebt man die Geschichte'},
+ {v:'gegner',l:'Gegenfigur',d:'Gerät mit der Hauptfigur in Konflikt, hat aber eigene Gründe'}];
+const ALTER=[12,13,14,15,16].map(n=>({v:n,l:n+' Jahre'}));
+const GESCHL=[{v:'m',l:'Männlich'},{v:'w',l:'Weiblich'},{v:'o',l:'Lieber offen lassen'}];
+const ORTE=[
+ {v:'schulhof',l:'Auf dem Schulhof',k:'Schulhof',p:'auf dem Schulhof'},
+ {v:'klasse',l:'Im Klassenzimmer',k:'Klassenzimmer',p:'im Klassenzimmer'},
+ {v:'kueche',l:'Zu Hause in der Küche',k:'Küche',p:'zu Hause in der Küche'},
+ {v:'zimmer',l:'Im eigenen Zimmer',k:'eigenes Zimmer',p:'im eigenen Zimmer'},
+ {v:'bus',l:'An der Bushaltestelle',k:'Bushaltestelle',p:'an der Bushaltestelle'},
+ {v:'park',l:'Im Park',k:'Park',p:'im Park'},
+ {v:'sport',l:'Auf dem Sportplatz',k:'Sportplatz',p:'auf dem Sportplatz'},
+ {v:'bahnhof',l:'Am Bahnhof',k:'Bahnhof',p:'am Bahnhof'}];
+const HAUT=[{v:'shell',l:'Sehr hell',c:'#f3d9c6'},{v:'hell',l:'Hell',c:'#e9bf9f'},{v:'mittel',l:'Mittel',c:'#cf9a6e'},{v:'braun',l:'Braun',c:'#a46b45'},{v:'dunkel',l:'Dunkelbraun',c:'#6c442c'}];
+const FRISUR=[{v:'kurz',l:'Kurz'},{v:'lang',l:'Lang und offen'},{v:'locken',l:'Lockig'},{v:'zopf',l:'Pferdeschwanz'},{v:'dutt',l:'Dutt'},{v:'hoch',l:'Kurz und hochgestylt'},{v:'raspel',l:'Raspelkurz'}];
+const HAAR=[{v:'blond',l:'Blond',c:'#d9b56b'},{v:'hellbraun',l:'Hellbraun',c:'#9a6a40'},{v:'braun',l:'Dunkelbraun',c:'#5a3a24'},{v:'schwarz',l:'Schwarz',c:'#241d1b'},{v:'rot',l:'Rot',c:'#b24f2c'},{v:'gefaerbt',l:'Türkis gefärbt',c:'#3f9e9b'}];
+const KLEID=[{v:'hoodie',l:'Kapuzenpulli'},{v:'shirt',l:'T-Shirt'},{v:'hemd',l:'Hemd oder Bluse'},{v:'jeans',l:'Jeansjacke'},{v:'trainer',l:'Trainingsjacke'}];
+const FARBE=[{v:'rot',l:'Rot',c:'#b8423a'},{v:'blau',l:'Dunkelblau',c:'#2f4f7f'},{v:'gruen',l:'Grün',c:'#4a7a55'},{v:'gelb',l:'Senfgelb',c:'#c99a2e'},{v:'grau',l:'Grau',c:'#8a8f96'},{v:'schwarz',l:'Schwarz',c:'#2a2c30'},{v:'weiss',l:'Weiss',c:'#ecebe7'}];
+const KOPF=[{v:'nichts',l:'Nichts'},{v:'muetze',l:'Eine Wollmütze'},{v:'cap',l:'Ein Cap'},{v:'kapuze',l:'Die Kapuze',d:'tief ins Gesicht gezogen',need:'hoodie'},{v:'kopfhoerer',l:'Grosse Kopfhörer'}];
+const MERKMAL=[{v:'sommersprossen',l:'Sommersprossen'},{v:'zahnspange',l:'Eine Zahnspange'},{v:'ohrstecker',l:'Ohrstecker'},{v:'pflaster',l:'Ein Pflaster im Gesicht'},{v:'narbe',l:'Eine kleine Narbe am Kinn'},{v:'keins',l:'Nichts Besonderes'}];
+const CHAR=[
+ {v:'selbst',l:'Selbstbewusst',stem:'selbstbewusst',desc:'tritt sicher auf und sagt offen die eigene Meinung',ex:n=>`${n} ging an der Gruppe vorbei, ohne den Blick zu senken.`},
+ {v:'schuechtern',l:'Schüchtern',stem:'schüchtern',desc:'ist zurückhaltend und spricht nicht gern vor anderen',ex:n=>`${n} starrte auf die eigenen Schuhe und murmelte etwas, das niemand verstand.`},
+ {v:'frech',l:'Frech',stem:'frech',desc:'hat immer einen Spruch auf Lager',ex:n=>`«Na und?», sagte ${n} und grinste, kaum hatte sich die Lehrerin umgedreht.`},
+ {v:'nachdenklich',l:'Nachdenklich',stem:'nachdenklich',desc:'überlegt lange, bevor etwas gesagt wird',ex:n=>`${n} drehte den Stift zwischen den Fingern und sagte lange nichts.`},
+ {v:'muerrisch',l:'Mürrisch',stem:'mürrisch',desc:'wirkt abweisend und lässt kaum jemanden an sich heran',ex:n=>`${n} knallte die Zimmertür zu, ohne ein Wort zu sagen.`},
+ {v:'froehlich',l:'Fröhlich',stem:'fröhlich',desc:'lacht viel und steckt andere mit guter Laune an',ex:n=>`${n} lachte so laut, dass sich der halbe Bus umdrehte.`},
+ {v:'vertraeumt',l:'Verträumt',stem:'verträumt',desc:'ist mit den Gedanken oft ganz woanders',ex:n=>`${n} hatte die Frage gar nicht gehört und sah den Regentropfen an der Scheibe nach.`}];
+const EIG_ART=[{v:'fuehlen',l:'Im Fühlen',d:'wie die Figur Dinge empfindet'},{v:'denken',l:'Im Denken',d:'wie die Figur über sich und andere denkt'},{v:'handeln',l:'Im Handeln',d:'wie sich die Figur verhält'}];
+const EIG={
+ fuehlen:[{v:'gekraenkt',l:'Ist schnell gekränkt',desc:'ist schnell gekränkt, zeigt es aber nicht'},{v:'eifer',l:'Wird schnell eifersüchtig',desc:'wird schnell eifersüchtig'},{v:'scham',l:'Schämt sich schnell',desc:'schämt sich schnell für sich selbst'},{v:'mitfuehl',l:'Fühlt mit allen mit',desc:'spürt sofort, wenn es anderen schlecht geht'},{v:'wut',l:'Wird plötzlich wütend',desc:'wird plötzlich wütend, wenn etwas ungerecht ist'}],
+ denken:[{v:'schlimm',l:'Malt sich das Schlimmste aus',desc:'malt sich immer das Schlimmste aus'},{v:'gut',l:'Glaubt, nicht gut genug zu sein',desc:'glaubt, nicht gut genug zu sein'},{v:'reden',l:'Denkt, alle reden über sie',desc:'denkt, dass alle hinter dem Rücken reden'},{v:'schlau',l:'Hält sich für schlauer als andere',desc:'hält sich für schlauer als die anderen'},{v:'misstrau',l:'Misstraut allen',desc:'traut niemandem so richtig'}],
+ handeln:[{v:'weg',l:'Läuft weg, wenn es schwierig wird',desc:'läuft weg, wenn es schwierig wird'},{v:'luegen',l:'Lügt, um Ärger zu vermeiden',desc:'lügt, um Ärger zu vermeiden'},{v:'nein',l:'Kann nicht Nein sagen',desc:'kann einfach nicht Nein sagen'},{v:'witz',l:'Macht Witze, wenn es ernst wird',desc:'macht Witze, sobald es ernst wird'},{v:'allein',l:'Will alles allein schaffen',desc:'will alles allein schaffen und nimmt keine Hilfe an'}]};
+const STAERKE=[{v:'zuhoeren',l:'Gut zuhören',desc:'kann gut zuhören'},{v:'lachen',l:'Andere zum Lachen bringen',desc:'bringt andere zum Lachen'},{v:'sport',l:'Sport, z. B. Fussball',desc:'ist sehr sportlich'},{v:'zeichnen',l:'Zeichnen',desc:'zeichnet richtig gut'},{v:'musik',l:'Musik machen',desc:'spielt Gitarre und schreibt eigene Songs'},{v:'mathe',l:'Rechnen und Tüfteln',desc:'ist schnell im Kopf und tüftelt gern'},{v:'details',l:'Kleinigkeiten bemerken',desc:'bemerkt Kleinigkeiten, die anderen entgehen'}];
+const UMFELD=[{v:'familie',l:'In einer grossen, lauten Familie'},{v:'eltern1',l:'Allein mit Mutter oder Vater'},{v:'getrennt',l:'Abwechselnd bei Mutter und Vater'},{v:'grosseltern',l:'Bei den Grosseltern'},{v:'einzel',l:'Als Einzelkind',d:'die Eltern erwarten viel'}];
+const SPRACHE=[{v:'knapp',l:'Kurz angebunden',d:'«Passt schon.»',ex:'Passt schon.'},{v:'jugend',l:'Mit vielen Jugendwörtern',d:'«Bro, das ist so cringe.»',ex:'Bro, das ist so cringe.'},{v:'hoeflich',l:'Höflich und vorsichtig',d:'«Ähm, wäre es okay, wenn …?»',ex:'Ähm, wäre es okay, wenn ich …?'},{v:'ironisch',l:'Ironisch',d:'«Super. Genau das hab ich gebraucht.»',ex:'Super. Genau das hab ich jetzt gebraucht.'},{v:'dialekt',l:'Im Dialekt',d:'«Das isch mir doch glich.»',ex:'Das isch mir doch glich.'},{v:'viel',l:'Ohne Punkt und Komma',d:'«Und dann, also, weisst du …»',ex:'Und dann, also, weisst du, dann hat sie …'}];
+const SITUATION=[
+ {v:'streit',l:'Mitten in einem Streit',d:'mit der besten Freundin oder dem besten Freund',desc:'steckt mitten in einem Streit mit dem wichtigsten Menschen in der Klasse',start:n=>`«Dann geh doch!», rief ${n}, und die Tür fiel ins Schloss.`},
+ {v:'note',l:'Eine schlechte Note',d:'die zu Hause niemand sehen soll',desc:'hat eine schlechte Note bekommen, die zu Hause niemand sehen soll',start:n=>`Unter der Prüfung stand eine rote Drei, und ${n} faltete das Blatt so lange, bis es in die Hosentasche passte.`},
+ {v:'neu',l:'Der erste Tag in einer neuen Klasse',desc:'kommt zum ersten Mal in eine neue Klasse',start:n=>`Zwanzig Köpfe drehten sich gleichzeitig um, als ${n} die Tür zum Klassenzimmer öffnete.`},
+ {v:'nachricht',l:'Eine Nachricht auf dem Handy',d:'die alles verändert',desc:'bekommt eine Nachricht, die alles verändert',start:n=>`Das Handy vibrierte. ${n} las die Nachricht einmal, zweimal – und setzte sich auf den Bordstein.`},
+ {v:'beobachtet',l:'Etwas beobachtet',d:'das niemand sehen sollte',desc:'hat etwas beobachtet, das niemand sehen sollte',start:n=>`${n} hätte nicht hinschauen sollen. Aber jetzt war es zu spät.`},
+ {v:'ausgeschlossen',l:'Von der Gruppe ausgeschlossen',desc:'wird plötzlich von der eigenen Gruppe ausgeschlossen',start:n=>`Als ${n} an den Tisch kam, wurde das Gespräch plötzlich ganz leise.`},
+ {v:'entscheidung',l:'Mitmachen oder nicht?',d:'eine Entscheidung unter Druck',desc:'muss sich entscheiden, bei etwas Verbotenem mitzumachen oder nicht',start:n=>`«Jetzt oder nie», sagte jemand, und alle sahen ${n} an.`}];
+const WUNSCH=[{v:'dazu',l:'Endlich dazugehören',desc:'will endlich dazugehören'},{v:'ernst',l:'Ernst genommen werden',desc:'will ernst genommen werden'},{v:'stolz',l:'Dass die Eltern stolz sind',desc:'wünscht sich, dass die Eltern einmal stolz sind'},{v:'gutmachen',l:'Einen Fehler wiedergutmachen',desc:'will einen Fehler wiedergutmachen'},{v:'freund',l:'Mit einer bestimmten Person befreundet sein',desc:'will mit einer bestimmten Person befreundet sein'},{v:'ruhe',l:'Einfach in Ruhe gelassen werden',desc:'will einfach in Ruhe gelassen werden'}];
+const GEHEIM=[{v:'gelogen',l:'Hat jemanden angelogen',desc:'hat einen wichtigen Menschen angelogen'},{v:'genommen',l:'Hat etwas mitgehen lassen',desc:'hat etwas mitgehen lassen, das jemand anderem gehört'},{v:'verliebt',l:'Ist heimlich verliebt',desc:'ist heimlich in jemanden verliebt'},{v:'zuhause',l:'Zu Hause läuft nicht alles gut',desc:'verschweigt, dass es zu Hause gerade schwierig ist'},{v:'abgeschrieben',l:'Hat bei einer Prüfung abgeschrieben',desc:'hat bei einer Prüfung abgeschrieben'},{v:'songs',l:'Schreibt heimlich Gedichte',desc:'schreibt heimlich Gedichte und zeigt sie niemandem'}];
+const AUSSAGE=[
+ {v:'vorurteil',l:'Ein Vorurteil stimmt nicht',d:'z. B. über jemanden, den man für einen Angeber hielt',desc:'merkt, dass ein Vorurteil nicht stimmt',q:'Welches Vorurteil hat deine Figur – und wann zerbricht es?'},
+ {v:'illusion',l:'Eine Illusion zerbricht',d:'etwas Erhofftes war nie echt',desc:'merkt, dass eine Hoffnung nie echt war',q:'Woran glaubt deine Figur zu Beginn – und was zeigt ihr das Gegenteil?'},
+ {v:'schein',l:'Der Schein trügt',d:'hinter einer schönen Fassade steckt etwas anderes',desc:'entdeckt, was hinter einer schönen Fassade steckt',q:'Was sieht von aussen gut aus – und was steckt wirklich dahinter?'},
+ {v:'selbst',l:'Eine Erkenntnis über sich selbst',d:'die Figur sieht sich plötzlich mit anderen Augen',desc:'erkennt plötzlich etwas über sich selbst',q:'Was versteht deine Figur am Ende über sich, das sie vorher nicht wusste?'}];
+const GEGEN=[{v:'handy',l:'Ein Handy mit gesprungenem Display',nom:'das Handy'},{v:'kopfhoerer',l:'Kopfhörer',nom:'der Kopfhörer'},{v:'notizbuch',l:'Ein abgegriffenes Notizbuch',nom:'das Notizbuch'},{v:'schluessel',l:'Einen Schlüsselbund mit Anhänger',nom:'der Schlüsselbund'},{v:'foto',l:'Ein altes Foto im Portemonnaie',nom:'das Foto'},{v:'skateboard',l:'Ein Skateboard',nom:'das Skateboard'},{v:'ball',l:'Einen Fussball',nom:'der Fussball'}];
+
+/* ---------- Fragen ---------- */
+const Q=[
+ {id:'rolle',ch:0,k:'Rolle',t:'Denk an die Kurzgeschichte, die du schreiben willst. Welche Rolle spielt diese Figur darin?',h:'Eine Kurzgeschichte hat nur wenige Figuren: meist eine Hauptfigur und eine Gegenfigur. Erfinde für jede Rolle eine eigene Figur.',opts:()=>ROLLE},
+ {id:'alter',ch:0,k:'Alter',t:'Wie alt ist deine Figur?',opts:()=>ALTER},
+ {id:'geschlecht',ch:0,k:'Geschlecht',t:'Ist deine Figur männlich oder weiblich?',opts:()=>GESCHL},
+ {id:'ort',ch:0,k:'Ort',t:'Kurzgeschichten spielen im Alltag. Wo treffen wir deine Figur zum ersten Mal?',opts:()=>ORTE,two:1},
+ {id:'haut',ch:1,k:'Hautfarbe',t:'Jetzt zum Aussehen. Welche Hautfarbe hat deine Figur?',opts:()=>HAUT,two:1},
+ {id:'frisur',ch:1,k:'Frisur',t:'Wie trägt deine Figur die Haare?',opts:()=>FRISUR,two:1},
+ {id:'haarfarbe',ch:1,k:'Haarfarbe',t:'Welche Farbe haben die Haare?',opts:()=>HAAR,two:1},
+ {id:'brille',ch:1,k:'Brille',type:'yesno',t:'Trägt deine Figur eine Brille?'},
+ {id:'merkmal',ch:1,k:'Merkmal',t:'Woran erkennt man deine Figur sofort?',opts:()=>MERKMAL,two:1},
+ {id:'kleidung',ch:1,k:'Kleidung',t:'Was trägt deine Figur heute?',opts:()=>KLEID,two:1},
+ {id:'farbe',ch:1,k:'Farbe',t:'In welcher Farbe?',opts:()=>FARBE,two:1},
+ {id:'kopf',ch:1,k:'Auf dem Kopf',t:'Hat deine Figur etwas auf dem Kopf?',opts:a=>KOPF.filter(o=>!o.need||o.need===a.kleidung),two:1},
+ {id:'charakter',ch:2,k:'Wirkung',t:'Jetzt schauen wir nach innen. Wie wirkt deine Figur auf Menschen, die ihr zum ersten Mal begegnen?',opts:()=>CHAR,two:1},
+ {id:'eigArt',ch:2,k:'Eigenheit zeigt sich',t:'Figuren in Kurzgeschichten haben oft eine besondere Eigenheit. Wo zeigt sie sich bei deiner Figur am deutlichsten?',opts:()=>EIG_ART},
+ {id:'eigenheit',ch:2,k:'Eigenheit',t:a=>({fuehlen:'Im Fühlen also.',denken:'Im Denken also.',handeln:'Im Handeln also.'}[a.eigArt]||'')+' Welche Eigenheit hat deine Figur?',opts:a=>EIG[a.eigArt]||[],two:1},
+ {id:'staerke',ch:2,k:'Stärke',t:'Was kann deine Figur besonders gut?',opts:()=>STAERKE,two:1},
+ {id:'umfeld',ch:3,k:'Zuhause',t:'Bei wem lebt deine Figur?',opts:()=>UMFELD},
+ {id:'freund',ch:3,k:'Beste/r Freund/in',type:'yesno',t:'Hat deine Figur eine beste Freundin oder einen besten Freund?'},
+ {id:'sprache',ch:3,k:'Sprache',t:'Kurzgeschichten verwenden Alltagssprache. Wie redet deine Figur?',opts:()=>SPRACHE,two:1},
+ {id:'situation',ch:4,k:'Situation',t:'Eine Kurzgeschichte zeigt nur einen kurzen Ausschnitt. In welchem Moment steigt deine Geschichte ein?',opts:()=>SITUATION,two:1},
+ {id:'wunsch',ch:4,k:'Wunsch',t:'Was wünscht sich deine Figur in diesem Moment am meisten?',opts:()=>WUNSCH,two:1},
+ {id:'geheimnis',ch:4,k:'Geheimnis',type:'yesno',t:'Verheimlicht deine Figur etwas?'},
+ {id:'geheimnisWas',ch:4,k:'Was verheimlicht',show:a=>a.geheimnis===true,t:'Was verheimlicht deine Figur?',opts:()=>GEHEIM,two:1},
+ {id:'aussage',ch:4,k:'Wendepunkt',t:'Gegen Schluss kommt meist ein Wendepunkt. Was merkt deine Figur dabei – und mit ihr der Leser?',opts:()=>AUSSAGE},
+ {id:'gegenstand',ch:4,k:'Gegenstand',t:'Letzte Frage: Was hat deine Figur immer dabei?',opts:()=>GEGEN,two:1}
+];
+const REACT=['Aha.','Interessant …','Ich sehe schon etwas.','Das passt.','Mal sehen …','Das hätte ich nicht gedacht.','Die Figur nimmt Gestalt an.'];
+
+/* ---------- Namen ---------- */
+const NAMES={m:['Leon','Noah','Elias','Luca','Jonas','Finn','Nico','Levin','Matteo','Samuel','Ardit','Tim'],w:['Mia','Lena','Emma','Nora','Lina','Sofia','Elin','Lara','Alina','Zoe','Leonie','Selina'],o:['Robin','Kim','Alex','Noa','Sascha','Toni','Jona'],s:['Frick','Marxer','Büchel','Keller','Brunner','Hasler','Vogt','Kaiser','Schädler','Beck','Ospelt','Meier','Gashi','Rossi','Yilmaz','Wanger']};
+const makeName=a=>pick(NAMES[a.geschlecht]||NAMES.o)+' '+pick(NAMES.s);
+
+/* ---------- Zustand ---------- */
+const STORE='figurenfluesterer.v2';
+const S={a:{},stack:[],name:'',nameAuto:true,nameKey:'',seed:1,saved:[],currentId:null,confirmed:false,changing:false,_prev:undefined};
+try{const raw=localStorage.getItem(STORE);if(raw)S.saved=JSON.parse(raw)||[]}catch(e){}
+function persist(){try{localStorage.setItem(STORE,JSON.stringify(S.saved))}catch(e){}}
+const qById=id=>Q.find(q=>q.id===id);
+const shown=q=>!q.show||q.show(S.a);
+function valid(q){const v=S.a[q.id];if(v===undefined)return false;if(q.type==='yesno')return typeof v==='boolean';return q.opts(S.a).some(o=>o.v===v)}
+const nextQ=()=>Q.find(q=>shown(q)&&!valid(q));
+const find=(list,v)=>list.find(o=>o.v===v)||{};
+function ansLabel(q){const v=S.a[q.id];if(q.type==='yesno')return v?'Ja':'Nein';return find(q.opts(S.a),v).l||'–'}
+
+/* ---------- Die Feder ---------- */
+function guideSVG(mood){return `
+<svg viewBox="0 0 200 250" data-mood="${mood}" id="feder" role="img" aria-label="Schreibfeder des Figurenflüsterers">
+ <defs>
+  <linearGradient id="nibG" x1="0" x2="1"><stop offset="0" stop-color="#7f8a95"/><stop offset=".42" stop-color="#eef2f4"/><stop offset=".58" stop-color="#d5dce1"/><stop offset="1" stop-color="#6f7a85"/></linearGradient>
+  <linearGradient id="goldG" x1="0" x2="1"><stop offset="0" stop-color="#9c7329"/><stop offset=".5" stop-color="#e8c77e"/><stop offset="1" stop-color="#8f6824"/></linearGradient>
+  <linearGradient id="gripG" x1="0" x2="1"><stop offset="0" stop-color="#0d2533"/><stop offset=".45" stop-color="#2a5568"/><stop offset="1" stop-color="#0d2533"/></linearGradient>
+  <radialGradient id="irisN"><stop offset="0" stop-color="#3f8aa3"/><stop offset="1" stop-color="#123e54"/></radialGradient>
+  <clipPath id="eyeN"><path d="M83,120 Q100,105 117,120 Q100,135 83,120Z"/></clipPath>
+ </defs>
+ <circle cx="100" cy="122" r="94" fill="none" stroke="#b88732" stroke-width="1.2" opacity=".55"/>
+ <circle cx="100" cy="122" r="86" fill="none" stroke="#b88732" stroke-width=".7" stroke-dasharray="1.5 5" opacity=".55"/>
+ <g class="n-float">
+  <path d="M70,10 L130,10 L124,50 L76,50Z" fill="url(#gripG)"/>
+  <rect x="74" y="48" width="52" height="7" rx="2" fill="url(#goldG)"/>
+  <path d="M76,56 C64,96 66,132 84,170 L98,222 Q100,228 102,222 L116,170 C134,132 136,96 124,56Z" fill="url(#nibG)" stroke="#56616c" stroke-width="1.2"/>
+  <path d="M84,166 Q100,172 116,166 L110,186 Q100,190 90,186Z" fill="url(#goldG)" opacity=".9"/>
+  <path d="M82,84 Q100,94 118,84 M80,98 Q100,108 120,98" stroke="#7a8590" fill="none" stroke-width="1"/>
+  <path d="M100,136 L100,224" stroke="#26313b" stroke-width="1.6"/>
+  <g class="n-eye">
+   <g class="n-open">
+    <path d="M83,120 Q100,105 117,120 Q100,135 83,120Z" fill="#fbfaf7"/>
+    <g clip-path="url(#eyeN)"><g class="n-iris"><circle cx="100" cy="120" r="7.5" fill="url(#irisN)"/><circle cx="100" cy="120" r="3.2" fill="#08141b"/><circle cx="102.6" cy="117.4" r="1.5" fill="#fff"/></g></g>
+    <path d="M83,120 Q100,105 117,120 Q100,135 83,120Z" fill="none" stroke="#26313b" stroke-width="1.6"/>
+   </g>
+   <path class="n-happy" d="M84,123 Q100,110 116,123" fill="none" stroke="#26313b" stroke-width="2.4" stroke-linecap="round"/>
+  </g>
+  <path class="n-drop" d="M100,226 C95,234 95,241 100,241 C105,241 105,234 100,226Z" fill="#173f52"/>
+ </g>
+</svg>`}
+function mood(m){const g=document.getElementById('feder');if(g)g.setAttribute('data-mood',m)}
+
+/* ---------- Hintergründe (unscharf wie im Foto) ---------- */
+function scene(name,r){
+ const W=300,H=380;let s='';
+ const R=(x,y,w,h,f,ex='')=>`<rect x="${F(x)}" y="${F(y)}" width="${F(w)}" height="${F(h)}" fill="${f}" ${ex}/>`;
+ const bokeh=(n,cols,y0=0,y1=H)=>{let b='';for(let i=0;i<n;i++)b+=`<circle cx="${F(r()*W)}" cy="${F(y0+r()*(y1-y0))}" r="${F(5+r()*16)}" fill="${pick(cols,r)}" opacity="${(.15+r()*.3).toFixed(2)}"/>`;return b};
+ switch(name){
+  case 'schulhof':s+=R(0,0,W,H,'#c8d4dc')+R(-10,50,320,230,'#d8c9ae');for(let y=70;y<250;y+=46)for(let x=6;x<300;x+=40)s+=R(x,y,26,30,'#7c8c98');s+=`<circle cx="20" cy="190" r="60" fill="#748f5e"/><circle cx="290" cy="170" r="70" fill="#6a8656"/>`+R(0,270,W,H,'#8b8e90')+bokeh(10,['#ffffff']);break;
+  case 'klasse':s+=R(0,0,W,H,'#e6dfcf')+R(20,70,230,130,'#2f4c42')+R(20,198,230,8,'#b9a98c')+R(256,40,60,200,'#f6f3e6')+R(0,0,W,24,'#f2efe6')+R(60,8,70,8,'#fffbe9')+R(170,8,70,8,'#fffbe9')+R(0,280,W,H,'#b7a587')+bokeh(6,['#fffbe9'],0,80);break;
+  case 'kueche':s+=R(0,0,W,H,'#efeeea');for(let y=110;y<240;y+=18)for(let x=0;x<W;x+=18)s+=R(x,y,17,17,'#e3e6e5');s+=R(0,0,W,100,'#c9b89c')+R(0,240,W,140,'#bba98c')+R(200,20,90,120,'#fbf6e3')+R(10,150,50,200,'#d9dcdc')+bokeh(8,['#fff6d8'],0,160);break;
+  case 'zimmer':s+=R(0,0,W,H,'#9fb2c1')+R(18,40,70,96,'#c8573f')+R(100,30,60,80,'#e9d38a')+R(230,30,64,150,'#f4f0e1')+R(10,200,110,10,'#7d6248');for(let x=14;x<116;x+=9)s+=R(x,172,7,28,pick(['#b8423a','#2f4f7f','#4a7a55','#c99a2e','#e3ddd0'],r));s+=`<circle cx="190" cy="170" r="40" fill="#ffd894" opacity=".55"/>`+R(0,290,W,H,'#6f6a66')+bokeh(6,['#ffe2a8'],120,220);break;
+  case 'bus':s+=R(0,0,W,H,'#b9c5cd')+R(0,230,W,H,'#6f7377')+R(190,60,120,200,'#cfc23e')+R(196,80,104,50,'#3b4a55')+R(20,40,8,240,'#5a5f63')+R(20,40,140,6,'#5a5f63')+R(30,60,120,170,'#dfe8ec','opacity=".5"')+bokeh(14,['#ffffff','#ffe9a8','#ff9e7a']);break;
+  case 'park':s+=R(0,0,W,H,'#8aa665');for(let i=0;i<16;i++)s+=`<circle cx="${F(r()*W)}" cy="${F(r()*260)}" r="${F(30+r()*50)}" fill="${pick(['#a9c47a','#6b8a4c','#58773f','#c1d78f'],r)}"/>`;s+=R(0,280,W,H,'#9a8e6c')+bokeh(18,['#ffffff','#f4f7d0']);break;
+  case 'sport':s+=R(0,0,W,H,'#bcd2e2')+R(0,190,W,H,'#5f9a55');for(let x=0;x<W;x+=14)s+=R(x,120,2,80,'#6a7177');s+=R(0,120,W,2,'#6a7177')+R(0,160,W,2,'#6a7177')+`<circle cx="40" cy="40" r="14" fill="#ffffff"/><circle cx="70" cy="40" r="14" fill="#ffffff"/>`+bokeh(8,['#ffffff']);break;
+  case 'bahnhof':s+=R(0,0,W,H,'#a7adb2')+R(0,0,W,50,'#4a5056')+R(0,180,W,60,'#b23a30')+R(10,190,60,30,'#2e3a44')+R(90,190,60,30,'#2e3a44')+R(170,190,60,30,'#2e3a44')+R(0,250,W,H,'#8d8f90')+bokeh(14,['#ffffff','#ffe7a6'],0,120);break;
+  default:s+=R(0,0,W,H,'#cdd6dc');
+ }
+ return s;
+}
+
+/* ---------- Porträt im Fotostil ---------- */
+function figFrom(a,seed){return{scene:a.ort||'park',age:a.alter||14,g:a.geschlecht||'o',skin:a.haut||'hell',hs:a.frisur||'kurz',hair:a.haarfarbe||'braun',glasses:!!a.brille,mark:a.merkmal||'keins',cloth:a.kleidung||'hoodie',color:a.farbe||'blau',hat:a.kopf||'nichts',char:a.charakter||'nachdenklich',item:a.gegenstand,seed}}
+
+function drawFigure(f,uid){
+ const r=rng(f.seed);
+ const skin=find(HAUT,f.skin).c||HAUT[1].c;
+ const hairC=find(HAAR,f.hair).c||HAAR[2].c;
+ const cloth=find(FARBE,f.color).c||FARBE[1].c;
+ const sk={b:skin,l:shade(skin,.16),d:shade(skin,-.2),x:shade(skin,-.42)};
+ const hc={b:hairC,l:shade(hairC,.28),d:shade(hairC,-.4)};
+ const eyePool=(f.skin==='braun'||f.skin==='dunkel')?['#4a2d1a','#3a2416','#5a3a22']:['#5b3a24','#3f6e8f','#5d7a45','#7a5a30','#6f8796'];
+ const eyeC=pick(eyePool,r);
+ const lip=mix(skin,'#b0505a',f.g==='m'?.3:.42);
+ const cx=150,cy=154,young=f.age<=13;
+ const fw=f.g==='m'?52:f.g==='w'?48:50,fh=young?62:67,top=cy-72,chW=f.g==='m'?30:f.g==='w'?23:27;
+ const ey=cy-6,exL=cx-20,exR=cx+20,my=cy+(young?36:40);
+ const C=f.char;
+ const id=s=>`${s}-${uid}`;
+ const face=`M${cx},${top} C${cx+fw-4},${top} ${cx+fw+3},${cy-34} ${cx+fw+1},${cy-2} C${cx+fw-1},${cy+30} ${cx+chW+8},${cy+fh-6} ${cx},${cy+fh} C${cx-chW-8},${cy+fh-6} ${cx-fw+1},${cy+30} ${cx-fw-1},${cy-2} C${cx-fw-3},${cy-34} ${cx-fw+4},${top} ${cx},${top}Z`;
+ const body='M14,404 C20,314 82,284 150,282 C218,284 280,314 286,404Z';
+
+ /* Haarformen vorne */
+ const HP={
+  fringe:`M${cx-fw-5},${cy-4} C${cx-fw-10},${top-28} ${cx+fw+10},${top-28} ${cx+fw+5},${cy-4} C${cx+fw},${cy-26} ${cx+fw-8},${top+30} ${cx+18},${top+24} C${cx},${top+20} ${cx-26},${top+42} ${cx-fw+1},${cy-12}Z`,
+  short:`M${cx-fw-3},${cy-14} C${cx-fw-6},${top-20} ${cx+fw+6},${top-20} ${cx+fw+3},${cy-14} C${cx+fw-2},${top+26} ${cx+22},${top+20} ${cx+6},${top+22} C${cx-14},${top+23} ${cx-fw+4},${top+26} ${cx-fw-3},${cy-14}Z`,
+  pulled:`M${cx-fw-3},${cy-10} C${cx-fw-6},${top-24} ${cx+fw+6},${top-24} ${cx+fw+3},${cy-10} C${cx+fw-4},${top+30} ${cx+24},${top+17} ${cx},${top+17} C${cx-24},${top+17} ${cx-fw+4},${top+30} ${cx-fw-3},${cy-10}Z`,
+  quiff:`M${cx-fw-2},${cy-16} C${cx-fw-3},${top-4} ${cx-22},${top-26} ${cx+2},${top-28} C${cx+30},${top-32} ${cx+fw+3},${top-6} ${cx+fw+2},${cy-16} C${cx+fw-6},${top+22} ${cx+12},${top+18} ${cx-fw+4},${cy-18}Z`,
+  buzz:`M${cx-fw-1},${cy-18} C${cx-fw-2},${top-8} ${cx+fw+2},${top-8} ${cx+fw+1},${cy-18} C${cx+fw-4},${top+22} ${cx+16},${top+15} ${cx},${top+15} C${cx-16},${top+15} ${cx-fw+4},${top+22} ${cx-fw-1},${cy-18}Z`};
+ const hpKey={kurz:f.g==='w'?'fringe':'short',lang:'fringe',zopf:'pulled',dutt:'pulled',hoch:'quiff',raspel:'buzz'}[f.hs];
+ const hp=hpKey?HP[hpKey]:null;
+
+ let defs=`
+  <clipPath id="${id('fr')}"><rect width="300" height="380" rx="6"/></clipPath>
+  <clipPath id="${id('fc')}"><path d="${face}"/></clipPath>
+  <clipPath id="${id('bd')}"><path d="${body}"/></clipPath>
+  ${hp?`<clipPath id="${id('hp')}"><path d="${hp}"/></clipPath>`:''}
+  <filter id="${id('bg')}" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="4.5"/></filter>
+  <filter id="${id('s1')}" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="1.4"/></filter>
+  <filter id="${id('s3')}" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="3.5"/></filter>
+  <filter id="${id('s8')}" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="14"/></filter>
+  <filter id="${id('hb')}"><feGaussianBlur stdDeviation=".5"/></filter>
+  <filter id="${id('gr')}" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="${f.seed%97}" stitchTiles="stitch"/><feColorMatrix type="matrix" values=".33 .33 .33 0 0  .33 .33 .33 0 0  .33 .33 .33 0 0  0 0 0 0 .13"/></filter>
+  <radialGradient id="${id('sk')}" cx=".4" cy=".36" r=".75"><stop offset="0" stop-color="${sk.l}"/><stop offset=".6" stop-color="${sk.b}"/><stop offset="1" stop-color="${sk.d}"/></radialGradient>
+  <linearGradient id="${id('nk')}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${sk.x}"/><stop offset=".45" stop-color="${sk.d}"/><stop offset="1" stop-color="${sk.b}"/></linearGradient>
+  <linearGradient id="${id('hg')}" x1="0" y1="0" x2=".3" y2="1"><stop offset="0" stop-color="${hc.l}"/><stop offset=".45" stop-color="${hc.b}"/><stop offset="1" stop-color="${hc.d}"/></linearGradient>
+  <linearGradient id="${id('cg')}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${shade(cloth,.1)}"/><stop offset="1" stop-color="${shade(cloth,-.3)}"/></linearGradient>
+  <linearGradient id="${id('dn')}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6b8bb5"/><stop offset="1" stop-color="#3b5578"/></linearGradient>
+  <linearGradient id="${id('side')}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffffff" stop-opacity=".12"/><stop offset=".45" stop-color="#ffffff" stop-opacity="0"/><stop offset="1" stop-color="#2a140a" stop-opacity=".34"/></linearGradient>
+  <radialGradient id="${id('ir')}"><stop offset="0" stop-color="${shade(eyeC,.35)}"/><stop offset=".7" stop-color="${eyeC}"/><stop offset="1" stop-color="${shade(eyeC,-.55)}"/></radialGradient>
+  <radialGradient id="${id('vg')}" cx=".5" cy=".45" r=".75"><stop offset=".55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".42"/></radialGradient>`;
+
+ let L='';
+ /* Hintergrund */
+ L+=`<g filter="url(#${id('bg')})">${scene(f.scene,r)}</g>`;
+ L+=`<ellipse cx="${cx+14}" cy="300" rx="130" ry="100" fill="#000" opacity=".22" filter="url(#${id('s8')})"/>`;
+
+ /* Haare hinten */
+ const hG=`url(#${id('hg')})`;
+ if(f.hs==='lang')L+=`<path d="M${cx-fw-9},${cy-30} C${cx-fw-22},${top-34} ${cx+fw+22},${top-34} ${cx+fw+9},${cy-30} C${cx+fw+20},${cy+40} ${cx+fw+22},${cy+100} ${cx+fw+14},${cy+124} C${cx+30},${cy+136} ${cx-30},${cy+136} ${cx-fw-14},${cy+124} C${cx-fw-22},${cy+100} ${cx-fw-20},${cy+40} ${cx-fw-9},${cy-30}Z" fill="${hG}" filter="url(#${id('hb')})"/>`;
+ if(f.hs==='kurz'&&f.g==='w')L+=`<path d="M${cx-fw-9},${cy-30} C${cx-fw-20},${top-30} ${cx+fw+20},${top-30} ${cx+fw+9},${cy-30} L${cx+fw+11},${cy+42} Q${cx},${cy+56} ${cx-fw-11},${cy+42}Z" fill="${hG}" filter="url(#${id('hb')})"/>`;
+ if(f.hs==='zopf')L+=`<path d="M${cx+fw-8},${cy-30} C${cx+fw+14},${cy-20} ${cx+fw+16},${cy+30} ${cx+fw+4},${cy+60} C${cx+fw-2},${cy+30} ${cx+fw-4},${cy} ${cx+fw-14},${cy-24}Z" fill="${hG}" filter="url(#${id('hb')})"/>`;
+ if(f.hs==='dutt')L+=`<circle cx="${cx+6}" cy="${top-10}" r="22" fill="${hG}"/><path d="M${cx-8},${top-18} q14,-10 28,2 M${cx-6},${top-6} q14,-8 26,2" stroke="${hc.d}" stroke-width="1.2" fill="none" opacity=".5"/>`;
+ if(f.hs==='locken'){for(let d=-30;d<=210;d+=13){const t=d*Math.PI/180;L+=`<circle cx="${F(cx+(fw+8)*Math.cos(t))}" cy="${F(cy-6-(fh+8)*Math.sin(t)*.95)}" r="${F(15+r()*6)}" fill="${hG}"/>`}}
+
+ /* Kapuze hinten */
+ const hood=f.hat==='kapuze';
+ if(hood)L+=`<path d="M${cx-fw-24},${cy+60} C${cx-fw-34},${top-12} ${cx-22},${top-38} ${cx},${top-38} C${cx+22},${top-38} ${cx+fw+34},${top-12} ${cx+fw+24},${cy+60}Z" fill="${shade(cloth,-.32)}"/>`;
+ else if(f.cloth==='hoodie')L+=`<path d="M92,280 C80,230 220,230 208,280Z" fill="${shade(cloth,-.22)}"/>`;
+
+ /* Hals */
+ const neck=`M${cx-24},${cy+36} L${cx-25},278 Q${cx},290 ${cx+25},278 L${cx+24},${cy+36}Z`;L+=`<clipPath id="${id('nkc')}"><path d="${neck}"/></clipPath><path d="${neck}" fill="url(#${id('nk')})"/><g clip-path="url(#${id('nkc')})"><ellipse cx="${cx}" cy="${cy+fh+2}" rx="30" ry="12" fill="${sk.x}" opacity=".5" filter="url(#${id('s3')})"/></g>`;
+
+ /* Oberkörper */
+ const torso=f.cloth==='jeans'?`url(#${id('dn')})`:`url(#${id('cg')})`;
+ L+=`<g transform="translate(0,-20)"><path d="${body}" fill="${torso}"/>`;
+ let cl='';
+ if(f.cloth==='hoodie')cl+=`<path d="M${cx-34},286 Q${cx},312 ${cx+34},286" stroke="${shade(cloth,-.35)}" stroke-width="5" fill="none" opacity=".7"/><path d="M${cx-12},300 Q${cx-15},330 ${cx-14},352 M${cx+12},300 Q${cx+15},330 ${cx+14},352" stroke="#ece8df" stroke-width="2.4" fill="none" stroke-linecap="round"/><rect x="${cx-16}" y="350" width="4" height="9" rx="1.5" fill="#bfc4c9"/><rect x="${cx+12}" y="350" width="4" height="9" rx="1.5" fill="#bfc4c9"/>`;
+ if(f.cloth==='shirt')cl+=`<path d="M${cx-27},285 Q${cx},310 ${cx+27},285" stroke="${shade(cloth,-.22)}" stroke-width="6" fill="none"/>`;
+ if(f.cloth==='hemd'){const cc=shade(cloth,.12);cl+=`<path d="M${cx},306 L${cx-30},282 L${cx-38},310 Z" fill="${cc}"/><path d="M${cx},306 L${cx+30},282 L${cx+38},310 Z" fill="${cc}"/><path d="M${cx},306 V384" stroke="${shade(cloth,-.25)}" stroke-width="1.5"/>`;[322,346,370].forEach(y=>cl+=`<circle cx="${cx+4}" cy="${y}" r="2.4" fill="${shade(cloth,.35)}"/>`)}
+ if(f.cloth==='jeans')cl+=`<path d="M${cx-26},284 L${cx},350 L${cx+26},284Z" fill="url(#${id('cg')})"/><path d="M${cx-26},284 L${cx-46},292 L${cx-10},338Z M${cx+26},284 L${cx+46},292 L${cx+10},338Z" fill="#4f6f99"/><path d="M${cx-10},338 V384 M${cx+10},338 V384 M60,340 h44 M196,340 h44" stroke="#d6a25a" stroke-width="1.3" stroke-dasharray="3 2" fill="none"/>`;
+ if(f.cloth==='trainer')cl+=`<path d="M${cx-24},282 Q${cx},296 ${cx+24},282 L${cx+22},298 Q${cx},308 ${cx-22},298Z" fill="${shade(cloth,-.2)}"/><path d="M${cx},300 V384" stroke="#c8ccd2" stroke-width="2.6"/><path d="M70,300 C46,320 34,350 30,384 M80,306 C56,326 44,356 40,384 M230,300 C254,320 266,350 270,384 M220,306 C244,326 256,356 260,384" stroke="#f1f1ee" stroke-width="4" fill="none" opacity=".9"/>`;
+ cl+=`<g filter="url(#${id('s3')})" opacity=".18"><path d="M74,330 Q92,352 84,384 M226,330 Q208,352 216,384" stroke="#000" stroke-width="9" fill="none"/></g>`;
+ cl+=`<rect x="0" y="270" width="300" height="140" fill="url(#${id('side')})"/>`;
+ L+=`<g clip-path="url(#${id('bd')})">${cl}</g>`;
+ if(f.item==='kopfhoerer'&&f.hat!=='kopfhoerer')L+=`<path d="M${cx-34},282 C${cx-38},318 ${cx+38},318 ${cx+34},282" stroke="#1f2226" stroke-width="7" fill="none" stroke-linecap="round"/><rect x="${cx-46}" y="270" width="20" height="26" rx="9" fill="#2a2e33"/><rect x="${cx+26}" y="270" width="20" height="26" rx="9" fill="#2a2e33"/><rect x="${cx-42}" y="274" width="4" height="14" rx="2" fill="#5a6068"/>`;
+ L+=`</g>`;
+
+ /* Ohren */
+ L+=`<ellipse cx="${cx-fw}" cy="${ey+10}" rx="8" ry="14" fill="${sk.d}"/><ellipse cx="${cx+fw}" cy="${ey+10}" rx="8" ry="14" fill="${sk.d}"/><path d="M${cx-fw-2},${ey+2} q-4,8 1,16 M${cx+fw+2},${ey+2} q4,8 -1,16" stroke="${sk.x}" stroke-width="1.6" fill="none" opacity=".5"/>`;
+ if(f.mark==='ohrstecker')L+=`<circle cx="${cx-fw-1}" cy="${ey+21}" r="2.2" fill="#e8eaec"/><circle cx="${cx+fw+1}" cy="${ey+21}" r="2.2" fill="#e8eaec"/>`;
+
+ /* Gesicht */
+ L+=`<path d="${face}" fill="url(#${id('sk')})"/>`;
+ let fo='';
+ fo+=`<rect x="${cx-70}" y="${top}" width="140" height="160" fill="url(#${id('side')})"/>`;
+ fo+=`<g filter="url(#${id('s3')})"><ellipse cx="${exL}" cy="${ey-3}" rx="15" ry="8" fill="${sk.x}" opacity=".14"/><ellipse cx="${exR}" cy="${ey-3}" rx="15" ry="8" fill="${sk.x}" opacity=".18"/><ellipse cx="${exL-6}" cy="${cy+18}" rx="13" ry="8" fill="#de7468" opacity="${C==='schuechtern'?.32:.16}"/><ellipse cx="${exR+6}" cy="${cy+18}" rx="13" ry="8" fill="#de7468" opacity="${C==='schuechtern'?.32:.14}"/><ellipse cx="${cx}" cy="${cy+fh}" rx="${fw-6}" ry="12" fill="${sk.x}" opacity=".16"/></g>`;
+ if(hp)fo+=`<path d="${hp}" fill="#000" opacity=".25" transform="translate(2,6)" filter="url(#${id('s3')})"/>`;
+ if(f.hat==='cap'||f.hat==='muetze')fo+=`<rect x="${cx-70}" y="${cy-44}" width="140" height="20" fill="#000" opacity=".28" filter="url(#${id('s3')})"/>`;
+ if(f.mark==='sommersprossen')for(let i=0;i<34;i++){const sd=r()<.5?-1:1;const x=cx+sd*(6+r()*30),y=cy+4+r()*20;fo+=`<circle cx="${F(x)}" cy="${F(y)}" r="${(.7+r()*.7).toFixed(2)}" fill="${sk.x}" opacity=".45"/>`}
+ L+=`<g clip-path="url(#${id('fc')})">${fo}</g>`;
+
+ /* Augenbrauen */
+ const by=ey-15;
+ const brow=(x0,d,ang,dy)=>{const p=`M${x0-13*d},${by+2} Q${x0-1*d},${by-5} ${x0+12*d},${by-1} Q${x0-1*d},${by+1} ${x0-13*d},${by+3.5}Z`;return `<path d="${p}" fill="${f.hair==='gefaerbt'?'#3a2a22':hc.d}" opacity=".88" transform="translate(0,${dy}) rotate(${ang*d} ${x0} ${by})" filter="url(#${id('hb')})"/>`};
+ const B={muerrisch:[12,0,12,0],schuechtern:[-9,0,-9,0],frech:[0,0,-6,-4],nachdenklich:[-6,0,2,0],selbst:[2,0,2,0]}[C]||[0,0,0,0];
+ L+=brow(exL,1,B[0],B[1])+brow(exR,-1,B[2],B[3]);
+
+ /* Augen */
+ const gaze={schuechtern:[-1.5,2.4],nachdenklich:[3,-1.5],vertraeumt:[2.5,-2.4]}[C]||[0.6,0];
+ const lid={vertraeumt:.45,muerrisch:.35,schuechtern:.25,nachdenklich:.12}[C]||0;
+ const eye=(x,d)=>{
+  const ep=`M${x-11*d},${ey} C${x-6*d},${ey-6.5} ${x+5*d},${ey-7} ${x+11*d},${ey-1} C${x+6*d},${ey+5} ${x-5*d},${ey+5} ${x-11*d},${ey}Z`;
+  const cid=id('e'+(d>0?'L':'R'));
+  const ir=young?6:5.6,ix=x+gaze[0],iy=ey+gaze[1];
+  const lidY=ey-6+lid*9;
+  let s=`<clipPath id="${cid}"><path d="${ep}"/></clipPath><g clip-path="url(#${cid})"><rect x="${x-13}" y="${ey-9}" width="26" height="16" fill="#f1ece6"/><circle cx="${ix}" cy="${iy}" r="${ir}" fill="url(#${id('ir')})"/><circle cx="${ix}" cy="${iy}" r="${ir*.42}" fill="#120c0a"/><circle cx="${ix+1.7}" cy="${iy-1.8}" r="1.3" fill="#fff" opacity=".9"/><rect x="${x-13}" y="${ey-9}" width="26" height="5" fill="#000" opacity=".12"/>`;
+  if(lid>0)s+=`<path d="M${x-13},${ey-10} L${x+13},${ey-10} L${x+13},${lidY} Q${x},${lidY-3} ${x-13},${lidY}Z" fill="${sk.b}"/>`;
+  if(C==='froehlich')s+=`<path d="M${x-13},${ey+8} L${x+13},${ey+8} L${x+13},${ey+2} Q${x},${ey-1} ${x-13},${ey+2}Z" fill="${sk.b}"/>`;
+  s+=`</g>`;
+  const lash=lid>0?`M${x-11},${lidY+1} Q${x},${lidY-3} ${x+11},${lidY+1}`:`M${x-11*d},${ey} C${x-6*d},${ey-6.5} ${x+5*d},${ey-7} ${x+11*d},${ey-1}`;
+  s+=`<path d="${lash}" stroke="#2a1c16" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M${x-10*d},${ey-4} C${x-5*d},${ey-11} ${x+5*d},${ey-11} ${x+10*d},${ey-5}" stroke="${sk.x}" stroke-width="1.1" fill="none" opacity=".4"/>`;
+  return s};
+ L+=eye(exL,1)+eye(exR,-1);
+
+ /* Nase */
+ L+=`<path d="M${cx+4},${ey+2} Q${cx+8},${cy+10} ${cx+8},${cy+18}" stroke="${sk.x}" stroke-width="3" fill="none" opacity=".3" filter="url(#${id('s1')})"/><ellipse cx="${cx-1}" cy="${cy+17}" rx="5" ry="4" fill="${sk.l}" opacity=".55" filter="url(#${id('s1')})"/><path d="M${cx-9},${cy+20} Q${cx-12},${cy+25} ${cx-5},${cy+26} M${cx+9},${cy+20} Q${cx+12},${cy+25} ${cx+5},${cy+26}" stroke="${sk.x}" stroke-width="1.6" fill="none" opacity=".55" stroke-linecap="round"/><ellipse cx="${cx}" cy="${cy+28}" rx="8" ry="2.5" fill="${sk.x}" opacity=".25" filter="url(#${id('s1')})"/>`;
+
+ /* Mund */
+ const open=C==='froehlich'||(f.mark==='zahnspange'&&C!=='muerrisch'&&C!=='schuechtern');
+ const M={selbst:[.35,0,0,17],schuechtern:[.15,0,0,13],frech:[.3,3,-4,17],nachdenklich:[0,1,-1,15],muerrisch:[-.4,0,0,16],froehlich:[.6,0,0,19],vertraeumt:[.2,0,0,15]}[C]||[.2,0,0,16];
+ const [sm,al,ar,mw]=M;
+ const Lx=cx-mw,Ly=my-sm*5+al,Rx=cx+mw,Ry=my-sm*5+ar;
+ const lipD=shade(lip,-.18);
+ if(open){
+  L+=`<path d="M${Lx},${Ly} Q${cx},${my+2} ${Rx},${Ry} Q${cx},${my+15} ${Lx},${Ly}Z" fill="#4b2224"/><path d="M${Lx+2},${Ly+.5} Q${cx},${my+2.5} ${Rx-2},${Ry+.5} L${Rx-4},${Ry+3} Q${cx},${my+9} ${Lx+4},${Ly+3}Z" fill="#f2eee6"/>`;
+  if(f.mark==='zahnspange'){L+=`<path d="M${Lx+4},${Ly+2.5} Q${cx},${my+6.5} ${Rx-4},${Ry+2.5}" stroke="#aeb7c1" stroke-width="1.4" fill="none"/>`;for(let i=-3;i<=3;i++)L+=`<rect x="${cx+i*4.5-1.2}" y="${my+4.6+Math.abs(i)*-.5}" width="2.4" height="2.4" fill="#cfd6dd"/>`}
+  L+=`<path d="M${Lx},${Ly} C${cx-8},${my-7} ${cx-3},${my-6} ${cx},${my-4} C${cx+3},${my-6} ${cx+8},${my-7} ${Rx},${Ry} Q${cx},${my+1} ${Lx},${Ly}Z" fill="${lipD}"/><path d="M${Lx},${Ly} Q${cx},${my+15} ${Rx},${Ry} Q${cx},${my+20} ${Lx},${Ly}Z" fill="${lip}"/>`;
+  L+=`<path d="M${cx-24},${cy+20} Q${cx-30},${my} ${cx-24},${my+8} M${cx+24},${cy+20} Q${cx+30},${my} ${cx+24},${my+8}" stroke="${sk.x}" stroke-width="2" fill="none" opacity=".22" filter="url(#${id('s1')})"/>`;
+ }else{
+  const mid=my+sm*6;
+  L+=`<path d="M${Lx},${Ly} C${cx-8},${my-6} ${cx-3},${my-5} ${cx},${my-3.5} C${cx+3},${my-5} ${cx+8},${my-6} ${Rx},${Ry} Q${cx},${mid} ${Lx},${Ly}Z" fill="${lipD}"/><path d="M${Lx},${Ly} Q${cx},${mid} ${Rx},${Ry} Q${cx},${mid+9} ${Lx},${Ly}Z" fill="${lip}"/><ellipse cx="${cx}" cy="${mid+4}" rx="6" ry="1.6" fill="#fff" opacity=".22"/><path d="M${Lx},${Ly} Q${cx},${mid} ${Rx},${Ry}" stroke="#4a2626" stroke-width="1.5" fill="none" stroke-linecap="round"/>`;
+ }
+ if(f.mark==='narbe')L+=`<path d="M${cx+8},${cy+fh-12} l7,5" stroke="${sk.l}" stroke-width="2" stroke-linecap="round"/>`;
+ if(f.mark==='pflaster')L+=`<g transform="rotate(-20 ${exR+12} ${cy+16})"><rect x="${exR}" y="${cy+11}" width="25" height="10" rx="4" fill="#e8c9a3"/><rect x="${exR+8.5}" y="${cy+11}" width="8" height="10" fill="#d9b48a"/></g>`;
+
+ /* Haare vorne */
+ if(hp){
+  const op=f.hs==='raspel'?.75:1;
+  let strands='';
+  for(let i=0;i<14;i++){const tx=cx-fw+r()*fw*2,tyy=top+16+r()*30;strands+=`<path d="M${F(cx+10+r()*8)},${F(top-14)} Q${F((cx+tx)/2+(r()-.5)*30)},${F(top-4)} ${F(tx)},${F(tyy)}" stroke="${i%2?hc.l:hc.d}" stroke-width="${(.8+r()*.8).toFixed(1)}" fill="none" opacity=".35"/>`}
+  L+=`<path d="${hp}" fill="${hG}" opacity="${op}" filter="url(#${id('hb')})"/><g clip-path="url(#${id('hp')})" opacity="${op}">${strands}</g>`;
+ }
+ if(f.hs==='lang')L+=`<path d="M${cx-fw-5},${cy-12} C${cx-fw-12},${cy+40} ${cx-fw-8},${cy+90} ${cx-fw+6},${cy+120} C${cx-fw+8},${cy+70} ${cx-fw+10},${cy+30} ${cx-fw+6},${cy-14}Z" fill="${hG}" filter="url(#${id('hb')})"/><path d="M${cx+fw+5},${cy-12} C${cx+fw+12},${cy+40} ${cx+fw+8},${cy+90} ${cx+fw-6},${cy+120} C${cx+fw-8},${cy+70} ${cx+fw-10},${cy+30} ${cx+fw-6},${cy-14}Z" fill="${hG}" filter="url(#${id('hb')})"/>`;
+ if(f.hs==='locken'){for(let d=15;d<=165;d+=18){const t=d*Math.PI/180;L+=`<circle cx="${F(cx+(fw-8)*Math.cos(t))}" cy="${F(cy-18-(fh-4)*Math.sin(t))}" r="${F(14+r()*4)}" fill="${hG}"/>`}for(let x=cx-fw+12;x<=cx+fw-12;x+=15)L+=`<circle cx="${F(x)}" cy="${F(top+22+r()*4)}" r="${F(11+r()*3)}" fill="${hG}"/><path d="M${F(x-6)},${F(top+24)} q6,-6 12,0" stroke="${hc.d}" stroke-width="1.2" fill="none" opacity=".5"/>`}
+
+ /* Kopfbedeckung */
+ const hatC=f.color==='weiss'?'#cfcac0':f.color==='schwarz'?'#3a3d42':shade(cloth,-.05);
+ if(f.hat==='muetze'){let rib='';for(let x=cx-fw-12;x<cx+fw+14;x+=6)rib+=`<path d="M${x},${cy-44} v-60" stroke="#000" stroke-width="1" opacity=".1"/>`;const dome=`M${cx-fw-8},${cy-30} C${cx-fw-12},${top-50} ${cx+fw+24},${top-60} ${cx+fw+8},${cy-30}Z`;L+=`<clipPath id="${id('mz')}"><path d="${dome}"/></clipPath><path d="${dome}" fill="${hatC}"/><path d="${dome}" fill="url(#${id('side')})"/><g clip-path="url(#${id('mz')})">${rib}</g><path d="M${cx-fw-10},${cy-46} Q${cx},${cy-54} ${cx+fw+10},${cy-46} L${cx+fw+11},${cy-26} Q${cx},${cy-34} ${cx-fw-11},${cy-26}Z" fill="${shade(hatC,-.15)}"/>`}
+ if(f.hat==='cap')L+=`<path d="M${cx-fw-4},${cy-34} C${cx-fw-2},${top-36} ${cx+fw+2},${top-36} ${cx+fw+4},${cy-34}Z" fill="${hatC}"/><path d="M${cx},${top-28} V${cy-34}" stroke="#000" stroke-width="1" opacity=".2"/><path d="M${cx-fw-6},${cy-34} Q${cx},${cy-16} ${cx+fw+6},${cy-34} Q${cx},${cy-44} ${cx-fw-6},${cy-34}Z" fill="${shade(hatC,-.2)}"/><rect x="${cx-70}" y="${top-40}" width="140" height="110" fill="url(#${id('side')})" clip-path="none" opacity=".0"/>`;
+ if(hood)L+=`<path d="M${cx-fw-10},${cy+52} C${cx-fw-18},${top-6} ${cx+fw+18},${top-6} ${cx+fw+10},${cy+52}" stroke="${shade(cloth,-.08)}" stroke-width="14" fill="none" stroke-linecap="round"/><path d="M${cx-fw-4},${cy+50} C${cx-fw-10},${top+2} ${cx+fw+10},${top+2} ${cx+fw+4},${cy+50}" stroke="#000" stroke-width="4" fill="none" opacity=".2" filter="url(#${id('s1')})"/>`;
+ if(f.hat==='kopfhoerer')L+=`<path d="M${cx-fw-6},${ey+2} C${cx-fw-10},${top-36} ${cx+fw+10},${top-36} ${cx+fw+6},${ey+2}" stroke="#1f2226" stroke-width="8" fill="none"/><rect x="${cx-fw-14}" y="${ey-6}" width="18" height="32" rx="8" fill="#2a2e33"/><rect x="${cx+fw-4}" y="${ey-6}" width="18" height="32" rx="8" fill="#2a2e33"/><rect x="${cx-fw-11}" y="${ey-2}" width="4" height="20" rx="2" fill="#5a6068"/>`;
+
+ /* Brille */
+ if(f.glasses){const gw=15,gh=10.5;L+=`<rect x="${exL-gw}" y="${ey-gh}" width="${gw*2}" height="${gh*2}" rx="8" fill="#ffffff" fill-opacity=".07" stroke="#1d1d1f" stroke-width="2.2"/><rect x="${exR-gw}" y="${ey-gh}" width="${gw*2}" height="${gh*2}" rx="8" fill="#ffffff" fill-opacity=".07" stroke="#1d1d1f" stroke-width="2.2"/><path d="M${exL+gw},${ey-2} Q${cx},${ey-6} ${exR-gw},${ey-2} M${exL-gw},${ey-4} L${cx-fw+1},${ey-2} M${exR+gw},${ey-4} L${cx+fw-1},${ey-2}" stroke="#1d1d1f" stroke-width="2.2" fill="none"/><path d="M${exL-8},${ey+6} L${exL+2},${ey-8} M${exR-8},${ey+6} L${exR+2},${ey-8}" stroke="#fff" stroke-width="1.6" opacity=".35"/>`}
+
+ /* Licht, Vignette, Korn */
+ L+=`<rect width="300" height="380" fill="url(#${id('vg')})"/><rect width="300" height="380" fill="#ffb27a" opacity=".05"/><rect width="300" height="380" filter="url(#${id('gr')})" style="mix-blend-mode:overlay"/>`;
+
+ return `<svg viewBox="0 0 300 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Porträt der Figur"><defs>${defs}</defs><g clip-path="url(#${id('fr')})">${L}</g></svg>`;
+}
+
+/* ---------- Ansichten ---------- */
+const view=document.getElementById('view');
+function setChapters(cur){
+ const el=document.getElementById('chapters');
+ if(cur==null){el.innerHTML='';document.getElementById('progress').hidden=true;return}
+ const doneCh=i=>Q.filter(q=>q.ch===i&&shown(q)).every(valid);
+ el.innerHTML=CHAPTERS.map((c,i)=>`<span class="${i===cur?'on':doneCh(i)?'done':''}">${c}</span>`).join('');
+ const tot=Q.filter(shown).length,dn=Q.filter(q=>shown(q)&&valid(q)).length;
+ document.getElementById('progress').hidden=false;document.getElementById('bar').style.width=(cur===5?100:Math.round(dn/tot*100))+'%';
+}
+
+const EXAMPLE={ort:'park',alter:15,geschlecht:'m',haut:'hell',frisur:'lang',haarfarbe:'braun',brille:false,merkmal:'keins',kleidung:'hemd',farbe:'grau',kopf:'muetze',charakter:'selbst'};
+
+function showStart(){
+ setChapters(null);
+ view.innerHTML=`<div class="stage pop">
+  <div class="genie">${guideSVG('talk')}</div>
+  <div class="bubble">
+   <p class="react">Willkommen.</p>
+   <h1 class="q">Jede Kurzgeschichte beginnt mit einer Figur. Ich helfe dir, deine zu finden.</h1>
+   <div class="intro-grid">
+    <div>
+     <p class="lead" style="margin-top:0">Ich stelle dir Fragen, wie bei einem Ratespiel. Mit jeder Antwort wird deine Figur genauer: ein Mensch zwischen 12 und 16 Jahren, mitten im Alltag. Am Schluss siehst du ein Porträt und bekommst einen Steckbrief und einen Plan für deine Kurzgeschichte.</p>
+     <div class="tags"><span>Äusseres</span><span>Eigenheit</span><span>Umfeld &amp; Sprache</span><span>Moment &amp; Wendepunkt</span></div>
+     <div class="row" style="margin-top:22px"><button class="pill gold" id="go">Figur erfinden</button>${S.saved.length?`<span style="color:var(--muted);font-size:.9rem">${S.saved.length} Figur${S.saved.length>1?'en':''} gespeichert</span>`:''}</div>
+    </div>
+    <div class="example">${drawFigure(figFrom(EXAMPLE,7),'ex')}<p>Beispiel<b>Levin Marxer</b>Selbstbewusste Hauptfigur · 15 Jahre</p></div>
+   </div>
+  </div></div>`;
+ document.getElementById('go').onclick=newFigure;
+ renderGallery();
+}
+
+function newFigure(){Object.assign(S,{a:{},stack:[],name:'',nameAuto:true,nameKey:'',seed:Math.floor(Math.random()*1e9),currentId:null,confirmed:false,changing:false});advance()}
+function advance(){const q=nextQ();if(!q)showResult();else showQuestion(q)}
+
+function showQuestion(q,reaction){
+ const ch=q.ch;setChapters(ch);
+ const text=typeof q.t==='function'?q.t(S.a):q.t;
+ const tot=Q.filter(shown).length,num=Q.filter(x=>shown(x)&&valid(x)).length+1;
+ let btns='';
+ if(q.type==='yesno'){
+  btns=`<div class="answers yn">${[['Ja','y'],['Nein','n'],['Weiss nicht','?'],['Wahrscheinlich','y'],['Eher nicht','n']].map(([l,v])=>`<button class="ans" data-yn="${v}">${l}</button>`).join('')}</div>`;
+ }else{
+  const opts=q.opts(S.a);
+  btns=`<div class="answers ${q.two&&opts.length>3?'two':''}">${opts.map((o,i)=>`<button class="ans" data-i="${i}">${o.c?`<span class="sw" style="background:${o.c}"></span>`:''}<span class="t">${o.l}${o.d?`<small>${o.d}</small>`:''}</span></button>`).join('')}<button class="ans ghost" data-i="?"><span class="t">Weiss nicht – entscheide du!</span></button></div>`;
+ }
+ view.innerHTML=`<div class="stage">
+  <div class="genie">${guideSVG('talk')}</div>
+  <div class="bubble pop">
+   <p class="react">${reaction||''}</p>
+   <h2 class="q">${esc(text)}</h2>
+   ${q.h?`<p class="hint">${esc(q.h)}</p>`:''}
+   ${btns}
+   <div class="qfoot"><button class="link" id="back">${S.changing?'Abbrechen':S.stack.length?'← Zurück':'← Zum Start'}</button><span>Frage ${num} von ${tot}</span></div>
+  </div></div>`;
+ view.querySelectorAll('.ans').forEach(b=>b.onclick=()=>{
+  let v;
+  if(q.type==='yesno'){const y=b.dataset.yn;v=y==='y'?true:y==='n'?false:Math.random()<.5}
+  else{const opts=q.opts(S.a);v=b.dataset.i==='?'?pick(opts).v:opts[+b.dataset.i].v}
+  answer(q,v);
+ });
+ document.getElementById('back').onclick=()=>{
+  if(S.changing){S.changing=false;if(S._prev!==undefined&&S.a[q.id]===undefined)S.a[q.id]=S._prev;advance();return}
+  const id=S.stack.pop();if(!id){showStart();return}delete S.a[id];showQuestion(qById(id));
+ };
+ renderGallery(true);
+}
+
+function answer(q,v){
+ S.a[q.id]=v;S.stack.push(q.id);
+ view.querySelectorAll('.ans').forEach(b=>b.disabled=true);
+ mood('think');
+ const bub=view.querySelector('.bubble .q');if(bub)bub.innerHTML='<span class="dots"><span>.</span><span>.</span><span>.</span></span>';
+ view.querySelectorAll('.react,.hint').forEach(e=>e.textContent='');
+ setTimeout(()=>{const n=nextQ();if(!n){S.changing=false;showResult()}else showQuestion(n,Math.random()<.5?pick(REACT):'')},reduced?120:650);
+}
+
+/* ---------- Ergebnis ---------- */
+function ensureName(){const key=S.a.geschlecht;if(S.nameAuto&&S.nameKey!==key){S.name=makeName(S.a);S.nameKey=key}}
+function rolleTitle(a){const stem=find(CHAR,a.charakter).stem||'';
+ if(a.rolle==='gegner')return cap(stem)+(a.geschlecht==='m'?'er Gegenspieler':a.geschlecht==='w'?'e Gegenspielerin':'e Gegenfigur');
+ return cap(stem)+'e '+(a.rolle==='held'?'Hauptfigur':'Nebenfigur')}
+const subtitle=a=>`${rolleTitle(a)} · ${a.alter} Jahre · ${find(ORTE,a.ort).k}`;
+
+function showResult(){
+ ensureName();setChapters(5);
+ const a=S.a;
+ view.innerHTML=`<div class="reveal pop">
+  <div class="band">Ich sehe …</div>
+  <div class="who">
+   <div class="namewrap"><input class="name-in" id="nm" value="${esc(S.name)}" aria-label="Name der Figur" maxlength="40"><button class="dice" id="dice" title="Anderen Namen vorschlagen" aria-label="Anderen Namen vorschlagen"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8" cy="8" r="1.3" fill="currentColor"/><circle cx="16" cy="16" r="1.3" fill="currentColor"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/><circle cx="16" cy="8" r="1.3" fill="currentColor"/><circle cx="8" cy="16" r="1.3" fill="currentColor"/></svg></button></div>
+   <p class="sub">${esc(subtitle(a))}</p>
+   <p class="ask">${S.confirmed?'Das ist deine Figur.':'Ist das deine Figur?'}</p>
+   ${S.confirmed?'':`<div class="yn-row"><button class="pill" id="yes">Ja</button><span class="diamond"></span><button class="pill" id="no">Nein</button></div>`}
+  </div>
+  <div class="portrait"><div id="pic">${drawFigure(figFrom(a,S.seed),'main')}</div><button class="link" id="redraw">Anderes Foto</button></div>
+  <div id="extra"></div>
+ </div>`;
+ const nm=document.getElementById('nm');
+ nm.oninput=()=>{S.name=nm.value.trim()||'Namenlos';S.nameAuto=false;if(S.confirmed){saveCurrent();renderSheet()}};
+ document.getElementById('dice').onclick=()=>{S.name=makeName(a);S.nameAuto=true;nm.value=S.name;if(S.confirmed){saveCurrent();renderSheet()}};
+ document.getElementById('redraw').onclick=()=>{S.seed=Math.floor(Math.random()*1e9);document.getElementById('pic').innerHTML=drawFigure(figFrom(a,S.seed),'main');if(S.confirmed)saveCurrent()};
+ if(!S.confirmed){
+  mood('happy');
+  document.getElementById('yes').onclick=()=>{S.confirmed=true;saveCurrent();showResult()};
+  document.getElementById('no').onclick=showChange;
+ }else renderSheet();
+ renderGallery();
+}
+
+function showChange(){
+ const ex=document.getElementById('extra');
+ const list=Q.filter(q=>shown(q)&&valid(q));
+ ex.innerHTML=`<div class="change pop"><h3>Was soll ich ändern?</h3><div class="chips">${list.map(q=>`<button class="chipbtn" data-id="${q.id}"><small>${q.k}</small>${esc(ansLabel(q))}</button>`).join('')}</div></div>`;
+ ex.querySelectorAll('.chipbtn').forEach(b=>b.onclick=()=>{const id=b.dataset.id;S._prev=S.a[id];delete S.a[id];S.changing=true;S.confirmed=false;showQuestion(qById(id),'Gut, das ändern wir.')});
+ ex.scrollIntoView({behavior:reduced?'auto':'smooth',block:'start'});
+}
+
+function sheetData(){
+ const a=S.a,n=S.name;
+ const pron=a.geschlecht==='m'?'er':a.geschlecht==='w'?'sie':n;
+ const ch=find(CHAR,a.charakter),eg=find(EIG[a.eigArt]||[],a.eigenheit),st=find(STAERKE,a.staerke),sp=find(SPRACHE,a.sprache),si=find(SITUATION,a.situation),wu=find(WUNSCH,a.wunsch),au=find(AUSSAGE,a.aussage),gg=find(GEGEN,a.gegenstand),ort=find(ORTE,a.ort),um=find(UMFELD,a.umfeld);
+ const gh=a.geheimnis?find(GEHEIM,a.geheimnisWas):null;
+ const hair=`${find(FRISUR,a.frisur).l}, ${find(HAAR,a.haarfarbe).l.toLowerCase()}`;
+ const extras=[a.brille?'Brille':null,a.merkmal!=='keins'?find(MERKMAL,a.merkmal).l.replace(/^(Eine?n?) /,''):null,a.kopf!=='nichts'?find(KOPF,a.kopf).l.replace(/^(Eine?n?|Die|Grosse) /,''):null].filter(Boolean);
+ const groups=[
+  {t:'Grundlagen',tag:'Wer?',rows:[['Rolle',find(ROLLE,a.rolle).l],['Alter',a.alter+' Jahre'],['Geschlecht',find(GESCHL,a.geschlecht).l.replace('Lieber offen lassen','offen')],['Erster Auftritt',ort.l]]},
+  {t:'Äussere Merkmale',tag:'Aussehen',rows:[['Haare',hair],['Haut',find(HAUT,a.haut).l],['Kleidung',`${find(KLEID,a.kleidung).l}, ${find(FARBE,a.farbe).l.toLowerCase()}`],['Auffällig',extras.length?extras.join(', '):'nichts']]},
+  {t:'Innere Merkmale',tag:'Charakter',rows:[['Wirkt',`${ch.l.toLowerCase()} – ${ch.desc}`],['Stärke',st.desc]]},
+  {t:'Die besondere Eigenheit',tag:find(EIG_ART,a.eigArt).l,key:1,rows:[['Eigenheit',eg.desc]]},
+  {t:'Umfeld & Sprache',tag:'Beziehungen',rows:[['Zuhause',um.l],['Freundschaft',a.freund?'hat eine beste Freundin oder einen besten Freund':'hat keine beste Freundin und keinen besten Freund'],['Typischer Satz',`«${sp.ex}»`]]},
+  {t:'Im Moment der Geschichte',tag:'Handlung',rows:[['Situation',si.desc],['Wunsch',wu.desc],['Geheimnis',gh?gh.desc:'keines – oder doch?'],['Immer dabei',gg.l]]}
+ ];
+ const plan=[
+  ['Kürze',`Erzähle nur einen Moment: ${n} ${si.desc}. Keine ganze Lebensgeschichte, nur dieser Ausschnitt.`],
+  ['Offenheit',`Beginne mitten im Geschehen, ohne Einleitung. Zum Beispiel: <em>${esc(si.start(n))}</em><br>Lass den Schluss offen: Verrate nicht, ob ${pron} am Ende bekommt, was ${a.geschlecht==='o'?n:pron} sich wünscht.`],
+  ['Alltäglichkeit',`Ort: ${ort.l}. ${n} ist ${a.geschlecht==='w'?'keine Heldin':'kein Held'}, sondern ein ganz normaler Mensch. Lass ${pron==='er'?'ihn':pron==='sie'?'sie':n} so reden wie im echten Leben: «${esc(sp.ex)}»`],
+  ['Figuren',`Höchstens zwei oder drei Figuren. Beschreibe ${n} nur knapp. Am wichtigsten ist die Eigenheit: ${n} ${eg.desc}.`],
+  ['Aufbau',`Erzähle der Reihe nach und steigere die Spannung bis zum Wendepunkt gegen Schluss: ${n} ${au.desc}.${gh?` Das Geheimnis kann dabei eine Rolle spielen: ${n} ${gh.desc}.`:''}`],
+  ['Aussage',`${au.q} Der Leser soll am Ende über etwas nachdenken, das grösser ist als die Geschichte selbst.`]
+ ];
+ return{groups,plan,ch};
+}
+
+function renderSheet(){
+ const d=sheetData(),n=S.name;
+ const ex=document.getElementById('extra');
+ ex.innerHTML=`<div class="sheet pop">
+  <h3>Steckbrief von ${esc(n)}</h3>
+  <div class="cols">${d.groups.map(g=>`<div class="box${g.key?' key':''}"><h4>${g.t} <span>${esc(g.tag)}</span></h4><dl>${g.rows.map(([k,v])=>`<dt>${k}</dt><dd>${esc(v)}</dd>`).join('')}</dl></div>`).join('')}</div>
+  <div><h3>Plan für deine Kurzgeschichte</h3>
+   <div class="plan">${d.plan.map(([k,v])=>`<div><b>${k}</b><p>${v.replace(/«([^»]*)»/g,(m)=>m)}</p></div>`).join('')}</div></div>
+  <div class="tip"><h3 style="margin:0 0 4px">Zeigen statt sagen</h3>
+   <p>Nenne die Eigenschaften deiner Figur nicht direkt. Zeig sie durch das, was die Figur tut oder sagt (indirekte Charakterisierung).</p>
+   <p class="bad">${esc(n)} ist ${esc(d.ch.l.toLowerCase())}.</p>
+   <p><b>Besser:</b> ${esc(d.ch.ex(n))}</p></div>
+  <div class="row"><button class="pill" id="copy">Steckbrief kopieren</button><button class="pill soft" id="chg">Etwas ändern</button><button class="pill gold" id="new">Nächste Figur erfinden</button><span class="toast" id="toast" aria-live="polite"></span></div>
+  <div id="copyfb"></div>
+ </div>`;
+ document.getElementById('new').onclick=newFigure;
+ document.getElementById('chg').onclick=()=>{S.confirmed=false;showResult();showChange()};
+ document.getElementById('copy').onclick=()=>{
+  const strip=s=>s.replace(/<br>/g,'\n   ').replace(/<[^>]+>/g,'');
+  const txt=`STECKBRIEF: ${n}\n${subtitle(S.a)}\n\n`+d.groups.map(g=>g.t.toUpperCase()+'\n'+g.rows.map(([k,v])=>`- ${k}: ${v}`).join('\n')).join('\n\n')+'\n\nPLAN FÜR DIE KURZGESCHICHTE\n'+d.plan.map(([k,v])=>`${k}: ${strip(v)}`).join('\n');
+  const t=document.getElementById('toast');
+  const fb=()=>{document.getElementById('copyfb').innerHTML=`<textarea class="copybox" id="cb" readonly>${esc(txt)}</textarea>`;const cb=document.getElementById('cb');cb.focus();cb.select();t.textContent='Text markiert – jetzt mit Strg+C kopieren.'};
+  try{navigator.clipboard.writeText(txt).then(()=>{t.textContent='Kopiert!'},fb)}catch(e){fb()}
+ };
+}
+
+/* ---------- Galerie ---------- */
+function saveCurrent(){
+ const rec={id:S.currentId||('f'+Date.now()),name:S.name,a:{...S.a},seed:S.seed};
+ S.currentId=rec.id;const i=S.saved.findIndex(x=>x.id===rec.id);
+ if(i>=0)S.saved[i]=rec;else S.saved.push(rec);persist();
+}
+function openSaved(id){const r=S.saved.find(x=>x.id===id);if(!r)return;Object.assign(S,{a:{...r.a},name:r.name,nameAuto:false,nameKey:r.a.geschlecht,seed:r.seed,currentId:r.id,confirmed:true,changing:false});S.stack=Q.filter(q=>shown(q)&&valid(q)).map(q=>q.id);showResult();window.scrollTo({top:0,behavior:reduced?'auto':'smooth'})}
+function renderGallery(hide){
+ const g=document.getElementById('gallery');
+ if(hide||!S.saved.length){g.hidden=true;return}
+ g.hidden=false;
+ g.innerHTML=`<h3>Figuren für deine Kurzgeschichte</h3><div class="thumbs">${S.saved.map(r=>`<button class="thumb" data-id="${r.id}">${drawFigure(figFrom(r.a,r.seed),'t'+r.id)}<span>${esc(r.name)}</span></button>`).join('')}</div>`;
+ g.querySelectorAll('.thumb').forEach(b=>b.onclick=()=>openSaved(b.dataset.id));
+}
+
+showStart();
+</script>
+</body>
+</html>
