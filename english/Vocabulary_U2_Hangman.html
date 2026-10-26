@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vocabulary Unit 2 Hangman</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gochi+Hand&family=Nunito:wght@400;600;800&display=swap">
+<style>
+:root{
+  color-scheme:light;
+  --paper:#FFD43B; --glow:#FFE979; --grid:rgba(120,80,0,.10); --margin:#E0442B; --ink:#1B1F2E; --muted:#5E4A12;
+  --card:#FFFBEA; --line:#E2B21C;
+  --noun:#2459C4; --verb:#C8401C; --adj:#1D7443; --adv:#7A3CC4; --all:#1B1F2E;
+  --good:#1D7443; --bad:#C8331F; --key:#FFFBEA; --keyUsed:#F4D66A;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{
+  margin:0; color:var(--ink); font-family:"Nunito",system-ui,sans-serif; font-size:16px;
+  background-color:var(--paper);
+  background-image:
+    radial-gradient(circle at 15% 0%,var(--glow),transparent 45%),
+    radial-gradient(circle at 100% 100%,#FFB81C,transparent 50%),
+    linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:100% 100%,100% 100%,24px 24px,24px 24px;
+  background-attachment:fixed;
+  padding-inline:16px; padding-block:20px 40px; min-height:100vh;
+}
+.wrap{max-width:920px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px;border-bottom:2px solid var(--margin);padding-bottom:10px}
+h1{font-family:"Gochi Hand",cursive;font-weight:400;font-size:clamp(2rem,6vw,2.8rem);margin:0;line-height:1;text-wrap:balance}
+.sub{color:var(--muted);font-size:.9rem;margin:4px 0 0}
+.stats{display:flex;gap:18px;font-variant-numeric:tabular-nums}
+.stat{text-align:right}
+.stat b{display:block;font-size:1.5rem;line-height:1}
+.stat span{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+
+.cats{display:flex;flex-wrap:wrap;gap:8px}
+.cat{
+  --c:var(--all);
+  font:inherit;font-weight:800;font-size:.95rem;cursor:pointer;
+  border:2px solid var(--c);color:var(--c);background:var(--card);
+  border-radius:999px;padding:7px 16px;display:flex;align-items:center;gap:8px;
+}
+.cat small{font-weight:600;opacity:.75}
+.cat[aria-pressed="true"]{background:var(--c);color:#FFFBEA}
+.cat:focus-visible,.key:focus-visible,.btn:focus-visible{outline:3px solid var(--margin);outline-offset:2px}
+
+.board{display:grid;grid-template-columns:minmax(0,400px) minmax(0,1fr);gap:24px;align-items:start}
+.wrap{max-width:1040px}
+@media (max-width:760px){.board{grid-template-columns:1fr}.gallows{max-width:340px;margin:0 auto}}
+.gallows{background:var(--card);border:2px solid var(--line);border-radius:14px;padding:8px;width:100%}
+.gallows svg{width:100%;height:auto;display:block}
+.gallows svg .part{stroke:var(--ink);stroke-width:6;stroke-linecap:round;fill:none;opacity:0;transition:opacity .25s}
+.gallows svg .part.on{opacity:1}
+.gallows svg .base{stroke:var(--muted);stroke-width:5;stroke-linecap:round;fill:none}
+.lives{display:flex;justify-content:center;gap:5px;padding:6px 0 4px}
+.lives i{width:12px;height:12px;border-radius:50%;background:var(--good)}
+.lives i.lost{background:var(--line)}
+
+.play{display:flex;flex-direction:column;gap:16px;min-width:0}
+.tag{align-self:flex-start;font-weight:800;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;padding:4px 12px;border-radius:6px;color:#FFFBEA;background:var(--c,var(--all))}
+.word{display:flex;flex-wrap:wrap;gap:6px 18px;min-height:64px;align-items:flex-end}
+.chunk{display:flex;gap:6px}
+.slot{
+  width:clamp(26px,6vw,40px);height:clamp(40px,8vw,54px);border-bottom:4px solid var(--ink);
+  display:flex;align-items:flex-end;justify-content:center;
+  font-family:"Gochi Hand",cursive;font-size:clamp(1.8rem,5.5vw,2.6rem);line-height:1;text-transform:lowercase;
+}
+.slot.sym{border-bottom-color:transparent}
+.slot.miss{color:var(--bad)}
+.slot.pop{animation:pop .25s ease-out}
+@keyframes pop{from{transform:translateY(-8px);opacity:0}to{transform:none;opacity:1}}
+
+.tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.btn{font:inherit;font-weight:800;cursor:pointer;border-radius:10px;padding:9px 16px;border:2px solid var(--ink);background:var(--card);color:var(--ink)}
+.btn.primary{background:var(--ink);color:#FFD43B}
+.btn:disabled{opacity:.4;cursor:default}
+.hint{font-size:.95rem;color:var(--muted)}
+.hint b{color:var(--ink)}
+
+.msg{border-radius:12px;padding:12px 16px;border:2px solid var(--c);background:var(--card);display:flex;flex-direction:column;gap:4px}
+.msg strong{font-size:1.1rem;color:var(--c)}
+.msg .de{color:var(--muted)}
+
+.keys{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:7px}
+.key{
+  font:inherit;font-weight:800;font-size:1.05rem;text-transform:lowercase;cursor:pointer;
+  height:clamp(40px,6vw,54px);border-radius:9px;border:2px solid var(--line);background:var(--key);color:var(--ink);
+  display:flex;align-items:center;justify-content:center;padding:0;
+}
+.key:hover:not(:disabled){border-color:var(--ink)}
+.key:disabled{cursor:default;background:var(--keyUsed);color:var(--muted)}
+.key.hit{border-color:var(--good);color:var(--good)}
+.key.miss{border-color:var(--bad);color:var(--bad);text-decoration:line-through}
+footer{color:var(--muted);font-size:.8rem}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Vocabulary Unit 2 Hangman</h1>
+      <p class="sub">Life Elementary · Unit 2 Possessions · guess the word letter by letter</p>
+    </div>
+    <div class="stats">
+      <div class="stat"><b id="sWon">0</b><span>won</span></div>
+      <div class="stat"><b id="sLost">0</b><span>lost</span></div>
+      <div class="stat"><b id="sStreak">0</b><span>streak</span></div>
+    </div>
+  </header>
+
+  <div class="cats" id="cats" role="group" aria-label="Choose a word type"></div>
+
+  <section class="board">
+    <div class="gallows">
+      <svg viewBox="0 0 200 220" aria-hidden="true">
+        <line class="base" x1="20" y1="205" x2="120" y2="205"/>
+        <line class="part" data-i="0" x1="50" y1="205" x2="50" y2="20"/>
+        <line class="part" data-i="1" x1="48" y1="20" x2="140" y2="20"/>
+        <line class="part" data-i="2" x1="50" y1="55" x2="85" y2="20"/>
+        <line class="part" data-i="3" x1="140" y1="20" x2="140" y2="48"/>
+        <circle class="part" data-i="4" cx="140" cy="66" r="18"/>
+        <line class="part" data-i="5" x1="140" y1="84" x2="140" y2="140"/>
+        <line class="part" data-i="6" x1="140" y1="100" x2="115" y2="122"/>
+        <line class="part" data-i="7" x1="140" y1="100" x2="165" y2="122"/>
+        <line class="part" data-i="8" x1="140" y1="140" x2="120" y2="175"/>
+        <line class="part" data-i="9" x1="140" y1="140" x2="160" y2="175"/>
+      </svg>
+      <div class="lives" id="lives" aria-label="Lives left"></div>
+    </div>
+
+    <div class="play">
+      <span class="tag" id="tag">noun</span>
+      <div class="word" id="word" aria-live="polite"></div>
+      <div class="tools">
+        <button class="btn" id="hintBtn" type="button">German hint (−1 life)</button>
+        <span class="hint" id="hint" hidden></span>
+      </div>
+      <div class="msg" id="msg" hidden></div>
+      <div class="keys" id="keys"></div>
+      <div class="tools">
+        <button class="btn primary" id="nextBtn" type="button">New word</button>
+        <span class="hint">Tip: you can also type on your keyboard. Enter = new word.</span>
+      </div>
+    </div>
+  </section>
+
+  <footer>Words from the Life 3e Elementary wordlist, Unit 2. Word types as marked in the list; entries marked “word family” come from the list’s related forms (e.g. <i>build</i> from <i>building</i>).</footer>
+</div>
+
+<script>
+const WORDS = {
+  noun: [
+    ["armchair","Sessel"],["bike","Fahrrad"],["possession","Besitz"],["pot","Topf"],
+    ["rug","Teppich (klein)"],["teapot","Teekanne"],
+    ["apartment","Wohnung"],["building","Gebäude"],["chair","Stuhl"],["cupboard","Schrank"],["curtain","Vorhang"],
+    ["difference","Unterschied"],["middle","Mitte"],["neighbour","Nachbar/in"],
+    ["picture","Bild"],["plant","Pflanze"],["size","Grösse"],["television","Fernseher"],["boot","Stiefel"],
+    ["bottle","Flasche"],["climbing","Klettern"],["first-aid kit","Erste-Hilfe-Set"],
+    ["glove","Handschuh"],["hat","Hut"],["knife","Messer"],["map","Karte"],["mountain","Berg"],
+    ["pen","Kugelschreiber"],["shelf","Regal"],["torch","Taschenlampe"],
+    ["case","Hülle / Etui"],
+    ["front","Vorderseite"],["headquarters","Hauptsitz"],["producer","Hersteller"],["screen","Bildschirm"],
+    ["sound","Ton / Klang"],["south","Süden"],["advert","Werbung / Inserat"],
+    ["customer","Kunde / Kundin"],["desk","Schreibtisch"],["engine","Motor"],["motorbike","Motorrad"],["pound","Pfund"],
+    ["shop assistant","Verkäufer/in"],["aid","Hilfe"],["century","Jahrhundert"],
+    ["earring","Ohrring"],["gift","Geschenk"],["history","Geschichte"],["kite","Drachen"],
+    ["mug","Becher / Tasse"],["necklace","Halskette"],["occasion","Anlass"],["ship","Schiff"],
+    ["wood","Holz"],["blinds","Jalousie / Rollo"],["carpet","Teppich"],["currency","Währung"],
+    ["drawer","Schublade"],["money","Geld"],["rollerskates","Rollschuhe"],
+    ["fan","Ventilator / Fan"],["interest","Interesse"],["musician","Musiker/in"],["silver","Silber"]
+  ],
+  verb: [
+    ["imagine","sich vorstellen"],["sell","verkaufen"],["resell","weiterverkaufen"],["memorize","auswendig lernen"],
+    ["remind","erinnern"],["buy","kaufen",1],["build","bauen",1],["climb","klettern",1],
+    ["possess","besitzen",1],["love","lieben",1],["produce","herstellen / produzieren",1]
+  ],
+  adjective: [
+    ["north","nördlich / Nord-"],["pink","rosa"],["sure","sicher"],
+    ["bad","schlecht"],["expensive","teuer"],["horrible","schrecklich"],
+    ["large","gross"],["lovely","schön / reizend"],["medium","mittel(gross)"],["old","alt"],
+    ["slow","langsam"],["small","klein"],["useful","nützlich"],["useless","nutzlos"],["amazing","erstaunlich"],
+    ["colourful","bunt / farbig"],["special","besonders"],
+    ["unique","einzigartig"],["different","anders / verschieden",1],
+    ["unsure","unsicher",1],["cheap","billig",1],["fast","schnell",1],["memorable","unvergesslich",1],
+    ["professional","professionell"],["interesting","interessant",1]
+  ],
+  adverb: [
+    ["usually","normalerweise / meistens"],["differently","anders",1],
+    ["unusually","ungewöhnlich",1],["slowly","langsam",1],["especially","besonders",1],
+    ["normally","normalerweise"],["formally","formell",1]
+  ]
+};
+const COLORS = {all:"--all",noun:"--noun",verb:"--verb",adjective:"--adj",adverb:"--adv"};
+const MAX = 10;
+const $ = id => document.getElementById(id);
+
+let cat = "all", cur = null, guessed = new Set(), wrong = 0, over = false, hintUsed = false;
+let stats = {won:0,lost:0,streak:0};
+let bags = {};
+
+function pool(c){
+  if (c==="all") return Object.entries(WORDS).flatMap(([t,l])=>l.map(w=>({w:w[0],de:w[1],fam:!!w[2],type:t})));
+  return WORDS[c].map(w=>({w:w[0],de:w[1],fam:!!w[2],type:c}));
+}
+// shuffle-bag so words don't repeat until the list is used up
+function draw(c){
+  if (!bags[c] || !bags[c].length){
+    const p = pool(c);
+    for (let i=p.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[p[i],p[j]]=[p[j],p[i]];}
+    if (cur && p.length>1 && p[p.length-1].w===cur.w) p.unshift(p.pop());
+    bags[c]=p;
+  }
+  return bags[c].pop();
+}
+
+function renderCats(){
+  const box=$("cats"); box.innerHTML="";
+  const labels={all:"All",noun:"Noun",verb:"Verb",adjective:"Adjective",adverb:"Adverb"};
+  for (const k of Object.keys(labels)){
+    const b=document.createElement("button");
+    b.type="button"; b.className="cat"; b.style.setProperty("--c",`var(${COLORS[k]})`);
+    b.setAttribute("aria-pressed",k===cat);
+    b.innerHTML=`${labels[k]} <small>${pool(k).length}</small>`;
+    b.onclick=()=>{cat=k;renderCats();newWord();};
+    box.appendChild(b);
+  }
+}
+
+function renderKeys(){
+  const box=$("keys"); box.innerHTML="";
+  for (const ch of "abcdefghijklmnopqrstuvwxyz"){
+    const b=document.createElement("button");
+    b.type="button"; b.className="key"; b.textContent=ch; b.id="k-"+ch;
+    b.onclick=()=>guess(ch);
+    box.appendChild(b);
+  }
+}
+
+function renderWord(popCh){
+  const box=$("word"); box.innerHTML="";
+  for (const part of cur.w.split(" ")){
+    const chunk=document.createElement("div"); chunk.className="chunk";
+    for (const ch of part){
+      const s=document.createElement("div"); s.className="slot";
+      if (!/[a-z]/.test(ch)){ s.classList.add("sym"); s.textContent=ch; }
+      else if (guessed.has(ch)){ s.textContent=ch; if (ch===popCh) s.classList.add("pop"); }
+      else if (over){ s.textContent=ch; s.classList.add("miss"); }
+      chunk.appendChild(s);
+    }
+    box.appendChild(chunk);
+  }
+}
+
+// hint unlocks after wrong guesses = 70 % of the word's letters (capped so one life is left after using it)
+function hintNeed(){
+  const letters=[...cur.w].filter(c=>/[a-z]/.test(c)).length;
+  return Math.min(Math.ceil(letters*0.7), MAX-2);
+}
+function renderHint(){
+  const b=$("hintBtn"), need=hintNeed();
+  if (hintUsed||over){ b.disabled=true; return; }
+  if (wrong<need){ b.disabled=true; b.textContent=`German hint (locked: ${wrong}/${need} wrong)`; }
+  else { b.disabled=false; b.textContent="German hint (−1 life)"; }
+}
+
+function renderLives(){
+  renderHint();
+  document.querySelectorAll(".gallows .part").forEach(p=>p.classList.toggle("on",+p.dataset.i<wrong));
+  const box=$("lives"); box.innerHTML="";
+  for (let i=0;i<MAX;i++){const d=document.createElement("i"); if(i>=MAX-wrong) d.className="lost"; box.appendChild(d);}
+  $("lives").setAttribute("aria-label",`${MAX-wrong} lives left`);
+}
+
+function renderStats(){ $("sWon").textContent=stats.won; $("sLost").textContent=stats.lost; $("sStreak").textContent=stats.streak; }
+
+function newWord(){
+  cur=draw(cat); guessed=new Set(); wrong=0; over=false; hintUsed=false;
+  const tag=$("tag"); tag.textContent=cur.type+(cur.fam?" · word family":"");
+  tag.style.setProperty("--c",`var(${COLORS[cur.type]})`);
+  $("hint").hidden=true; $("msg").hidden=true;
+  document.querySelectorAll(".key").forEach(k=>{k.disabled=false;k.className="key";});
+  renderWord(); renderLives();
+}
+
+function guess(ch){
+  if (over || guessed.has(ch)) return;
+  guessed.add(ch);
+  const k=$("k-"+ch); k.disabled=true;
+  if (cur.w.includes(ch)) k.classList.add("hit");
+  else { k.classList.add("miss"); wrong++; }
+  check(ch);
+}
+
+function check(popCh){
+  const solved=[...cur.w].every(c=>!/[a-z]/.test(c)||guessed.has(c));
+  if (solved) end(true);
+  else if (wrong>=MAX) end(false);
+  renderWord(popCh); renderLives();
+}
+
+function end(won){
+  over=true;
+  document.querySelectorAll(".key").forEach(k=>k.disabled=true);
+  $("hintBtn").disabled=true;
+  if (won){stats.won++;stats.streak++;} else {stats.lost++;stats.streak=0;}
+  renderStats();
+  const m=$("msg");
+  m.style.setProperty("--c", won?"var(--good)":"var(--bad)");
+  m.innerHTML=`<strong>${won?"Well done!":"Oh no, out of lives."}</strong>
+    <span>The word was <b>${cur.w}</b> (${cur.type}).</span>
+    <span class="de">German: ${cur.de}</span>`;
+  m.hidden=false;
+  $("nextBtn").focus();
+}
+
+$("hintBtn").onclick=()=>{
+  if (over||hintUsed||wrong<hintNeed()) return;
+  hintUsed=true; wrong++;
+  const h=$("hint"); h.innerHTML=`German: <b>${cur.de}</b>`; h.hidden=false;
+  $("hintBtn").disabled=true;
+  check();
+};
+$("nextBtn").onclick=newWord;
+
+document.addEventListener("keydown",e=>{
+  if (e.ctrlKey||e.metaKey||e.altKey) return;
+  const k=e.key.toLowerCase();
+  if (/^[a-z]$/.test(k)) { guess(k); e.preventDefault(); }
+  else if (e.key==="Enter" && document.activeElement.tagName!=="BUTTON") { newWord(); e.preventDefault(); }
+});
+
+renderCats(); renderKeys(); renderStats(); newWord();
+</script>
+</body>
+</html>
