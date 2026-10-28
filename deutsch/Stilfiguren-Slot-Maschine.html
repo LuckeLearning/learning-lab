@@ -1,0 +1,494 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0d0f1a">
+<title>Stilfiguren – Slot</title>
+<style>
+:root{
+  --bg:#0d0f1a;--bg2:#151827;--card:#1b1f33;--line:#2a2f4a;
+  --text:#eef0ff;--muted:#8d93b8;
+  --lime:#c6ff3d;--violet:#8b5cff;--pink:#ff4fa3;--cyan:#38e1ff;
+  --ok:#3ee08f;--bad:#ff5d6c;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{min-height:100vh;background:var(--bg);color:var(--text);
+  font-family:"Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  padding:28px 40px 30px;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:-20%;z-index:-1;pointer-events:none;
+  background:
+   radial-gradient(40% 35% at 15% 10%,#8b5cff40,transparent 70%),
+   radial-gradient(35% 30% at 90% 20%,#38e1ff2e,transparent 70%),
+   radial-gradient(40% 35% at 70% 100%,#ff4fa326,transparent 70%);
+  animation:drift 18s ease-in-out infinite alternate}
+body:after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.35;
+  background-image:linear-gradient(#ffffff08 1px,transparent 1px),linear-gradient(90deg,#ffffff08 1px,transparent 1px);
+  background-size:44px 44px;mask-image:radial-gradient(ellipse at center,#000 30%,transparent 80%)}
+@keyframes drift{to{transform:translate(3%,-2%) rotate(3deg)}}
+button{font:inherit;cursor:pointer;color:inherit}
+button:disabled{opacity:.45;cursor:wait}
+button:focus-visible{outline:2px solid var(--lime);outline-offset:4px}
+.app{max-width:1160px;margin:auto}
+
+/* Header */
+.top{display:flex;justify-content:space-between;align-items:center;gap:16px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.02em;font-size:14px}
+.logo i{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-style:normal;
+  background:linear-gradient(135deg,var(--violet),var(--pink));box-shadow:0 0 18px #8b5cff80;font-size:15px}
+.ghost{border:1px solid var(--line);background:#ffffff08;padding:9px 14px;border-radius:999px;font-size:13px}
+.ghost:hover{border-color:#ffffff40}
+.hero{display:flex;justify-content:space-between;align-items:end;gap:24px;margin:34px 0 26px}
+.kicker{font-size:12px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--lime);margin:0 0 10px}
+h1{margin:0;font-size:clamp(44px,7vw,86px);line-height:.9;letter-spacing:-.045em;font-weight:900}
+h1 span{background:linear-gradient(90deg,var(--violet),var(--pink) 55%,var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:var(--muted);margin:14px 0 0;font-size:16px}
+
+/* Scoreboard */
+.score{display:flex;gap:10px}
+.pill{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 16px;min-width:92px}
+.pill small{display:block;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.pill b{font-size:26px;font-weight:800;font-variant-numeric:tabular-nums}
+.pill.streak b{color:var(--lime)}
+.pill.bump{animation:bump .4s ease}
+@keyframes bump{40%{transform:scale(1.12)}}
+
+/* Machine */
+.machine{position:relative;border-radius:28px;padding:26px 30px 28px;
+  background:linear-gradient(160deg,#1d2140,#12152a);border:1px solid #ffffff14;
+  box-shadow:0 30px 80px #0008,inset 0 1px 0 #ffffff14}
+.machine:before{content:"";position:absolute;inset:-1px;border-radius:29px;padding:1px;pointer-events:none;
+  background:linear-gradient(120deg,var(--violet),transparent 30%,transparent 70%,var(--cyan));
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:.7}
+.machine.win{animation:win .7s ease}
+@keyframes win{30%{box-shadow:0 0 0 3px var(--lime),0 0 60px #c6ff3d55}}
+.mtop{display:flex;justify-content:space-between;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.live{display:flex;align-items:center;gap:8px}
+.live:before{content:"";width:7px;height:7px;border-radius:50%;background:var(--lime);box-shadow:0 0 10px var(--lime);animation:blink 1.6s infinite}
+@keyframes blink{50%{opacity:.3}}
+
+.stage{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan);text-align:center;margin:22px 0 12px}
+.reel{position:relative;height:150px;border-radius:20px;overflow:hidden;display:grid;place-items:center;
+  background:#07080f;border:1px solid #ffffff12;box-shadow:inset 0 0 40px #8b5cff22}
+.reel:before,.reel:after{content:"";position:absolute;left:0;right:0;height:42px;z-index:2;pointer-events:none}
+.reel:before{top:0;background:linear-gradient(#07080f,transparent)}
+.reel:after{bottom:0;background:linear-gradient(0deg,#07080f,transparent)}
+.reel .line{position:absolute;left:18px;right:18px;top:50%;height:1px;background:linear-gradient(90deg,transparent,#c6ff3d66,transparent)}
+#term{position:relative;z-index:1;font-size:clamp(34px,6.4vw,76px);font-weight:900;letter-spacing:-.04em;line-height:1.05;padding:0 14px;text-align:center;overflow-wrap:anywhere}
+#term.spinning{animation:roll .065s linear infinite;color:#ffffffb0;filter:blur(1.2px)}
+#term.land{animation:land .45s cubic-bezier(.2,1.4,.4,1)}
+#term.done{background:linear-gradient(90deg,#fff,var(--lime));-webkit-background-clip:text;background-clip:text;color:transparent}
+@keyframes roll{from{transform:translateY(-18px)}to{transform:translateY(18px)}}
+@keyframes land{from{transform:translateY(-30px) scale(.9);opacity:.4}to{transform:none;opacity:1}}
+
+.message{text-align:center;color:var(--muted);font-size:15px;margin:16px 0 0;min-height:22px}
+
+/* Quiz */
+.quiz[hidden]{display:none}
+.answers{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}
+.answer{position:relative;text-align:left;display:flex;flex-direction:column;gap:12px;padding:18px;border-radius:18px;
+  background:var(--card);border:1px solid var(--line);font-size:16px;line-height:1.5;min-height:140px;
+  transition:transform .18s,border-color .18s,background .18s;opacity:0;animation:pop .35s ease forwards}
+.answer:nth-child(2){animation-delay:.07s}.answer:nth-child(3){animation-delay:.14s}
+@keyframes pop{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.answer:hover:not([aria-disabled=true]){transform:translateY(-3px);border-color:var(--violet);background:#222748}
+.letter{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-weight:800;font-size:13px;
+  background:#ffffff10;border:1px solid #ffffff20}
+.note{display:none;font-size:13px;color:var(--muted);border-top:1px solid #ffffff15;padding-top:10px}
+.answer[aria-disabled=true]{cursor:default}
+.answer[aria-disabled=true] .note{display:block}
+.answer.correct{border-color:var(--ok);background:linear-gradient(160deg,#3ee08f1f,var(--card))}
+.answer.correct .letter{background:var(--ok);color:#06210f;border-color:var(--ok)}
+.answer.wrong{border-color:var(--bad);background:linear-gradient(160deg,#ff5d6c1f,var(--card));animation:shake .35s}
+.answer.wrong .letter{background:var(--bad);color:#2a0007;border-color:var(--bad)}
+.answer.dim{opacity:.55}
+@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.feedback{text-align:center;margin-top:14px;font-size:15px;font-weight:600}
+.feedback.ok{color:var(--ok)}.feedback.bad{color:var(--bad)}
+.feedback:empty{display:none}
+
+.reveal{text-align:center;margin-top:12px;min-height:36px}
+.link{display:none;border:0;background:none;color:var(--cyan);font-size:14px;text-decoration:underline;text-underline-offset:4px}
+.link.show{display:inline}
+.solution{display:none;margin:12px auto 0;max-width:760px;padding:14px 18px;border-radius:14px;
+  background:#38e1ff12;border:1px solid #38e1ff40;font-size:16px;line-height:1.55}
+.solution:before{content:"Definition";display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan);margin-bottom:4px}
+.solution.show{display:block;animation:pop .3s ease}
+
+/* Controls */
+.controls{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:18px;margin-top:22px}
+.stat{font-size:13px;color:var(--muted)}.stat.r{text-align:right}
+.spin{border:0;border-radius:999px;padding:17px 40px;font-size:18px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;
+  color:#0d0f1a;background:var(--lime);box-shadow:0 0 0 0 #c6ff3d80,0 10px 30px #c6ff3d40;transition:transform .15s,box-shadow .15s}
+.spin:hover:not(:disabled){transform:translateY(-2px) scale(1.02);box-shadow:0 0 0 6px #c6ff3d22,0 14px 36px #c6ff3d55}
+.spin:active:not(:disabled){transform:scale(.97)}
+.hint{text-align:center;font-size:11px;color:var(--muted);margin:12px 0 0}
+kbd{font:inherit;border:1px solid var(--line);border-radius:5px;padding:1px 6px;background:#ffffff08}
+.track{height:4px;border-radius:4px;background:#ffffff10;margin-top:20px;overflow:hidden}
+#progress{height:100%;width:0;background:linear-gradient(90deg,var(--violet),var(--pink),var(--lime));transition:width .4s}
+
+.bar{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-top:20px;flex-wrap:wrap}
+.seg{display:flex;padding:4px;border-radius:999px;background:var(--bg2);border:1px solid var(--line)}
+.seg button{border:0;background:none;padding:9px 16px;border-radius:999px;font-size:13px;color:var(--muted)}
+.seg button.active{background:#ffffff14;color:var(--text)}
+
+.history{margin-top:26px}
+.history h2{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:0 0 12px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;min-height:34px}
+.chip{font-size:13px;padding:7px 13px;border-radius:999px;background:var(--card);border:1px solid var(--line)}
+.chip.ok{border-color:#3ee08f70}.chip.bad{border-color:#ff5d6c70}
+.chip:first-child{background:#ffffff12}
+.empty{font-size:13px;color:var(--muted);font-style:italic}
+
+footer{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-top:28px;padding-top:18px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+footer .steps{display:flex;gap:18px}
+footer b{color:var(--lime);margin-right:6px}
+
+@media(max-width:820px){
+  body{padding:18px 16px}
+  .hero{flex-direction:column;align-items:start}
+  .machine{padding:20px 16px 22px;border-radius:22px}
+  .answers{grid-template-columns:1fr}
+  .answer{min-height:0;display:grid;grid-template-columns:30px 1fr;gap:12px}
+  .note{grid-column:2}
+  .controls{grid-template-columns:1fr 1fr}
+  .spin{grid-column:1/-1;grid-row:1}
+  .reel{height:125px}
+}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}.answer{opacity:1}}
+</style>
+</head>
+<body>
+<main class="app">
+  <header class="top">
+    <div class="logo"><i>✦</i> Sprache &amp; Wirkung</div>
+    <button class="ghost" id="fullscreenButton">⛶ Vollbild</button>
+  </header>
+
+  <section class="hero">
+    <div>
+      <p class="kicker">Rhetorik · Level up</p>
+      <h1>Stil<span>figuren.</span></h1>
+      <p class="sub">Dreh. Erkenne. Begründe. 29 Stilfiguren warten.</p>
+    </div>
+    <div class="score">
+      <div class="pill"><small>Punkte</small><b id="points">0</b></div>
+      <div class="pill streak" id="streakPill"><small>Streak 🔥</small><b id="streak">0</b></div>
+      <div class="pill"><small>Quote</small><b id="rate">–</b></div>
+    </div>
+  </section>
+
+  <section class="machine" id="machine" aria-label="Stilfiguren-Zufallsgenerator">
+    <div class="mtop"><span class="live">Begriffsroulette</span><span>Erkennen · Auswählen · Verstehen</span></div>
+    <p class="stage" id="stage">Deine nächste Challenge</p>
+    <div class="reel"><div class="line"></div><div id="term">Bereit?</div></div>
+    <p class="message" id="message" role="status">Drück auf Drehen – dann wählst du das passende Beispiel.</p>
+
+    <div class="quiz" id="quizArea" hidden>
+      <div class="answers" id="answers" role="group" aria-label="Wähle das passende Beispiel"></div>
+      <div class="feedback" id="quizFeedback" role="status"></div>
+    </div>
+    <div class="reveal"><button class="link" id="checkButton">Definition anzeigen</button></div>
+    <div class="solution" id="solutionBox" aria-live="polite"></div>
+
+    <div class="controls">
+      <div class="stat" id="leftStat"></div>
+      <button class="spin" id="spinButton">↻ Drehen</button>
+      <div class="stat r" id="rightStat"></div>
+    </div>
+    <p class="hint"><kbd>Leertaste</kbd> drehen · <kbd>A</kbd><kbd>B</kbd><kbd>C</kbd> antworten</p>
+    <div class="track" aria-hidden="true"><div id="progress"></div></div>
+  </section>
+
+  <div class="bar">
+    <div class="seg" role="group" aria-label="Wiederholungsmodus">
+      <button class="active" id="noRepeatButton" aria-pressed="true">Ohne Wiederholung</button>
+      <button id="repeatButton" aria-pressed="false">Mit Wiederholung</button>
+    </div>
+    <button class="ghost" id="resetButton">↺ Zurücksetzen</button>
+  </div>
+
+  <section class="history">
+    <h2>Zuletzt gezogen</h2>
+    <div class="chips" id="history"></div>
+  </section>
+
+  <footer>
+    <div class="steps"><span><b>01</b>Drehen</span><span><b>02</b>Beispiel wählen</span><span><b>03</b>Begründen</span></div>
+    <span>Bonus: Finde ein eigenes Beispiel.</span>
+  </footer>
+</main>
+
+<script>
+const TERMS = [
+    {
+        "term": "Antithese",
+        "explanation": "Entgegenstellung von Gedanken oder Begriffen."
+    },
+    {
+        "term": "Diminutiv",
+        "explanation": "Verkleinerungsform eines Wortes, oft verniedlichend oder abwertend."
+    },
+    {
+        "term": "Euphemismus",
+        "explanation": "Beschönigende Umschreibung eines meist negativen Sachverhalts."
+    },
+    {
+        "term": "Hendiadyoin",
+        "explanation": "Verbindung zweier fast bedeutungsgleicher Wörter, häufig mit „und“."
+    },
+    {
+        "term": "Hyperbel",
+        "explanation": "Starke Übertreibung."
+    },
+    {
+        "term": "Ironie",
+        "explanation": "Das Gegenteil von dem wird gesagt, was eigentlich gemeint ist."
+    },
+    {
+        "term": "Litotes",
+        "explanation": "Verneinung des Gegenteils, um etwas indirekt zu betonen."
+    },
+    {
+        "term": "Metapher",
+        "explanation": "Übertragene, bildhafte Bedeutung eines Wortes."
+    },
+    {
+        "term": "Metonym",
+        "explanation": "Das Gemeinte wird durch einen verwandten Begriff ersetzt."
+    },
+    {
+        "term": "Neologismus",
+        "explanation": "Wortneuschöpfung."
+    },
+    {
+        "term": "Oxymoron",
+        "explanation": "Verbindung zweier scheinbar widersprüchlicher Begriffe."
+    },
+    {
+        "term": "Paradoxon",
+        "explanation": "Scheinbar widersinnige Aussage, die zum Nachdenken anregt."
+    },
+    {
+        "term": "Periphrase",
+        "explanation": "Umschreibung eines Begriffs."
+    },
+    {
+        "term": "Pleonasmus",
+        "explanation": "Doppelte Wiedergabe desselben Sachverhalts."
+    },
+    {
+        "term": "Synonym",
+        "explanation": "Sinnverwandtes Wort."
+    },
+    {
+        "term": "Tautologie",
+        "explanation": "Verdoppelung derselben Bedeutung."
+    },
+    {
+        "term": "Akkumulation",
+        "explanation": "Anhäufung mehrerer Begriffe zu einem Oberthema."
+    },
+    {
+        "term": "Anapher",
+        "explanation": "Wiederholung eines Wortes oder einer Wortgruppe am Satzanfang."
+    },
+    {
+        "term": "Anadiplose",
+        "explanation": "Das letzte Wort eines Satzes wird am Anfang des nächsten Satzes wiederholt."
+    },
+    {
+        "term": "Asyndeton",
+        "explanation": "Aneinanderreihung ohne Bindewörter."
+    },
+    {
+        "term": "Chiasmus",
+        "explanation": "Überkreuzstellung von Satzgliedern oder Gedanken."
+    },
+    {
+        "term": "Ellipse",
+        "explanation": "Auslassung von Wörtern, die zum Verständnis ergänzt werden können."
+    },
+    {
+        "term": "Epipher",
+        "explanation": "Wiederholung eines Wortes oder einer Wortgruppe am Satzende."
+    },
+    {
+        "term": "Inversion",
+        "explanation": "Umstellung der üblichen Wortstellung im Satz."
+    },
+    {
+        "term": "Klimax",
+        "explanation": "Steigernde Anordnung von Wörtern oder Aussagen."
+    },
+    {
+        "term": "Kyklos",
+        "explanation": "Wiederholung eines Wortes oder einer Wendung am Anfang und am Ende."
+    },
+    {
+        "term": "Parallelismus",
+        "explanation": "Gleicher oder sehr ähnlicher Satzbau in aufeinanderfolgenden Sätzen."
+    },
+    {
+        "term": "Polysyndeton",
+        "explanation": "Aneinanderreihung mit wiederholten Bindewörtern."
+    },
+    {
+        "term": "Vergleich",
+        "explanation": "Verbildlichung durch Gegenüberstellung, meist mit „wie“ oder „als“."
+    }
+];
+const EXAMPLES = {"Antithese": [["Die einen reden, die anderen schweigen.", "Reden und Schweigen werden als gegensätzliche Handlungen gegenübergestellt."], ["Aussen herrscht Ruhe, innen tobt der Streit.", "Äussere Ruhe und innerer Streit stehen einander gegenüber."]], "Diminutiv": [["Auf dem Tisch steht ein Häuschen aus Holz.", "Die Endung -chen macht aus Haus die Verkleinerungsform Häuschen."], ["Im Gras sitzt ein Hündchen.", "Die Endung -chen verkleinert das Wort Hund."]], "Euphemismus": [["Die Firma setzt Mitarbeitende frei.", "Freisetzen beschönigt den unangenehmen Sachverhalt der Entlassung."], ["Er hat sich das Geld ausgeliehen – ohne zu fragen.", "Ausgeliehen beschönigt hier, dass er das Geld unerlaubt genommen hat."]], "Hendiadyoin": [["Wir waren Feuer und Flamme für die Idee.", "Feuer und Flamme bilden als Wortpaar gemeinsam den Ausdruck für Begeisterung."], ["Bei der Prüfung wurde mir angst und bange.", "Angst und bange drücken als verbundenes Wortpaar gemeinsam einen Zustand aus."]], "Hyperbel": [["Ich habe dir das schon eine Million Mal erklärt.", "Eine Million Mal ist eine starke, nicht wörtlich gemeinte Übertreibung."], ["In meinem Rucksack liegen tonnenweise Bücher.", "Tonnenweise übertreibt das Gewicht der Bücher stark."]], "Ironie": [["Nach drei verpassten Bussen sagt sie: «Das läuft heute ja hervorragend!»", "Hervorragend meint in dieser Situation das Gegenteil des tatsächlich schlechten Verlaufs."], ["Als sein Freund eine Stunde zu spät kommt, sagt er: «Du bist ja wieder besonders pünktlich!»", "Die scheinbare Anerkennung der Pünktlichkeit meint tatsächlich einen Vorwurf."]], "Litotes": [["Deine Idee ist nicht schlecht.", "Die Verneinung von schlecht drückt eine positive Bewertung aus."], ["Die Aufgabe war nicht ganz einfach.", "Die Verneinung von einfach betont indirekt die Schwierigkeit."]], "Metapher": [["Ein Meer von Lichtern lag vor uns.", "Meer überträgt das Bild einer grossen Wasserfläche auf die vielen Lichter."], ["Zwischen den beiden steht eine Mauer des Schweigens.", "Eine Mauer steht bildhaft für die fehlende Kommunikation."]], "Metonym": [["Heute lesen wir Schiller.", "Der Name des Autors steht für seine Werke."], ["Das ganze Stadion jubelte.", "Der Ort Stadion steht für die Menschen darin."]], "Neologismus": [["Am Wochenende brauche ich eine Portion «Bildschirmpauseglück».", "Bildschirmpauseglück ist ein für diesen Satz neu gebildetes Wort."], ["Er nannte die ständige Suche nach WLAN «Netzsehnsucht».", "Netzsehnsucht wird als neue Bezeichnung für diesen Zustand geschaffen."]], "Oxymoron": [["Es herrschte eine beredte Stille.", "Beredt und Stille verbinden widersprüchliche Bedeutungen in einem Ausdruck."], ["Die Nachricht war ein offenes Geheimnis.", "Offen und Geheimnis widersprechen sich innerhalb der Wortverbindung."]], "Paradoxon": [["Je mehr ich weiss, desto deutlicher erkenne ich mein Nichtwissen.", "Wachsende Erkenntnis scheint zu mehr Nichtwissen zu führen; gemeint ist das Bewusstsein für die Grenzen des Wissens."], ["Nur wer seine Unsicherheit zugibt, kann sicherer werden.", "Unsicherheit einzugestehen scheint der Sicherheit zu widersprechen, kann aber gerade ein Weg dorthin sein."]], "Periphrase": [["Der höchste Berg der Erde liegt im Himalaja.", "Der höchste Berg der Erde umschreibt den Mount Everest, statt ihn beim Namen zu nennen."], ["Die Hauptstadt Frankreichs liegt an der Seine.", "Die Hauptstadt Frankreichs umschreibt den Namen Paris."]], "Pleonasmus": [["Auf der Wiese lag weisser Schnee.", "Weiss ist bereits eine typische Bedeutungseigenschaft von Schnee und wird zusätzlich genannt."], ["Sie stellte das runde Rad an die Wand.", "Rund wiederholt eine Eigenschaft, die im Begriff Rad bereits enthalten ist."]], "Synonym": [["«Beginnen» bedeutet ungefähr dasselbe wie «anfangen».", "Beginnen und anfangen sind sinnverwandte Wörter."], ["«Mutig» und «tapfer» haben eine ähnliche Bedeutung.", "Mutig und tapfer sind sinnverwandte Wörter."]], "Tautologie": [["Das gilt immer und ewig.", "Immer und ewig wiederholen denselben zeitlichen Gedanken."], ["Das ist ganz und gar unmöglich.", "Ganz und gar verstärken einander durch die Verdoppelung desselben Gedankens."]], "Akkumulation": [["Auf dem Tisch lagen Hefte, Stifte, Bücher, Lineale.", "Mehrere Gegenstände zum Oberthema Schulmaterial werden angehäuft."], ["Am Strand fanden wir Muscheln, Steine, Algen, Treibholz.", "Mehrere Begriffe zum Oberthema Strandfunde werden gesammelt."]], "Anapher": [["Wir wollen zuhören. Wir wollen verstehen. Wir wollen handeln.", "Wir wollen wird am Anfang mehrerer aufeinanderfolgender Sätze wiederholt."], ["Hier beginnt der Weg. Hier wächst der Mut. Hier entsteht die Zukunft.", "Hier wird an den Satzanfängen wiederholt."]], "Anadiplose": [["Am Ende blieb Hoffnung. Hoffnung gab ihr Kraft.", "Das letzte Wort des ersten Satzes, Hoffnung, steht am Anfang des zweiten."], ["Sie suchte eine Antwort. Eine Antwort fand sie im Brief.", "Eine Antwort wird vom Satzende an den Anfang des nächsten Satzes übernommen."]], "Asyndeton": [["Er kam, sah, siegte.", "Die Handlungen werden ohne verbindende Konjunktion aneinandergereiht."], ["Sie öffnete die Tür, trat ein, setzte sich.", "Die Teilsätze werden ohne Bindewörter verbunden."]], "Chiasmus": [["Die Kunst ist lang, und kurz ist unser Leben.", "Die Struktur Subjekt – Prädikativ wird zu Prädikativ – Subjekt umgekehrt: Kunst – lang / kurz – Leben."], ["Er liebt die Bücher, die Filme liebt sie.", "Subjekt – Verb – Objekt wird zu Objekt – Verb – Subjekt überkreuzt."]], "Ellipse": [["Noch einen Kaffee?", "Die vollständige Frage, etwa Möchtest du noch einen Kaffee?, wird verkürzt."], ["Endlich Ferien!", "Für einen vollständigen Satz fehlen ergänzbare Wörter, etwa Endlich haben wir Ferien."]], "Epipher": [["Er denkt an morgen. Sie hofft auf morgen. Alle warten auf morgen.", "Morgen steht wiederholt am Ende aufeinanderfolgender Sätze."], ["Wir suchen die Freiheit. Wir verteidigen die Freiheit. Wir feiern die Freiheit.", "Die Freiheit wird jeweils am Satzende wiederholt."]], "Inversion": [["Dunkel war die Nacht.", "Das Prädikativ dunkel steht betont vor dem Verb; üblicher wäre Die Nacht war dunkel."], ["Gross war die Freude.", "Das Prädikativ gross wird gegenüber Die Freude war gross betont vorangestellt."]], "Klimax": [["Sie flüsterte, sprach, schrie.", "Die Lautstärke steigert sich in drei aufeinanderfolgenden Stufen."], ["Er gewann erst die Schulmeisterschaft, dann die Landesmeisterschaft, schliesslich die Weltmeisterschaft.", "Die Bedeutung der gewonnenen Wettbewerbe steigt stufenweise."]], "Kyklos": [["Stille. Nach dem letzten Ton blieb nur Stille.", "Stille rahmt den Textabschnitt am Anfang und am Ende."], ["Freiheit – dafür gingen sie auf die Strasse, für Freiheit.", "Freiheit steht am Anfang und am Ende der Aussage."]], "Parallelismus": [["Der Vater liest die Zeitung. Die Tochter schreibt einen Brief.", "Beide Sätze folgen demselben Bauplan: Subjekt – Verb – Objekt."], ["Am Morgen öffnet sie das Fenster. Am Abend schliesst er die Tür.", "Die Sätze besitzen denselben Aufbau: Zeitangabe – Verb – Subjekt – Objekt."]], "Polysyndeton": [["Und es regnet und es stürmt und es donnert.", "Das Bindewort und wird vor den verbundenen Teilsätzen wiederholt."], ["Sie packte Brot und Käse und Äpfel und Wasser ein.", "Das Bindewort und steht wiederholt zwischen den aufgezählten Gegenständen."]], "Vergleich": [["Das Wasser war klar wie Glas.", "Wie stellt Wasser und Glas hinsichtlich ihrer Klarheit gegenüber."], ["Der Stoff fühlte sich weich wie Seide an.", "Wie verbindet den Stoff mit Seide, um seine Weichheit zu veranschaulichen."]]};
+const DISTRACTORS = {"Antithese": ["Metapher", "Klimax"], "Diminutiv": ["Hyperbel", "Chiasmus"], "Euphemismus": ["Metonym", "Periphrase"], "Hendiadyoin": ["Pleonasmus", "Litotes"], "Hyperbel": ["Vergleich", "Litotes"], "Ironie": ["Hyperbel", "Metonym"], "Litotes": ["Euphemismus", "Ironie"], "Metapher": ["Metonym", "Vergleich"], "Metonym": ["Periphrase", "Hyperbel"], "Neologismus": ["Diminutiv", "Metonym"], "Oxymoron": ["Litotes", "Metapher"], "Paradoxon": ["Ironie", "Hyperbel"], "Periphrase": ["Chiasmus", "Vergleich"], "Pleonasmus": ["Litotes", "Vergleich"], "Synonym": ["Diminutiv", "Neologismus"], "Tautologie": ["Chiasmus", "Neologismus"], "Akkumulation": ["Oxymoron", "Litotes"], "Anapher": ["Anadiplose", "Kyklos"], "Anadiplose": ["Anapher", "Epipher"], "Asyndeton": ["Polysyndeton", "Chiasmus"], "Chiasmus": ["Parallelismus", "Epipher"], "Ellipse": ["Inversion", "Litotes"], "Epipher": ["Anadiplose", "Asyndeton"], "Inversion": ["Ellipse", "Anapher"], "Klimax": ["Akkumulation", "Vergleich"], "Kyklos": ["Anapher", "Epipher"], "Parallelismus": ["Inversion", "Metonym"], "Polysyndeton": ["Asyndeton", "Akkumulation"], "Vergleich": ["Metapher", "Hyperbel"]};
+
+const $ = id => document.getElementById(id);
+const termEl=$("term"), messageEl=$("message"), spinButton=$("spinButton"), checkButton=$("checkButton"),
+      solutionBox=$("solutionBox"), historyEl=$("history"), noRepeatButton=$("noRepeatButton"),
+      repeatButton=$("repeatButton"), resetButton=$("resetButton"), stageEl=$("stage");
+const LETTERS=["A","B","C"];
+
+let noRepeat=true, remaining=[...TERMS], drawn=[], current=null;
+let options=[], answered=false;
+let points=0, streak=0, correctCount=0, answeredCount=0;
+
+const randomItem = l => l[Math.floor(Math.random()*l.length)];
+
+function updateStats(){
+  $("progress").style.width = (new Set(drawn.map(x=>x.t.term)).size/TERMS.length*100)+"%";
+  noRepeatButton.setAttribute("aria-pressed",noRepeat);
+  repeatButton.setAttribute("aria-pressed",!noRepeat);
+  $("leftStat").textContent = noRepeat ? `Gezogen: ${drawn.length} / ${TERMS.length}` : `Gezogen: ${drawn.length}`;
+  $("rightStat").textContent = noRepeat ? `Noch im Topf: ${remaining.length}` : "Mit Wiederholung";
+  $("points").textContent=points;
+  $("streak").textContent=streak;
+  $("rate").textContent = answeredCount ? Math.round(correctCount/answeredCount*100)+"%" : "–";
+}
+function bump(id){const el=$(id).parentElement;el.classList.remove("bump");void el.offsetWidth;el.classList.add("bump")}
+
+function renderHistory(){
+  historyEl.innerHTML="";
+  if(!drawn.length){historyEl.innerHTML='<span class="empty">Deine gezogenen Begriffe erscheinen hier.</span>';return}
+  drawn.slice(-10).reverse().forEach(d=>{
+    const c=document.createElement("span");
+    c.className="chip"+(d.r===true?" ok":d.r===false?" bad":"");
+    c.textContent=(d.r===true?"✓ ":d.r===false?"✗ ":"")+d.t.term;
+    historyEl.appendChild(c);
+  });
+}
+function hideSolution(){checkButton.classList.remove("show");solutionBox.classList.remove("show");solutionBox.textContent=""}
+function clearQuiz(){$("quizArea").hidden=true;$("answers").replaceChildren();const f=$("quizFeedback");f.textContent="";f.className="feedback";options=[];answered=false}
+
+function setMode(m){noRepeat=m;noRepeatButton.classList.toggle("active",m);repeatButton.classList.toggle("active",!m);resetGame()}
+function resetGame(){
+  remaining=[...TERMS];drawn=[];current=null;points=0;streak=0;correctCount=0;answeredCount=0;
+  termEl.className="";termEl.textContent="Bereit?";
+  messageEl.textContent="Drück auf Drehen – dann wählst du das passende Beispiel.";
+  stageEl.textContent="Deine nächste Challenge";
+  hideSolution();clearQuiz();renderHistory();updateStats();
+}
+function chooseFinal(){
+  if(noRepeat && remaining.length===0){remaining=[...TERMS];drawn=[]}
+  const sel=randomItem(noRepeat?remaining:TERMS);
+  if(noRepeat) remaining=remaining.filter(i=>i.term!==sel.term);
+  drawn.push({t:sel,r:null});
+  return sel;
+}
+function lockUI(on){spinButton.disabled=on;[noRepeatButton,repeatButton,resetButton].forEach(b=>b.disabled=on)}
+
+function spin(){
+  if(spinButton.disabled) return;
+  if(current && !answered){streak=0}
+  lockUI(true);hideSolution();clearQuiz();current=null;
+  stageEl.textContent="Auswahl läuft …";
+  termEl.className="spinning";
+  messageEl.textContent="Die Begriffe rollen …";
+  let ticks=0; const max=28+Math.floor(Math.random()*12);
+  const step=()=>{
+    termEl.textContent=randomItem(TERMS).term;
+    ticks++;
+    if(ticks<max){setTimeout(step, 55+Math.pow(Math.max(0,ticks-max+10),2)*4)}
+    else{
+      current=chooseFinal();
+      termEl.className="land done";
+      termEl.textContent=current.term;
+      stageEl.textContent="Deine Stilfigur";
+      messageEl.textContent="Welches Beispiel passt? Wähle A, B oder C.";
+      buildQuiz();checkButton.classList.add("show");
+      renderHistory();updateStats();lockUI(false);
+    }
+  };
+  step();
+}
+
+function buildQuiz(){
+  const names=[current.term,...DISTRACTORS[current.term]];
+  options=names.map(n=>{const [text,reason]=randomItem(EXAMPLES[n]);return {name:n,text,reason}});
+  for(let i=options.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[options[i],options[j]]=[options[j],options[i]]}
+  $("quizArea").hidden=false;
+  options.forEach((o,i)=>{
+    const b=document.createElement("button");b.className="answer";b.type="button";
+    b.innerHTML='<span class="letter"></span><span class="txt"></span><span class="note"></span>';
+    b.querySelector(".letter").textContent=LETTERS[i];
+    b.querySelector(".txt").textContent=o.text;
+    b.addEventListener("click",()=>reveal(i));
+    $("answers").appendChild(b);
+  });
+}
+
+function reveal(sel){
+  if(answered||!current||!options.length) return;
+  answered=true;
+  const ci=options.findIndex(o=>o.name===current.term);
+  [...$("answers").children].forEach((b,i)=>{
+    const o=options[i], ok=i===ci;
+    b.classList.add(ok?"correct":(i===sel?"wrong":"dim"));
+    b.setAttribute("aria-disabled","true");
+    b.querySelector(".note").textContent=(ok?"✓ ":"")+o.name+": "+o.reason;
+  });
+  const f=$("quizFeedback"), last=drawn[drawn.length-1];
+  if(sel===null){
+    f.textContent="Aufgedeckt: Feld "+LETTERS[ci]+" zeigt die "+current.term+".";streak=0;
+  }else{
+    answeredCount++;
+    if(sel===ci){
+      correctCount++;streak++;points+=10+(streak>1?(streak-1)*5:0);
+      f.className="feedback ok";
+      f.textContent=(streak>=3?"🔥 "+streak+"er-Streak! ":"Stark! ")+"+"+(10+(streak>1?(streak-1)*5:0))+" Punkte";
+      last.r=true;$("machine").classList.remove("win");void $("machine").offsetWidth;$("machine").classList.add("win");
+      bump("points");bump("streak");
+    }else{
+      streak=0;f.className="feedback bad";
+      f.textContent="Knapp daneben – das war "+options[sel].name+". Gesucht: Feld "+LETTERS[ci]+".";
+      last.r=false;
+    }
+  }
+  renderHistory();updateStats();
+}
+function checkSolution(){
+  if(!current) return;
+  reveal(null);
+  solutionBox.textContent=current.term+": "+current.explanation;
+  solutionBox.classList.add("show");checkButton.classList.remove("show");
+}
+
+spinButton.addEventListener("click",spin);
+checkButton.addEventListener("click",checkSolution);
+noRepeatButton.addEventListener("click",()=>setMode(true));
+repeatButton.addEventListener("click",()=>setMode(false));
+resetButton.addEventListener("click",resetGame);
+$("fullscreenButton").addEventListener("click",()=>{
+  if(!document.fullscreenElement) document.documentElement.requestFullscreen?.(); else document.exitFullscreen?.();
+});
+document.addEventListener("keydown",e=>{
+  if(["INPUT","TEXTAREA","SELECT"].includes(e.target.tagName)) return;
+  if(e.code==="Space"){e.preventDefault();spin()}
+  const k=e.key.toUpperCase();
+  if(LETTERS.includes(k) && options.length && !answered) reveal(LETTERS.indexOf(k));
+});
+renderHistory();updateStats();
+</script>
+</body>
+</html>
