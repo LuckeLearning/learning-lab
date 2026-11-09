@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Story Slots – Unit 2</title>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{--card:rgba(255,255,255,.18);--white:#fff;}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Fira Sans',sans-serif;min-height:100vh;color:#fff;
+    background:linear-gradient(135deg,#2bb0b8,#36cfc0);overflow-x:hidden;position:relative}
+  svg.bg{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+  :root{--sz:min(170px,24vw,22vh)}
+  .wrap{position:relative;z-index:1;display:grid;grid-template-columns:1fr auto;grid-template-rows:auto 1fr auto;
+    gap:14px;height:100dvh;padding:14px 18px;max-width:1400px;margin:0 auto}
+  .head{grid-column:1/-1;text-align:center}
+  h1{font-weight:600;font-size:clamp(1.2rem,3vh,1.8rem)}
+  .sub{opacity:.9;font-size:clamp(.85rem,2vh,1.05rem)}
+  .stage{background:var(--card);border-radius:14px;padding:12px;min-height:0;
+    display:flex;flex-wrap:wrap;gap:14px;justify-content:center;align-content:center}
+  .slot{width:var(--sz);display:flex;flex-direction:column;align-items:center;gap:6px}
+  .window{width:var(--sz);height:var(--sz);background:#fff;border:3px solid #ddd;border-radius:8px;overflow:hidden;position:relative}
+  .strip{position:absolute;left:0;top:0;width:100%}
+  .cell{height:calc(var(--sz) - 6px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4%}
+  .cell img{width:52%;height:52%;object-fit:contain}
+  .cell .emo{font-size:calc(var(--sz)*.42);line-height:1}
+  .cell .lbl{color:#1d6f75;font-weight:600;font-size:calc(var(--sz)*.1);text-align:center;line-height:1.1;padding:0 4px}
+  .word{font-size:clamp(.85rem,1.9vh,1.05rem);text-align:center;min-height:1.2em;opacity:0;transition:opacity .4s}
+  .word.show{opacity:1}
+  .panel{background:var(--card);border-radius:14px;padding:16px 20px;width:260px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
+  .panel h2{font-weight:400;font-size:1.05rem}
+  select{width:100%;padding:10px;border-radius:40px;border:none;background:rgba(255,255,255,.25);
+    color:#fff;font-size:1rem;font-family:inherit;text-align:center;text-align-last:center;cursor:pointer}
+  select option{color:#000}
+  label{font-size:1rem;display:flex;align-items:center;gap:8px;cursor:pointer}
+  input[type=checkbox]{width:20px;height:20px;accent-color:#2bb0b8}
+  .timeropt{display:none}
+  button{width:100%;padding:11px;border:none;border-radius:40px;background:#fff;color:#222;font-size:1.1rem;
+    font-family:inherit;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.15);transition:transform .1s}
+  button:active{transform:scale(.97)} button:disabled{opacity:.6;cursor:default}
+  .timer{font-size:1.8rem;font-weight:600;display:none}
+  .phrases{grid-column:1/-1;background:var(--card);border-radius:14px;padding:10px 16px}
+  .phrases h3{font-weight:600;font-size:.95rem;margin-bottom:4px}
+  .pgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px 14px}
+  .pgrid h4{font-size:.72rem;opacity:.85;text-transform:uppercase;letter-spacing:.05em}
+  .pgrid li{list-style:none;padding:1px 0;font-size:clamp(.72rem,1.6vh,.9rem);line-height:1.25}
+  .pgrid li span{opacity:.75}
+  @media (max-width:760px){
+    :root{--sz:min(120px,28vw,15vh)}
+    .wrap{grid-template-columns:1fr;grid-template-rows:auto 1fr auto auto;gap:8px;padding:8px 10px}
+    .panel{width:100%;flex-direction:row;flex-wrap:wrap;padding:8px 10px;gap:8px}
+    .panel h2{display:none}
+    .panel select,#start{width:auto;flex:1;padding:8px}
+    .timer{font-size:1.2rem}
+    .pgrid{grid-template-columns:1fr 1fr}
+    .pgrid li span{display:none}
+    .phrases{padding:6px 10px}
+  }
+</style>
+</head>
+<body>
+<svg class="bg" preserveAspectRatio="none" viewBox="0 0 100 100">
+  <g stroke="rgba(255,255,255,.35)" stroke-width=".15" fill="none">
+    <path d="M5 0 L8 25 L0 60"/><path d="M20 0 L30 15 L60 0"/><path d="M33 0 L20 45 L0 100"/>
+    <path d="M60 0 L95 30 L100 25"/><path d="M80 0 L100 15"/><path d="M15 75 L45 100"/>
+    <path d="M40 75 L50 100"/><path d="M70 40 L100 60"/><path d="M85 100 L100 90"/>
+  </g>
+</svg>
+
+<div class="wrap">
+  <div class="head"><h1>Story Slots – Unit 2</h1>
+  <p class="sub">Tell a story in the <b>past tense</b>. Use all the words!</p></div>
+
+  <div class="stage" id="stage"></div>
+
+  <div class="panel">
+    <h2>Anzahl der Slots</h2>
+    <select id="count">
+      <option value="2">2 Slots</option>
+      <option value="3" selected>3 Slots</option>
+      <option value="4">4 Slots</option>
+      <option value="5">5 Slots</option>
+    </select>
+    <label><input type="checkbox" id="useTimer"> Mit Timer spielen</label>
+    <select id="minutes" class="timeropt">
+      <option value="2">2 Minuten</option>
+      <option value="3">3 Minuten</option>
+      <option value="5" selected>5 Minuten</option>
+      <option value="10">10 Minuten</option>
+      <option value="15">15 Minuten</option>
+    </select>
+    <div class="timer" id="timer">5:00</div>
+    <button id="start">&#9655;&nbsp; Start</button>
+  </div>
+
+  <div class="phrases">
+    <h3>💬 Key Phrases – tell your story</h3>
+    <div class="pgrid">
+      <div><h4>Start</h4><ul>
+        <li>Last weekend … <span>– Letztes Wochenende …</span></li>
+        <li>One day … <span>– Eines Tages …</span></li>
+        <li>Yesterday morning … <span>– Gestern Morgen …</span></li>
+        <li>When I was on holiday … <span>– Als ich in den Ferien war …</span></li></ul></div>
+      <div><h4>Go on</h4><ul>
+        <li>First … Then … <span>– Zuerst … Dann …</span></li>
+        <li>After that … <span>– Danach …</span></li>
+        <li>Suddenly … <span>– Plötzlich …</span></li>
+        <li>Because of the … <span>– Wegen des/der …</span></li></ul></div>
+      <div><h4>Useful verbs (past)</h4><ul>
+        <li>I found / lost / forgot … <span>– fand / verlor / vergass</span></li>
+        <li>I bought / got / gave … <span>– kaufte / bekam / gab</span></li>
+        <li>I took / put … in my bag <span>– nahm / legte</span></li>
+        <li>I saw / went / came … <span>– sah / ging / kam</span></li></ul></div>
+      <div><h4>Feelings &amp; end</h4><ul>
+        <li>I was surprised / happy / scared. <span>– überrascht / froh / ängstlich</span></li>
+        <li>It was amazing / horrible! <span>– Es war toll / schrecklich!</span></li>
+        <li>In the end … <span>– Am Ende …</span></li>
+        <li>It was the best day ever! <span>– Der beste Tag überhaupt!</span></li></ul></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ---- Wortliste Unit 2 (Nomen) – hier anpassen ----
+// Format: [Englisch, Deutsch, Emoji, Fluent-Emoji-Name]
+const WORDS = [
+  // Possessions
+  ["bag","Tasche","👜","Handbag"],["umbrella","Regenschirm","☂️","Umbrella"],["camera","Fotoapparat","📷","Camera"],
+  ["watch","Armbanduhr","⌚","Watch"],["key","Schlüssel","🔑","Key"],["wallet","Portemonnaie","👛","Purse"],
+  ["passport","Pass","🛂","Passport control"],["mobile phone","Handy","📱","Mobile phone"],["laptop","Laptop","💻","Laptop"],
+  ["headphones","Kopfhörer","🎧","Headphone"],["sunglasses","Sonnenbrille","🕶️","Sunglasses"],["book","Buch","📖","Open book"],
+  ["guitar","Gitarre","🎸","Guitar"],["bike","Fahrrad","🚲","Bicycle"],["car","Auto","🚗","Automobile"],
+  ["football","Fussball","⚽","Soccer ball"],["ticket","Ticket, Fahrkarte","🎫","Ticket"],["alarm clock","Wecker","⏰","Alarm clock"],
+  ["pen","Stift","🖊️","Pen"],["glasses","Brille","👓","Glasses"],["T-shirt","T-Shirt","👕","T-shirt"],
+  ["trainers","Turnschuhe","👟","Running shoe"],["hat","Hut","🎩","Top hat"],["map","Landkarte, Stadtplan","🗺️","World map"],
+  ["television","Fernseher","📺","Television"],["computer","Computer","🖥️","Desktop computer"],["money","Geld","💵","Dollar banknote"],
+  ["gift","Geschenk","🎁","Wrapped gift"],["teddy bear","Teddybär","🧸","Teddy bear"],["skateboard","Skateboard","🛹","Skateboard"],
+  ["suitcase","Koffer","🧳","Luggage"],["toothbrush","Zahnbürste","🪥","Toothbrush"],
+  // Unit 2 – Auswahl
+  ["sofa","Sofa","🛋️","Couch and lamp"],["teapot","Teekanne","🫖","Teapot"],["pot","Topf","🍲","Pot of food"],
+  ["plant","Pflanze","🪴","Potted plant"],["picture","Bild","🖼️","Framed picture"],["lamp","Lampe","💡","Light bulb"],
+  ["boots","Stiefel","🥾","Hiking boot"],["bottle","Flasche","🍾","Bottle with popping cork"],["gloves","Handschuhe","🧤","Gloves"],
+  ["knife","Messer","🔪","Kitchen knife"],["mountain","Berg","⛰️","Mountain"],["rucksack","Rucksack","🎒","Backpack"],
+  ["torch","Taschenlampe","🔦","Flashlight"],["battery","Batterie, Akku","🔋","Battery"],["motorbike","Motorrad","🏍️","Motorcycle"],
+  ["kite","Drachen","🪁","Kite"],["mug","Becher, Tasse","☕","Hot beverage"],["ship","Schiff","🚢","Ship"],
+  ["neighbour","Nachbar/in","🏘️","Houses"],["rollerskates","Rollschuhe","🛼","Roller skate"],["table tennis","Tischtennis","🏓","Ping pong"],
+  ["necklace","Halskette","📿","Prayer beads"],["earrings","Ohrringe","💎","Gem stone"],["musician","Musiker/in","🎻","Violin"],
+  ["drawer","Schublade","🗄️","File cabinet"],["tourist","Tourist/in","📸","Camera with flash"],["desk","Schreibtisch","✏️","Pencil"],
+  ["first-aid kit","Erste-Hilfe-Kasten","🩹","Adhesive bandage"],["shop assistant","Verkäufer/in","🛍️","Shopping bags"]
+];
+
+const fluent = n => {
+  const file = n.toLowerCase().replace(/[^a-z0-9]+/g,"_") + "_3d.png";
+  return `https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets/${encodeURIComponent(n)}/3D/${file}`;
+};
+const cellHTML = w => `<div class="cell"><img src="${fluent(w[3])}" alt="${w[0]}"
+  onerror="this.outerHTML='<span class=&quot;emo&quot;>${w[2]}</span>'"><span class="lbl">${w[0]}</span></div>`;
+
+const stage = document.getElementById("stage");
+const CELL = 214;
+let slots = [], timerId = null;
+
+function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+function build(n){
+  stage.innerHTML=""; slots=[];
+  const start = shuffle(WORDS).slice(0,n);
+  for(let i=0;i<n;i++){
+    const s=document.createElement("div"); s.className="slot";
+    s.innerHTML=`<div class="window"><div class="strip">${cellHTML(start[i])}</div></div><div class="word"></div>`;
+    stage.appendChild(s); slots.push(s);
+  }
+}
+
+function spin(){
+  const n=slots.length, pick=shuffle(WORDS).slice(0,n); // immer verschiedene Wörter
+  const btn=document.getElementById("start"); btn.disabled=true;
+  slots.forEach((s,i)=>{
+    const strip=s.querySelector(".strip"), word=s.querySelector(".word");
+    word.classList.remove("show");
+    const filler=Array.from({length:18+i*6},()=>WORDS[Math.floor(Math.random()*WORDS.length)]);
+    const cur=strip.lastElementChild.outerHTML;
+    strip.style.transition="none"; strip.style.transform="translateY(0)";
+    strip.innerHTML=cur+filler.map(cellHTML).join("")+cellHTML(pick[i]);
+    const dist=(strip.children.length-1)*strip.firstElementChild.offsetHeight;
+    strip.offsetHeight;
+    const dur=1.6+i*0.6;
+    strip.style.transition=`transform ${dur}s cubic-bezier(.15,.7,.25,1)`;
+    strip.style.transform=`translateY(-${dist}px)`;
+    setTimeout(()=>{word.textContent=pick[i][1];word.classList.add("show");
+      if(i===n-1){btn.disabled=false; startTimer();}},dur*1000);
+  });
+}
+
+function startTimer(){
+  clearInterval(timerId);
+  const t=document.getElementById("timer");
+  if(!document.getElementById("useTimer").checked){t.style.display="none";return;}
+  let sec=+document.getElementById("minutes").value*60;
+  const show=()=>t.textContent=`${Math.floor(sec/60)}:${String(sec%60).padStart(2,"0")}`;
+  t.style.display="block"; t.style.color="#fff"; show();
+  timerId=setInterval(()=>{sec--;show();if(sec<=30)t.style.color="#ffe066";
+    if(sec<=0){clearInterval(timerId);t.textContent="Time's up! ⏰";}},1000);
+}
+
+document.getElementById("count").onchange=e=>build(+e.target.value);
+document.getElementById("useTimer").onchange=e=>{
+  document.getElementById("minutes").style.display=e.target.checked?"block":"none";
+  if(!e.target.checked){clearInterval(timerId);document.getElementById("timer").style.display="none";}
+};
+document.getElementById("start").onclick=spin;
+build(3);
+</script>
+</body>
+</html>
