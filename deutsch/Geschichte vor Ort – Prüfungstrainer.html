@@ -1,0 +1,599 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Geschichte vor Ort – Prüfungstrainer</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700&family=Barlow+Semi+Condensed:wght@500;600;700&display=swap">
+<style>
+/* Layout: schmale Lesespalte, Reiter für die vier Prüfungsteile, Karteikarten zum Aufdecken */
+:root{
+  --bg:#f3f4f8; --paper:#ffffff; --ink:#18213a; --muted:#5b6380; --line:#d9dce8;
+  --blue:#1d3a8f; --red:#b3202f; --blue-soft:#e6ebf8; --red-soft:#f8e6e8; --ok:#2f7a4a; --ok-soft:#e3f2e8;
+  --f-display:"Literata", Georgia, "Times New Roman", serif;
+  --f-body:"Literata", Georgia, serif;
+  --f-ui:"Barlow Semi Condensed", "Arial Narrow", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#10131d; --paper:#181c29; --ink:#e7e9f2; --muted:#9aa1bb; --line:#2c3247;
+  --blue:#8fa8f0; --red:#f08a95; --blue-soft:#1f2740; --red-soft:#3a1f25; --ok:#7fcf9b; --ok-soft:#1c3326; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#10131d; --paper:#181c29; --ink:#e7e9f2; --muted:#9aa1bb; --line:#2c3247;
+  --blue:#8fa8f0; --red:#f08a95; --blue-soft:#1f2740; --red-soft:#3a1f25; --ok:#7fcf9b; --ok-soft:#1c3326; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 48px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.wrap{max-width:820px;margin:0 auto}
+header.top{padding-block:28px 12px;display:grid;gap:6px}
+.flag{display:flex;height:6px;width:72px;border-radius:2px;overflow:hidden}
+.flag i{flex:1}.flag i:first-child{background:var(--blue)}.flag i:last-child{background:var(--red)}
+h1{font-family:var(--f-display);font-size:clamp(1.7rem,4.5vw,2.4rem);line-height:1.15;margin:6px 0 0;text-wrap:balance}
+.sub{color:var(--muted);margin:0;max-width:62ch}
+.meta{font-family:var(--f-ui);font-size:.95rem;color:var(--muted);display:flex;gap:14px;flex-wrap:wrap}
+nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:10px;border-bottom:1px solid var(--line);
+  display:flex;gap:6px;overflow-x:auto;scrollbar-width:thin}
+nav.tabs button{font-family:var(--f-ui);font-weight:600;font-size:1rem;letter-spacing:.02em;white-space:nowrap;
+  border:1px solid var(--line);background:var(--paper);color:var(--ink);padding:7px 12px;border-radius:6px;cursor:pointer}
+nav.tabs button[aria-selected="true"]{background:var(--blue);border-color:var(--blue);color:var(--paper)}
+nav.tabs button:focus-visible,.card button:focus-visible,.tools button:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+.intro{margin:18px 0 6px;color:var(--muted);max-width:66ch}
+.intro b{color:var(--ink)}
+.tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0 14px;font-family:var(--f-ui)}
+.tools button{font-family:var(--f-ui);font-size:.95rem;font-weight:600;border:1px solid var(--line);background:var(--paper);color:var(--ink);padding:6px 11px;border-radius:6px;cursor:pointer}
+.tools .count{color:var(--muted);margin-left:auto}
+.group{font-family:var(--f-ui);text-transform:uppercase;letter-spacing:.08em;font-size:.85rem;font-weight:700;color:var(--red);margin:26px 0 8px}
+.list{display:grid;gap:12px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:16px 18px;min-width:0}
+.card.known{border-color:var(--ok);background:linear-gradient(var(--ok-soft),var(--ok-soft)) top/100% 4px no-repeat,var(--paper)}
+.card .tag{font-family:var(--f-ui);font-size:.85rem;font-weight:600;color:var(--blue);letter-spacing:.03em}
+.card h3{font-family:var(--f-display);font-size:1.12rem;line-height:1.35;margin:4px 0 10px;font-weight:600;text-wrap:balance}
+.card .row{display:flex;gap:8px;flex-wrap:wrap}
+.card .row button{font-family:var(--f-ui);font-weight:600;font-size:.95rem;padding:6px 12px;border-radius:6px;cursor:pointer;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.card .row button.show{background:var(--blue-soft);border-color:var(--blue);color:var(--blue)}
+.card .row button.ok[aria-pressed="true"]{background:var(--ok);border-color:var(--ok);color:var(--paper)}
+.ans{margin-top:14px;padding-top:12px;border-top:1px dashed var(--line);min-width:0}
+.ans p{margin:.4em 0}
+.ans ul{margin:.3em 0 .6em;padding-left:1.2em}
+.ans li{margin:.2em 0}
+.ans h4{font-family:var(--f-ui);font-size:.9rem;text-transform:uppercase;letter-spacing:.07em;color:var(--red);margin:14px 0 4px}
+.ans .note{background:var(--red-soft);border-radius:6px;padding:8px 10px;font-size:.93rem}
+.ans .de{background:var(--blue-soft);border-radius:6px;padding:8px 10px;font-size:.93rem}
+.ans q{font-style:italic}
+.fact{display:grid;grid-template-columns:5.5em 1fr;gap:4px 12px}
+.fact dt{font-family:var(--f-ui);font-weight:700;color:var(--blue);font-variant-numeric:tabular-nums}
+.fact dd{margin:0}
+.exam{display:grid;gap:14px}
+.exam .part{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:14px 18px}
+.exam .part h2{font-family:var(--f-ui);font-size:1rem;text-transform:uppercase;letter-spacing:.07em;color:var(--red);margin:0 0 6px}
+.exam ol{margin:0;padding-left:1.3em}
+.exam li{margin:.35em 0}
+.exam a{color:var(--blue);cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+footer{margin-top:36px;color:var(--muted);font-size:.9rem;font-family:var(--f-ui)}
+@media (prefers-reduced-motion:no-preference){.ans{animation:in .18s ease-out}@keyframes in{from{opacity:.4;transform:translateY(-3px)}to{opacity:1;transform:none}}}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <div class="flag" aria-hidden="true"><i></i><i></i></div>
+  <h1>Geschichte vor Ort</h1>
+  <p class="sub">Prüfungstrainer zum Kurs von Klaus Biedermann (Oktober 2026): Einführung, Balzers, Vaduz, Triesenberg, Unterland, Lawena-Stelen und Handout. Aufgebaut wie die Prüfung: Vermittlung vor Ort, zwei Inhaltsfragen, ein Bildkommentar.</p>
+  <div class="meta"><span id="progress">0 Karten als «sitzt» markiert</span></div>
+</header>
+
+<nav class="tabs" role="tablist" id="tabs"></nav>
+<main id="view"></main>
+
+<footer>Musterantworten stützen sich auf die Kursunterlagen. Ergänzungen, die nicht im Material stehen, sind als «Zusatzwissen» markiert. Deine Markierungen «sitzt» werden nur in diesem Browser gespeichert.</footer>
+</div>
+
+<script>
+const TABS=[
+ {id:"probe",label:"Probeprüfung"},
+ {id:"vermittlung",label:"1 · Vor Ort vermitteln"},
+ {id:"themen",label:"2+3 · Prüfungsthemen"},
+ {id:"weitere",label:"Weitere Inhalte"},
+ {id:"bilder",label:"4 · Bildkommentar"},
+ {id:"zahlen",label:"Jahreszahlen"}
+];
+
+/* ---------- TEIL 1 ---------- */
+const VERMITTLUNG=[
+{g:"Vorteile einer Erkundung vor Ort",items:[
+{q:"Welche Vorteile hat eine Erkundung vor Ort gegenüber Geschichtsunterricht im Klassenzimmer? Begründen Sie mit Beispielen aus dem Kurs.",a:`
+<h4>Kernargumente</h4>
+<ul>
+<li><b>Authentizität des Ortes:</b> Man steht dort, wo es geschah: Schwurplatz Bendern (Treueeid 1699), Gerichtsort Rofaberg, Stolpersteine der Rotters in Vaduz. Der Ort macht Geschichte glaubwürdig und «greifbar».</li>
+<li><b>Topografie erklärt Geschichte:</b> Vom Burghügel Gutenberg sieht man Luzisteig und Ellhorn und versteht sofort deren militärische Bedeutung; der Runde Büchel zeigt, warum man erhöht siedelte (Schutz vor Rheinhochwasser); die Lage Triesenbergs erklärt die Isolation und damit den Dialekterhalt; im Steg sieht man die Siedlungsform rund um die Maiensässwiese.</li>
+<li><b>Mehrere Sinne:</b> Kopien der Bronzefiguren (Mars, Eber, Hirsch) wurden herumgereicht; Kapelle St. Peter in Mäls von innen (Flügelaltar 1516) mit dem Mesmer; Glocken vor der Kirche Bendern zum Anfassen.</li>
+<li><b>Spuren lesen lernen:</b> Inschrift der Jubiläumskirche Balzers, Wandmalerei «Brüder Litscher» am Roten Haus, Strassennamen (Abtwingertweg, Zum St. Johanner, Goldene-Boos-Strasse), Flurnamen am Triesenberg (Guflina, Kulm …). Schüler merken: Geschichte steckt in ihrer Alltagsumgebung.</li>
+<li><b>Verbindung von Mikro- und Makrogeschichte:</b> Der Schwabenkrieg 1499 wird an Schloss Vaduz und Burg Gutenberg konkret; der Dreissigjährige Krieg an den Hexenprozessen am Triesenberg; der Zweite Weltkrieg an der Grenze in Schaanwald.</li>
+<li><b>Menschen statt Strukturen:</b> Fallgeschichten (Christina Bürzle, Familie Haas, Barbara Erni, Gebrüder Rotter) machen abstrakte Begriffe wie Heiratsverbot, Heimatrecht oder Finanzeinbürgerung emotional nachvollziehbar und fördern Empathie.</li>
+<li><b>Identität und Lokalbezug:</b> Schüler kennen die Orte und tragen das Wissen nach Hause; der Bezug zur eigenen Gemeinde erhöht Motivation.</li>
+<li><b>Ausserschulische Expertinnen und Experten</b> (Mesmer, Museum, Gemeindearchiv) und originale Objekte (Fastentuch, Käppchen des ausgesetzten Kindes).</li>
+</ul>
+<h4>Grenzen ehrlich benennen (bringt Punkte)</h4>
+<ul><li>Organisation, Zeit, Wetter, Kosten, Aufsicht.</li><li>Gefahr der Anekdotensammlung ohne roten Faden: braucht Leitfrage, Vor- und Nachbereitung.</li><li>Viele Orte sind verändert oder verschwunden (Zuschgen in Balzers abgerissen, Donatus-Kirchlein, alte Kapelle St. Florin): Der Ort muss mit Quellen und Bildern «aufgeladen» werden.</li></ul>`},
+{q:"Was würden Sie Ihren Schülerinnen und Schülern von den Besichtigungen vermitteln? (So lautet Prüfungsfrage 1.)",a:`
+<p>Tipp: Wähle 2–3 Stationen und nenne jeweils <b>Lernziel</b>, <b>Methode</b> und <b>Gegenwartsbezug</b>. Ein Vorschlag:</p>
+<ul>
+<li><b>Rofaberg (Eschen):</b> Wie funktionierte Recht früher? Gerichtsgemeinde, Landammann, «den Stab brechen», letzte Hinrichtung 1785 (Barbara Erni). Methode: Rollenspiel Gerichtsgemeinde; Vergleich mit heutigem Rechtsstaat (Todesstrafe erst 1989 abgeschafft, Europarat 1978).</li>
+<li><b>St. Peter in Mäls / Christina Bürzle:</b> Wie ging die Gesellschaft mit unehelichen Kindern um? Quellenarbeit mit Zitaten (Hofkanzlei «liederliche Dirne», Zeugin «wie heruntergeschnitten»). Perspektivenwechsel: Mutter, Vater, Behörden, Kind. Gegenwartsbezug: heutige Familienvielfalt, Rechte von Kindern.</li>
+<li><b>Stolpersteine Rotter (Vaduz):</b> Liechtenstein im Nationalsozialismus; Finanzeinbürgerungen zwischen Hilfe und Geschäft; Erinnerungskultur. Methode: Biografiearbeit.</li>
+<li><b>Triesenberg:</b> Migration (Walser um 1300) und Sprache als Identität.</li>
+</ul>
+<div class="de"><b>Bezug zu deinem Fach Deutsch</b> (überzeugt in der Prüfung, weil es echt ist):
+<ul>
+<li>Triesenberger Walserdialekt: Sprachwandel, Mundart vs. Talraum («geisch du» / «goosch du»), Diminutive wie «Öpfelti».</li>
+<li>Namenkunde: Balzers von lat. <i>palatiolum</i>; rätoromanische Flurnamen (Guflina, Runggalina, Lavadina, Kulm); Zuschg/Sust/<i>sosta</i>/Sustenpass; «Tobelhocker»; «Goldene Boos».</li>
+<li>Redewendungen mit Geschichte: «über jemanden den Stab brechen».</li>
+<li>Sage und historischer Kern: Brüder Litscher am Roten Haus (Sage vom Brudermord vs. belegte Schenkung 1525), Goldene Boos und das Männlein in der Truhe, Theodul und die Teufelsglocke.</li>
+<li>Sprachanalyse von Quellen: Landvogt Schuppler 1815 (Vorurteile, Wortwahl), Peter Kaisers «als Bürger, u. nicht als Unterthanen», NS-Propaganda im «Umbruch».</li>
+</ul></div>`},
+{q:"Wie verhindern Sie, dass eine Exkursion zur blossen Aneinanderreihung von Anekdoten wird?",a:`<ul>
+<li><b>Leitfrage</b> für den ganzen Gang, z. B. «Wer gehörte dazu, wer nicht?» (Hintersassen, uneheliche Kinder, Reformierte auf dem Friedhof, jüdische Eingebürgerte, Fahrende wie Barbara Erni).</li>
+<li><b>Vorbereitung</b> im Unterricht (Zeitleiste, Karte), <b>Arbeitsaufträge</b> vor Ort (Inschriften lesen, Fotos, Skizzen), <b>Sicherung</b> danach.</li>
+<li><b>Quellen</b> mitnehmen und am Ort lesen lassen; Multiperspektivität.</li>
+<li><b>Einbettung</b> jedes Einzelfalls in Strukturen (Heiratsverbot 1804, Gemeindegesetze 1842/1864, Dreissigjähriger Krieg).</li>
+<li>Schüler übernehmen selbst Stationen (Expertengruppen).</li></ul>`}
+]},
+{g:"Nachwirkung und Weitergabe",items:[
+{q:"Wie kann das Gehörte nachwirken und weitergegeben werden?",a:`
+<h4>Im Unterricht und darüber hinaus</h4>
+<ul>
+<li>Schülerinnen und Schüler gestalten selbst eine Führung, einen Audioguide, Infotafeln oder einen Podcast für jüngere Klassen oder Eltern.</li>
+<li><b>Oral History:</b> Grosseltern befragen (Rationierung bis 1948, Landdienst 1942–46, Frauenstimmrecht 1984, Dialekt).</li>
+<li>Weiterarbeiten mit Online-Quellen: historisches-lexikon.li, namenbuch.li, eliechtensteinensia.li (z. B. Biedermanns Aufsätze zu Bürzle und den Eheverboten).</li>
+<li>Museumsbesuch zur Vertiefung: Landesmuseum (Bronzefiguren von Gutenberg, Fastentuch von Bendern, Henkelkrug vom Lutzengüetle).</li>
+<li>Eigene Gemeinde erforschen: Strassennamen, Kirchen, Gemeindearchiv.</li>
+</ul>
+<h4>Wie Geschichte im Land selbst nachwirkt</h4>
+<ul>
+<li>Erinnerungszeichen: Stolpersteine für Alfred und Gertrud Rotter, Goldene-Boos-Strasse in Eschen, Peter-Kaiser-Platz, Theodulsglocke im Triesenberger Wappen (seit 1955), Greif im Balzner Wappen (Frauenberger).</li>
+<li>Langes Nachwirken eines Stigmas: Tobelhocker bis fast in die Gegenwart.</li>
+<li>Strukturen von damals gelten heute: Zollvertrag mit der Schweiz 1923, Franken seit 1924, Gemeindegrenze Schellenberg–Ruggell von 1794, Parteien FBP und VU, Ellhorn-Grenze 1948.</li>
+<li>Kontinuität von Mentalitäten: Triesenberg als letzte Gemeinde mit Zonenplan (2000), «freie Walser».</li>
+</ul>
+<h4>Haltung</h4>
+<p>Würdevoller Umgang mit Opfern (Bürzle, Erni, Hexenprozess-Opfer, Rotters): nicht sensationslüstern erzählen, sondern verstehen, warum Menschen ausgegrenzt wurden.</p>`},
+{q:"Welche Station hat Sie persönlich am meisten beeindruckt und warum? Wie würden Sie das didaktisch nutzen?",a:`<p>Hier ist eine persönliche Antwort gefragt. Struktur: <b>Station → was beeindruckt hat → historischer Kontext → Unterrichtsidee</b>.</p>
+<p>Beispiel: Das Käppchen des 1797 in Fläsch ausgesetzten Kindes. Ein kleines Objekt erzählt eine ganze Sozialgeschichte (Ächtung lediger Mütter, Konfession, Behördenwillkür, ungleiche Strafen für Mann und Frau). Unterricht: Objekt zeigen, Hypothesen bilden lassen, dann Quellenzitate ausgeben.</p>`},
+{q:"Warum ist Lokalgeschichte für ein Kleinland wie Liechtenstein besonders ergiebig?",a:`<ul><li>Kurze Wege: Alle Schauplätze liegen nahe; Exkursionen sind realistisch.</li><li>Das Land war Durchgangsland (Handelsweg Italien–Deutschland seit der Römerzeit); europäische Geschichte spiegelt sich unmittelbar: Römer, Franken, Habsburger und Eidgenossen, Napoleon, Deutscher Bund, NS-Zeit.</li><li>Kleinstaat zwischen grossen Nachbarn: Schweiz/Österreich-Orientierung (Zollverträge 1852/1923) ist für Schüler Gegenwart.</li><li>Gut erschlossene Quellen (Landesarchiv, eLiechtensteinensia).</li></ul>`}
+]}];
+
+/* ---------- TEIL 2+3: Prüfungsthemen ---------- */
+const THEMEN=[
+{g:"Vaduz",items:[
+{tag:"Prüfungsthema · Vaduz",q:"Das Vaduzer Amtsviertel: Welche Funktionen hatte es, und wie spiegelt es die Verwaltungs- und Zollgeschichte des Landes?",a:`
+<h4>Lage</h4><p>Südlicher Ortskern von Vaduz, am Hangfuss des Schlosswalds, zwischen Engländerbau (Norden) und Pfarrkirche (Süden).</p>
+<h4>Landesmuseum-Komplex (ehem. Taverne + Amtshaus)</h4>
+<ul>
+<li>Herrschaftliche Taverne, um 1510 erwähnt, Gasthaus «Hirschen», später «Adler», bis 1856.</li>
+<li>Die Wirte waren zugleich <b>Zöllner</b>: Sitz des <b>Hauptzollamts</b>. Erfasst wurden alle Warentransporte auf der Handelsstrasse Chur–Feldkirch.</li>
+<li><b>Zollsystem an Strassenzügen, nicht an Landesgrenzen</b>: Fuhrwerke zahlten Weggeld und je nach Ware Zoll. So bis zum <b>Zollvertrag mit Österreich 1852</b>.</li>
+<li>Bis um 1850 Sitz des <b>Oberamts</b> (Vorläufer der Regierung, zugleich Landgericht): Landvogt, Rentmeister (Kassier), Amtsschreiber. Gerichtssitzungen auf Schloss Vaduz (17. bis Anfang 19. Jh.).</li>
+<li>Beamte meist aus Österreich und Mähren, fühlten sich unwohl. Landvogt <b>Joseph Schuppler</b> (1809–1827) beschrieb die Bevölkerung 1815 sehr abschätzig («sinnlich, falsch, eigennützig …») und bat mindestens fünfmal um Versetzung. Im 18. Jh. residierten Beamte zeitweise in Feldkirch (Palais Liechtenstein).</li>
+<li>1848 wird aus dem Landvogt der <b>Landesverweser</b> → Verweserhaus. 1865–1905 Sitz der Landesregierung.</li>
+<li>Umbau 1968–1971, <b>seit 1972 Landesmuseum</b>, Anbau 2003, Denkmalschutz.</li>
+</ul>
+<h4>Regierungsgebäude (1903–1905)</h4>
+<ul>
+<li>Architekt Gustav Ritter von Neumann (Wien), Neurenaissance/Neubarock, Balzner Marmor, Mosaike aus Innsbruck.</li>
+<li>Kosten 360 000 Kronen (260 000 Darlehen der Sparkassa, 100 000 von Fürst Johann II.) ≈ ein Jahresbudget des Landes.</li>
+<li>Technische Neuerungen: erste Zentralheizung, elektrisches Licht, eines der ersten Telefone.</li>
+<li>Landtagssaal 1905–2008; zeitweise auch Sparkassa (Landesbank), Bank in Liechtenstein (1920, LGT), Historischer Verein, Gefängnis. Restaurierung 1984–1994.</li>
+<li>Peter-Kaiser-Platz: Ort politischer Demonstrationen, z. B. Frauen 1971: «Wir schämen uns für euch».</li>
+</ul>
+<h4>Landtag</h4><p>1862–1867 tagte der Landtag im Gasthaus Kirchthaler («Vaduzer Hof»). 1988 Erhöhung von 15 auf 25 Sitze → Platzbedarf → <b>Landtagsgebäude 2008</b> (Hansjörg Göritz, Hannover; «Hohes Haus» und «Langes Haus»; 35 Mio. Fr.).</p>
+<h4>Deutung</h4><p>Im Amtsviertel sieht man den Weg von der fernen Fürstenherrschaft mit fremden Beamten (Oberamt) über den Konstitutionalismus (1862) zum modernen Parlamentsstaat. Die Bündelung Wirt–Zöllner–Amt zeigt, wie klein und personell verflochten die Verwaltung war.</p>`},
+{tag:"Prüfungsthema · Vaduz",q:"Finanzeinbürgerungen in den 1930er-Jahren: Wer profitierte? Erzählen Sie das Schicksal der Gebrüder Rotter.",a:`
+<h4>Finanzeinbürgerungen</h4>
+<ul>
+<li>In den 1930er-Jahren bürgerte Liechtenstein zahlreiche Personen, viele jüdischer Herkunft, gegen <b>sehr hohe Geldsummen</b> ein.</li>
+<li><b>Profiteure:</b> das damals arme Land und die Gemeinden. Finanziert wurden u. a. der <b>Binnenkanal (1931–1943)</b>, die Teerung der Landstrasse, die Ebenholz-Schule. Auch der Staat schuf so Arbeit.</li>
+<li>Für die Eingebürgerten bedeutete der Pass Schutz, aber keine Garantie (Fall Rotter).</li>
+<li>Folge: Im Deutschen Reich galt Liechtenstein als «judenfreundlich» (Schreiben des Reichssicherheitshauptamts unter Eichmann 1942) → Beunruhigung im Fürstentum.</li>
+</ul>
+<h4>Die Gebrüder Rotter</h4>
+<ul>
+<li>Alfred und Fritz Rotter aus Berlin, jüdisch, <b>1931 in Mauren eingebürgert</b>, wohnten seit Januar 1933 in Vaduz.</li>
+<li>Drahtzieher eines Entführungsversuchs: Architekt <b>Franz Roeckle</b> (baute auch das Vaduzer Rathaus 1932/33 und die Altabach-Häuser nach dem Brand 1907) mit Gesinnungsgenossen. Ziel: Festnahme und Auslieferung ans Deutsche Reich.</li>
+<li><b>April 1933</b>: Entführung ins Gebirge gelingt, Auslieferung scheitert. Auf der Flucht stürzen <b>Alfred und Gertrud Rotter</b> in eine Schlucht und sterben; Fritz überlebt.</li>
+<li>Die Täter erhielten nur milde Gefängnisstrafen.</li>
+<li>Heute erinnern <b>Stolpersteine</b> in Vaduz an Alfred und Gertrud.</li>
+</ul>
+<div class="note"><b>Zusatzwissen (nicht im Kursmaterial):</b> Die Rotters waren bekannte Berliner Theaterunternehmer; die Entführung fand am 5. April 1933 im Gebiet Gaflei statt.</div>
+<h4>Bewertung</h4><p>Ambivalent: Rettung für einzelne Verfolgte, aber in erster Linie Geschäft; zugleich zeigt der Fall, dass NS-Gedankengut schon 1933 im Land Anhänger hatte.</p>`},
+{tag:"Prüfungsthema · Vaduz/Einführung",q:"Parteiengründungen in Liechtenstein: Wann und warum entstanden sie, wie waren sie ausgerichtet (früher und heute)?",a:`
+<h4>Entstehung 1918</h4><p>Am Ende des Ersten Weltkriegs orientierte sich das Land neu: weg vom Kriegsverlierer Österreich (Zollvertrag 1919 gekündigt) hin zur Schweiz (Zollvertrag 1923, Franken 1924). Der Landtag existierte seit 1862, Parteien aber erst seit 1918.</p>
+<h4>Christlich-soziale Volkspartei (1918) – die «Roten»</h4>
+<ul><li>Kopf: Dr. Wilhelm Beck (Triesenberg), Gründer der «Oberrheinischen Nachrichten» 1914 (Vorläufer des «Vaterlands»).</li>
+<li>Für Anlehnung an die Schweiz, Ausbau der Volksrechte, Beschränkung der Fürstenmacht (prägte die Verfassung 1921: Initiative und Referendum nach Schweizer Vorbild).</li>
+<li>Anhänger: Arbeiter, Saisonniers in der Schweiz; stark im Oberland.</li></ul>
+<h4>Fortschrittliche Bürgerpartei FBP (1918) – die «Schwarzen»</h4>
+<ul><li>Konservativer, fürsten- und kirchentreu, Österreich-freundlicher; stark im Unterland.</li>
+<li>Mehrheit seit den Wahlen 1928; Pfarrer Anton Frommelt; in den 1930er/40er-Jahren klare Gegnerin des Nationalsozialismus.</li></ul>
+<h4>1930er-Jahre</h4>
+<ul><li>Erbitterter Parteienstreit der 1920er → <b>Liechtensteiner Heimatdienst 1933</b>: gegen den Parteienstaat, zunehmend autoritär, antisemitisch.</li>
+<li><b>1936</b> Fusion Volkspartei + Heimatdienst = <b>Vaterländische Union (VU)</b>.</li>
+<li><b>Volksdeutsche Bewegung (VDBL) 1938</b>: NS-freundlich, für Anschluss ans Reich; Zeitung «Der Umbruch» 1940–43; Putschversuch März 1939.</li>
+<li>1938 <b>Koalitionsregierung FBP/VU</b> eine Woche nach dem Anschluss Österreichs, auch mit Proporz Oberland/Unterland.</li></ul>
+<h4>Heute</h4><p>FBP und VU bestehen bis heute als die zwei traditionellen Grossparteien; die Farben «schwarz» und «rot» sind geblieben, die alten Gegensätze (Schweiz vs. Österreich, Fürst vs. Volksrechte, Oberland vs. Unterland) haben aber stark an Bedeutung verloren. Beide stehen heute in der bürgerlichen Mitte und haben lange in Koalition regiert.</p>
+<div class="note"><b>Zusatzwissen:</b> Seit den 1980er-Jahren gibt es weitere Parteien, z. B. die Freie Liste (1985) und die Demokraten pro Liechtenstein (2018).</div>`}
+]},
+{g:"Balzers",items:[
+{tag:"Prüfungsthema · Balzers",q:"Umgang mit nicht verheirateten Paaren und unehelichen Kindern: Erzählen und deuten Sie den Fall Christina Bürzle aus Mäls.",a:`
+<h4>Hintergrund</h4><p>Im späten 18. und im 19. Jh. durften arme Menschen oft nicht heiraten (Ziel: «Vermehrung» der Armen verhindern). Uneheliche Kinder entstanden trotzdem. Eltern und Kinder waren bis weit ins 20. Jh. benachteiligt; ledige Mütter wurden geächtet, oft mit Prostituierten gleichgesetzt.</p>
+<h4>Der Fall</h4>
+<ul>
+<li><b>18. September 1797</b>, 1 Uhr nachts: In Fläsch (reformiert, Graubünden) wird ein neugeborenes Mädchen in einem Korb gefunden, in Handtuch, mit Kissen und <b>Käppchen</b> (erhalten, von den Bündner Behörden ans Oberamt Vaduz geschickt).</li>
+<li>Drei Mädchen aus Mäls, die in Fläsch beim Wimmeln halfen, bezeugen Christina Bürzle als Mutter: «es sieht dier so gleich, als wenn es von dier heruntergeschnitten wäre».</li>
+<li>Verhaftung, Verhöre vor dem Oberamt Vaduz (Dez. 1797 – Dez. 1798), <b>132 Fragen</b>. Sie hatte Balzers verlassen, weil «fast alle im Ort» ihr «schimpflich nachgeredt» hätten; man unterstellte ihr sogar Kindstötung. Schwangerschaft verbrachte sie als Hilfskraft bei einer Schweizer Bauernfamilie; bei der Geburt stand ihr niemand bei.</li>
+<li>Vater: <b>Dominik Negele</b> aus Mäls.</li>
+<li>Strafvorschlag der Hofkanzlei Wien: mangels Zuchthaus 6 Wochen Gefängnis, 3 Tage pro Woche Wasser und Brot, Schläge beim Empfang und bei der Entlassung («liederliche Dirne»).</li>
+<li>Rückholversuche: Bündner verlangten Kostgeld zurück; Negele kam Dez. 1798 betrunken zurück; Balzner Entführungspläne scheiterten. Motiv auch: Das Kind sollte nicht <b>reformiert</b> erzogen werden.</li>
+<li>Bürzle starb 31-jährig im Dezember 1803, bevor sie die Strafe antrat. Das Kind wuchs wohl in Fläsch auf; Name und Schicksal unbekannt (keine Fläscher Taufbücher erhalten).</li>
+<li>Negele erhielt ebenfalls Gefängnis, aber rasch ein <b>Begnadigungsgesuch</b> aus Balzers (todkranke Mutter, Arbeitskraft).</li>
+</ul>
+<h4>Deutung</h4>
+<ul><li>Soziale Ächtung als Hauptmotiv der Aussetzung.</li><li>Ungleiche Behandlung von Frau und Mann.</li><li>Konfession wichtiger als Kindeswohl.</li><li>Staat (Oberamt, Wiener Hofkanzlei) greift tief ins Private.</li><li>Quelle: Biedermann, Balzner Neujahrsblätter 2021.</li></ul>`},
+{tag:"Prüfungsthema · Balzers",q:"Rodfuhrwesen: Wie funktionierte der Warentransport durch Bauern, und warum ging er zu Ende?",a:`
+<ul>
+<li>Handelsweg Feldkirch–Chur, überregional Deutschland–Italien (seit über 2000 Jahren).</li>
+<li><b>Rodfuhrwesen:</b> Bauern eines Dorfes transportieren Waren bis ins nächste Dorf, wo die dortigen Bauern übernehmen. Teilnehmen konnte jeder Landwirt mit Wagen und Zugtieren; Aufgebot in festgesetzter <b>Rod (= Reihe)</b>.</li>
+<li>Hauptsächlich <b>Korn und Salz</b>, abgeholt in Feldkirch, etappenweise bis Maienfeld.</li>
+<li><b>Zuschgen</b> = Lagerhäuser und Unterstände (schweizerisch «Sust», ital. <i>sosta</i> → Sustenpass); Übergabe der Ware, Pferdewechsel; daneben Wirtshaus, oft Weggeldstation. Urkunde 1390: Zuschgen in Feldkirch, Schaan, Vaduz, Balzers, Maienfeld; später Schaanwald, Nendeln, Triesen.</li>
+<li><b>Balzers</b> = wichtigster Umladeort (Passstrasse über die Luzisteig), drei Zuschgen bei den Wirtshäusern.</li>
+</ul>
+<h4>Probleme und Ende</h4>
+<ul>
+<li>Schlechte Strassen: um 1510 soll der Balzner Zöllner Löcher füllen; 1772 Landstrasse in Nendeln ein «immerwehrender … Sumpf»; 1793–98 verweigern Fuhrleute das Weggeld.</li>
+<li>Druck von Österreich: Strasse Bregenz–Grenze 1768–71 neu, Liechtenstein muss ab 1782 nachziehen.</li>
+<li>Bauern unzuverlässig, in der Erntezeit nicht verfügbar; liegengelassene Waren → Feldkircher Händler setzen auf <b>professionelle Fuhrleute</b> (längere Strecken).</li>
+<li>Konflikte: um 1645 werfen Schellenberger Fuhrleute österreichische Waren ins Riet; 1793 wird Zuschg-Aufseher Jakob Fehr in Nendeln angegriffen (Halskrause weggerissen).</li>
+<li>Strassenausbau im 19. Jh. → Rodfuhrwesen zu langsam, Ende im frühen 19. Jh.</li>
+</ul>
+<h4>Folgen</h4><p>Verdienstausfall für Bauern und Wirtshäuser, Zuschgen abgerissen (Balzers im 20. Jh.), verstärkte Auswanderung: ca. <b>400 Personen aus Balzers 1845–1930</b>, meist in die USA (mehr als andere Gemeinden); Saisonarbeit in Schweiz, Süddeutschland, Frankreich bis Mitte 20. Jh.</p>`}
+]},
+{g:"Unterland",items:[
+{tag:"Prüfungsthema · Unterland",q:"Heiratsverbot für mittellose Menschen ab 1804: Gründe und Folgen.",a:`
+<h4>Gründe</h4>
+<ul>
+<li>Gesetz 1804: Die Obrigkeit muss <b>jeder Heirat zustimmen</b>.</li>
+<li>Ziel: die «unkontrollierte Vermehrung» armer Leute verhindern.</li>
+<li>Dahinter: Die Gemeinden sind seit dem frühen 16. Jh. zur <b>Armenfürsorge</b> verpflichtet; jede arme Familie belastet die Gemeindekasse und den knappen Gemeindenutzen (Boden, Holz). Krisen: Hungersnot 1816/17 und 1846.</li>
+</ul>
+<h4>Folgen</h4>
+<ul>
+<li>Kinder wurden trotzdem geboren, aber unehelich → Ächtung vor allem der Mütter (vgl. Bürzle in Balzers, Kindsaussetzung).</li>
+<li><b>Heiraten im Ausland</b>: Die katholische Kirche traute solche Paare z. B. in <b>Rom</b> (Franz Anton Haas & Ottilia Scherer 1827; Heiratsurkunde von Kreszentia Knobel & Josef Bauer aus Triesenberg 1852 im Landesarchiv). Nach der Rückkehr drohte Verhaftung.</li>
+<li>Warum der Aufwand? Besonders für die Frau war ein schriftliches Ehedokument Schutz vor dem Vorwurf der Prostitution.</li>
+<li>Heimatlose, Hintersassen, Ausgrenzung durch Gemeinden; Auswanderung.</li>
+<li>Spannungsfeld Staat (Verbot) vs. Kirche (Sakrament, traut trotzdem).</li>
+</ul>
+<p>Literatur: Biedermann, «Die Folgen staatlicher Eheverbote …», Jahrbuch Hist. Verein Bd. 121 (2022).</p>`},
+{tag:"Prüfungsthema · Unterland",q:"Der steinige Weg zur Einbürgerung in Eschen (1842): Franz Anton Haas und Ottilia Scherer.",a:`
+<ul>
+<li>Franz Anton Haas, geb. <b>1798 in Eschen</b>; Eltern nicht sesshaft und heimatlos, Vater Korbflechter.</li>
+<li><b>1827 Heirat in Rom</b> mit Ottilia Scherer (wegen des Heiratsgesetzes von 1804).</li>
+<li>Um 1837 in Eschen, wohnhaft im Haus von <b>Johann Batliner im Ortsteil Aspa</b>.</li>
+<li><b>1842</b> will die Gemeinde die Familie (inzwischen <b>sieben Kinder</b>) loswerden und droht Batliner mit Entzug des Gemeindenutzens.</li>
+<li>Haas wendet sich ans <b>Oberamt Vaduz</b>, das hilft: Eschen muss die Familie als Heimatberechtigte akzeptieren.</li>
+<li>Grundlage: <b>Gemeindegesetz 1842, § 60</b>: «Die dem Lande zugewachsenen fremden Leute, welche nicht mehr entfernt werden können … werden als Hintersassen jener Gemeinde erklärt, in welcher [sie] … ihren ordentlichen Wohnsitz genommen haben.»</li>
+<li><b>Hintersasse</b> = Heimatrecht, aber <b>keine Nutzungsrechte</b>.</li>
+<li><b>Gemeindegesetz 1864</b>: Einkauf in die Nutzungsrechte möglich, aber teuer → viele Hintersassen ohne Lebensgrundlage in der Landwirtschaft → Fabrikarbeit (ab 1860), Auswanderung oder traditionelles Handwerk (Körbe, Besen, Kessel flicken, Dachrinnen).</li>
+</ul>
+<h4>Kontext: Bürger und Gemeinde</h4>
+<ul><li>Politische Gemeinden 1809 aus genossenschaftlichen Nachbarschaften geschaffen (Eschen: Mösma, Schönabüel, Nendeln, Eschen).</li>
+<li>Bürgerrechte: Stimmrecht (eine Stimme pro Haushalt), Nutzung von Gemeindeboden, Bau- und Brennholz. Pflicht: Gemeinwerk.</li>
+<li>Konflikt Land (will Heimatlose versorgt wissen) vs. Gemeinde (will Armenlast vermeiden).</li></ul>`},
+{tag:"Prüfungsthema · Unterland",q:"Einbürgerung von Ehefrauen in früherer Zeit: Was war die Brauteinkaufstaxe?",a:`
+<ul>
+<li>Stammte die Braut aus einer anderen Gemeinde oder dem Ausland, musste der Mann eine <b>Brauteinkaufstaxe</b> bezahlen (Einkauf der Frau in Bürger- und Nutzungsrechte).</li>
+<li>Für Ausländerinnen <b>höher</b> als für Frauen aus einer anderen liechtensteinischen Gemeinde.</li>
+<li>Im 19. Jh. eine echte Hürde; in Schaan zahlten Männer sie teils in Raten («abstottern»).</li>
+<li>Bei Verweigerung: Verlust der Bürger- und Nutzungsrechte für Mann und Familie.</li>
+<li><b>1975 abgeschafft</b>, zuletzt nur noch symbolisch.</li>
+<li>Logik: Gemeindenutzen ist begrenzt, jede neue Bürgerin bedeutet Mitnutzung und mögliche Armenlast.</li>
+</ul>
+<h4>Anschluss an die Gegenwart</h4><p>Bis 1984 erhielt eine Ausländerin bei Heirat mit einem Liechtensteiner sofort das Bürgerrecht. Vor der Abstimmung zum Frauenstimmrecht 1984 wurde das geändert (Angst, Ausländerinnen würden «dominieren»): seither Pass erst nach fünf Jahren Ehe.</p>`},
+{tag:"Prüfungsthema · Unterland",q:"Hexenprozesse: Gründe und Folgen (mit Triesenberg und den Tobelhockern).",a:`
+<h4>Gründe</h4>
+<ul>
+<li><b>Dreissigjähriger Krieg 1618–1648</b>: Machtkampf katholischer Kaiser vs. evangelische Fürsten; Schweden erobern Bregenz, bedrohen das Rheintal; Vaduz, Schaan und Planken zahlen 3000 Gulden gegen Plünderung (Darlehen aus Maienfeld, erst 1757 abbezahlt). Not, Angst, Schuldige gesucht.</li>
+<li><b>Verschuldung</b> der Bevölkerung und der <b>Grafen von Hohenems</b> (Verschwendung, Willkür). Der Besitz Verurteilter konnte eingezogen und verkauft werden → finanzielles Motiv.</li>
+<li>Vorwürfe: böser Blick, Schadenzauber; unter Zwang Geständnisse (vorehelicher Verkehr, Teufelspakt).</li>
+</ul>
+<h4>Ausmass</h4>
+<ul><li>Rund <b>200 Todesurteile</b> bei ca. 3000 Einwohnern; fast gleich viele Männer wie Frauen.</li>
+<li>Triesenberg: 10 Hingerichtete (1679/80), davon 7 Frauen → hohe Opferdichte.</li></ul>
+<h4>Ende</h4>
+<ul><li>Triesner Pfarrer <b>Valentin von Kriss</b> schreibt 1680 an die oberösterreichische Regierung in Innsbruck.</li>
+<li><b>1681</b> verbietet der Kaiser dem Grafen von Hohenems die Prozesse.</li>
+<li>Untersuchung durch Fürstabt von Kempten, <b>Rupert von Bodman</b>; Universität <b>Salzburg</b> erklärt 1682 alle Prozesse für rechtswidrig.</li></ul>
+<h4>Folgen</h4>
+<ul><li>Die Hohenemser sind als Landesherren untragbar → Verkaufsverhandlungen (geleitet vom Fürstabt von Kempten) → <b>1699 Schellenberg, 1712 Vaduz an Liechtenstein → 1719 Reichsfürstentum</b>. Die Hexenprozesse stehen also indirekt am Anfang des heutigen Staates.</li>
+<li><b>Tobelhocker</b>: Hexenverfolger («Brenner», Kläger, Denunzianten) und ihre Nachkommen sollten nach dem Tod ins Triesner Lawenatobel gebannt sein und auch für die Sünden der Vorfahren büssen. Seit 1684 bezeugt, Stigma bis fast in die Gegenwart (Heiratsmarkt!). Beispiel: Die Nachkommen von Christian Bühler (1814 nach Mauren) liessen sich um 1850 vom Triesenberger Pfarrer bescheinigen, nicht von Tobelhockern abzustammen. Ausserhalb Liechtensteins ist keine vergleichbare Tradition bekannt.</li></ul>`},
+{tag:"Prüfungsthema · Unterland",q:"Gerichtsort Rofaberg und Hinrichtungen in Liechtenstein (letztmals 1785).",a:`
+<h4>Gerichtsgemeinde</h4>
+<ul>
+<li>Beim Gasthaus «Hirschen» neben der Kapelle Rofaberg traf sich die <b>Gerichtsgemeinde der Herrschaft Schellenberg</b>, ca. 15. bis frühes 19. Jh. (rund 400 Jahre). Oberland: <b>Lindenplatz Vaduz</b> vor der St.-Florins-Kapelle.</li>
+<li>Alle zwei Jahre an <b>Pfingsten</b> Wahl des <b>Landammanns</b> aus einem Dreiervorschlag der Herrschaft; wahlberechtigt alle Bürger über 16.</li>
+<li>Landammann: leitet Gericht, siegelt Urkunden, vertritt die Landschaft, zieht Steuern ein, leitet die Polizei.</li>
+<li><b>Niedere Gerichtsbarkeit</b> (Schulden, Beleidigung, kleine Diebstähle, Sachbeschädigung; Mai und Herbst) vs. <b>hohe Gerichtsbarkeit</b> (Mord usw.).</li>
+<li>Bei Todesurteil <b>bricht der Landammann seinen Stab</b> → Redewendung «über jemanden den Stab brechen».</li>
+</ul>
+<h4>Hinrichtung</h4>
+<ul>
+<li>Richtstätten: <b>Güdigen (Güedega)</b> oberhalb Eschen nahe Mauren; im Oberland beim <b>Galga</b> an der Grenze Vaduz/Triesen (heute etwa Firma Lova). Schwert oder Strang.</li>
+<li>Scharfrichterfamilie <b>Burkhard</b> in Vaduz, Haus am Dorfrand (Spaniagasse): unehrenhaft, «unrein»; später Wasenmeister (Tierkadaver).</li>
+<li><b>Letzte Hinrichtung 26. Februar 1785</b> in Eschen: <b>Barbara Erni</b> aus Altenstadt bei Feldkirch, Vagabundenfamilie, wegen vieler Diebstähle, mit dem Schwert; einige tausend Zuschauer. Übername «Goldene Boos» (rotblondes Haar; «Boos» = liederliche Frau). Sage: Männlein in der Truhe stahl für sie. Heute Goldene-Boos-Strasse in Eschen.</li>
+<li>Sozialer Hintergrund: Fahrende ohne festen Wohnsitz, als Hausierer, Bettler, mobile Handwerker, teils in die Kriminalität gedrängt.</li>
+</ul>
+<h4>Todesstrafe bis 1989</h4><p>Für Mord vorgesehen; letzte Begnadigung durch den Fürsten 1979 (Mord in Balzers). Beitritt zum <b>Europarat 1978</b> verlangte Frauenstimmrecht (1984) und Abschaffung der Todesstrafe (1989).</p>
+<h4>Rofaberg sonst</h4><p>Zollstation (Weg Eschen–Bendern), Wirtshaus, Pilgerweg (Jakobsweg Feldkirch–Mauren–Eschen–Bendern–Rheinfähre–Toggenburg–Einsiedeln). Heiligkreuz-Kapelle frühes 16. Jh., gotisch; barocker Altar 1649 (Landammann Hans Hoop und Maria Büchel); Glasfenster Martin Häusle (1950er); Glocken 1653 und 1704.</p>`},
+{tag:"Prüfungsthema · Unterland",q:"Gemeinde Schellenberg: Koexistenz mit Ruggell, Nutzungsfragen und Entstehung der Gemeindegrenzen.",a:`
+<ul>
+<li>Einzige Gemeinde mit rein deutschem Namen (Herren von Schellenberg, 12./13. Jh.). Die zwei Burgen gehörten stets dem Landesherrn; 1956 schenkte Fürst Franz Josef II. sie dem Historischen Verein.</li>
+<li>Lange <b>verkehrsmässig isoliert</b> (nur Fuss- und Karrenwege); Fussweg nach Feldkirch seit dem Mittelalter; Zollgrenze seit 1919, Zollhäuschen Hinterschellenberg seit 1987 unbesetzt.</li>
+</ul>
+<h4>Koexistenz mit Ruggell</h4>
+<ul>
+<li>Schellenberg hatte wenig Fläche → durfte das Vieh im <b>Frühling und Herbst bis an den Rhein</b> treiben.</li>
+<li>Gegenleistung: jährlich 1–2 Tage <b>Wuhrbau</b> (Dämme gegen Hochwasser) für Ruggell.</li>
+<li>Umgekehrt nutzten die Ruggeller bei Rheinüberschwemmungen Boden bis weit nach Schellenberg hinauf.</li>
+<li>Jahrhundertelang Streit um den gemeinsamen Boden.</li>
+</ul>
+<h4>Grenzziehung 1794</h4>
+<p>Auf Druck Ruggells <b>Aufteilung des gemeinsamen Besitzes im Verhältnis der Haushaltungen: 82 (Ruggell) zu 49 (Schellenberg)</b>. Schellenberg erhielt Talboden → darum gehört bis heute ein Teil des Rietbodens im Tal zu Schellenberg.</p>
+<h4>Kirchliches</h4>
+<ul><li>Bis 1881 Pfarrei Bendern. Kapelle St. Georg in Hinterschellenberg um 1700 (private Initiative).</li>
+<li>1855/56 erste grössere Kirche; 1858 Kloster der «Schwestern vom Kostbaren Blut» (Ausbildung für Mission in den USA; drei Liechtensteinerinnen gingen), Klosterkirche 1868.</li>
+<li>Heutige Pfarrkirche 1960–63 (Eduard Ladner; Ausstattung Georg Malin): einzige ganz moderne Kirche des Landes, berücksichtigt das <b>Zweite Vatikanum</b> (Priester zum Volk, Landessprache). Alte Kirche 1972 abgerissen; ihre Glocken hängen in der evangelischen Kirche im Ebenholz, Vaduz. Patronin Maria.</li></ul>
+<p>Mai 1945: Holmston-Smyslovsky kam mit ca. 500 Personen über die Grenze bei Hinterschellenberg.</p>
+<div class="note">Im Skript steht, 1956 sei der «250. Geburtstag» der Unabhängigkeit gefeiert worden. <b>Zusatzwissen:</b> Gefeiert wurden 1956 150 Jahre Souveränität (1806). Falls gefragt, kurz erwähnen.</div>`}
+]},
+{g:"Triesenberg",items:[
+{tag:"Prüfungsthema · Triesenberg",q:"Erhalt des Dialekts in Triesenberg: Gründe und Blick in die Zukunft.",a:`
+<h4>Herkunft</h4><p>Walser aus dem <b>Oberwallis</b> wanderten um <b>1300</b> ein (einzelne Familien); erste Erwähnung <b>1355</b> (Kauf von Wald und Teil von Malbun von der Pfarrei Schaan). Grund der Auswanderung vermutlich Bevölkerungsüberschuss; Walser siedelten in Höhenlagen (auch Grosses/Kleines Walsertal, Palfries, Graubünden). Das Gebiet war schon vorher von der romanischen Talbevölkerung genutzt (Flurnamen Guflina, Runggalina, Lavadina, Kulm).</p>
+<h4>Gründe für den Erhalt</h4>
+<ul>
+<li><b>Isolation</b>: bis Mitte 19. Jh. keine befahrbare Strasse; erst 1864–68 Fahrstrasse Vaduz–Meierhof–Triesenberg–Kulm–Steg, Tunnel 1867, Masescha 1874/75, Strasse zum Schloss 1916, bis Triesenberg 1925.</li>
+<li><b>Eigene Identität</b> als «freie Walser» (anfangs befreit von Abgaben an die Landesherren), eigener Heiliger <b>Theodul</b> (Glocke im Wappen seit 1955).</li>
+<li><b>Abgrenzung vom Tal</b>: kirchlich lange benachteiligt («der mindeste Triesner tritt vor dem vornehmsten Triesenberger in die Kirche»), eigene Pfarrei erst 1768.</li>
+<li>Streusiedlung, Viehwirtschaft, eigene Lebenswelt.</li>
+</ul>
+<h4>Merkmale (Beispiele aus dem Kurs)</h4>
+<p>«geisch du» (Tal: «goosch du»), «du steischd, äär schteid», «täuf» (tüüf), «gäära», «d milch würd schnäll süüri», «d haar sind chürtsi», Diminutive «Öpfelti», «Rütelti».</p>
+<h4>Wandel und Zukunft</h4>
+<ul><li>Im 20. Jh. schwinden Verkleinerungsformen, Adjektivendungen u. a.; trotzdem bleibt die Mundart hörbar anders.</li>
+<li>Faktoren für weitere Angleichung: Mobilität, Pendeln, Zuzug, Medien, Tourismus (Malbun), Schule im Tal.</li>
+<li>Faktoren für Erhalt: starkes Gemeindebewusstsein, Stolz auf das Walsertum, Vereine, Dokumentation (Namenbuch, Aufnahmen), Schule kann Dialekt thematisieren.</li>
+<li>Eigene Prognose formulieren: wahrscheinlich weitere Abschwächung, aber als Identitätsmerkmal bewusst gepflegt.</li></ul>
+<div class="de">Als Deutschlehrerin kannst du hier Fachbegriffe einbringen: Sprachinsel, Lautwandel, Diminutiv, Mundart und Standardsprache, Sprachkontakt.</div>`}
+]},
+{g:"Triesen / Lawena",items:[
+{tag:"Prüfungsthema · Lawena",q:"Geschichte der Stromversorgung in Liechtenstein: Ruggell sagte 1911 (noch) Nein …",a:`
+<h4>Vor dem Strom</h4><p>Brunnen, Holz- und Tonrohre, Wasserräder für Mühlen und Sägen; Stickerei in Heimarbeit ab 1840; Textilfabriken nach dem Zollvertrag 1852 (Triesen, Vaduz), zuerst wassergetrieben; Gaswerk in Triesen (1871) für Fabrikbeleuchtung.</p>
+<h4>Schritte</h4>
+<dl class="fact">
+<dt>1883</dt><dd>Textilfabriken Jenny & Spoerry in Triesen und Vaduz erzeugen erstmals Strom (Produktivität, Licht auch für Arbeiterwohnungen, Nachtarbeit).</dd>
+<dt>1887</dt><dd>erste Telefonleitung (Triesen–Vaduz).</dd>
+<dt>1901</dt><dd>Vaduz: erstes öffentliches Elektrizitätswerk (Spoerry-Weiher unter dem Wildschloss), bis 1927.</dd>
+<dt>1902–18</dt><dd>Gasbetrieb in Schaan: Strassenbeleuchtung.</dd>
+<dt>1905</dt><dd>EW Feldkirch lädt ins Gasthaus «Löwen» Bendern zur Infoversammlung.</dd>
+<dt>1906/1911</dt><dd>Mauren bzw. Eschen erhalten Strom aus Feldkirch (Lieferungen 1906–1949, v. a. Unterland).</dd>
+<dt>1911</dt><dd><b>Ruggell lehnt mehrheitlich ab</b>: Elektrifizierung war anfangs umstritten (Kosten, Skepsis gegenüber Neuem, bäuerliche Prioritäten).</dd>
+<dt>1914</dt><dd>Alois Schädler: elektrische Säge in Triesenberg mit Strom für einige Häuser. Landtag befürwortet Lawenawerk; Krieg stoppt das Projekt.</dd>
+<dt>1920/21</dt><dd>landesweites Verteilnetz: Schaan/Planken Ende 1920, Triesenberg/Balzers Winter/Frühling 1921, Triesen und Rest Vaduz Sommer 1921, ab Herbst 1921 Schellenberg, <b>Ruggell</b>, Gamprin. Strom in allen Gemeinden.</dd>
+<dt>1925</dt><dd>Kredit Schweizerische Volksbank 1 Mio. Fr. (⅔ der Kosten); Volksabstimmung 56 % Ja. Devise der Gegner: «Zuerst das Brot, dann das Licht». Opposition v. a. im Unterland (hatte schon Feldkirch-Strom).</dd>
+<dt>1927</dt><dd><b>Lawenakraftwerk</b> in Betrieb, 700 kW; Druckleitung 2058 m vom Wasserschloss Münz zum Maschinenhaus in der Säga, ca. 880 m Gefälle. Vorgeschichte: Messungen Peter Rheinberger 1880, Jakob Ender 1922, Werbefahrt mit Ross und Wagen samt Generator und Lampe, Siemens-Generator mit Sechsspänner 1926.</dd>
+<dt>1932</dt><dd>Vertrag: Mauren und Eschen ins Lawena-Netz (Umspannstation «Pirsch» Schaanwald, 6000 → 10 000 V).</dd>
+<dt>ab 1930</dt><dd>Zweite Industrialisierung: Ramco 1933 Schaan (heute Ivoclar Vivadent), Presta Eschen und Hilti Schaan Ende 1941 (Zulieferer der deutschen Rüstung). Dieselgenerator 800 PS, Leitung von Gisingen über den Eschnerberg; 1943: Verbrauch 3,5 Mio. kWh, +14 % pro Jahr. Seit 1947 «LKW».</dd>
+<dt>1947–49</dt><dd><b>Saminakraftwerk</b>: Landtag 7,5 Mio. Kredit, 90 % Ja (1947), Darlehen Volksbank 7 Mio.; Stausee Steg, Druckleitung 2046 m, 835 m Gefälle; Malbun angeschlossen; Produktion verzehnfacht, Eigenbedarf bis 1956 gedeckt. Anstoss: Presta in Eschen.</dd>
+<dt>1949</dt><dd>Vertrag mit Vorarlberg endet → NOK (heute Axpo).</dd>
+<dt>später</dt><dd>Radio ab 1927, TV ab 1953; Pro-Kopf-Verbrauch 1960–2012 verfünffacht; Erdkabel ab 1970; Lawena-Ausbau 1985–88 auf 3800 kW; Rheinkraftwerke 1981 geplant, 1992 verworfen; Liberalisierung 2004; Samina 2011–15 Pumpspeicherwerk; Windrad Balzers 2017 abgelehnt; 2017 nur noch ca. 20 % Eigenproduktion; Photovoltaik wächst seit 2008.</dd>
+</dl>
+<div class="note">Achtung Widerspruch: Die Einführung sagt «1947 fertiggestellt», die Lawena-Stelen sagen Bau 1947–1949. Sicher: Volksabstimmung 1947, Fertigstellung 1949.</div>
+<h4>Deutung</h4><p>Strom folgt der Industrie (Fabriken zuerst), die Gemeinden folgen; das Unterland hängt lange an Feldkirch; Volksabstimmungen zeigen Skepsis (1925 knapp) und später Konsens (1947). Heute wieder Auslandsabhängigkeit.</p>`}
+]}];
+
+/* ---------- Weitere Inhalte ---------- */
+const WEITERE=[
+{g:"Durchgang durch die Landesgeschichte",items:[
+{q:"Welche Spuren der Ur- und Frühgeschichte haben wir kennengelernt?",a:`<ul>
+<li><b>Lutzengüetle</b> (Eschnerberg, Gamprin): Henkelkrug um 4000 v. Chr. (Jungsteinzeit), heute im Landesmuseum. Grabungen ab 1937 durch den Historischen Verein, fortgesetzt im Zweiten Weltkrieg: In bedrohter Zeit erforschte man die eigenen Wurzeln (Identitätsstiftung).</li>
+<li><b>Balzers</b>: Besiedlung seit dem 5. Jt. v. Chr.; <b>Runder Büchel</b> Gräberfeld 550–250 v. Chr., mind. 31 Personen, Brandbestattung mit Schmuck, Waffen, Keramik.</li>
+<li><b>Bronzefiguren von Gutenberg</b> (1932 entdeckt, vermutlich von Egon Rheinbergers Söhnen): 10 Figuren, 500–100 v. Chr., Weihegaben eines Brandopferplatzes; fünf Krieger mit rätischem Helm, «Mars von Gutenberg» (knapp 13 cm), Eber und Hirsch als Begleiter keltischer Götter.</li>
+<li><b>Römerzeit</b>: ab 15 v. Chr. Provinz Raetia prima (Hauptstadt Chur); <b>Kastell Schaan</b> 4. Jh. n. Chr., ca. 57×60 m, Ecktürme, Sicherung der Strasse Mailand–Augsburg. Darauf im 5. Jh. <b>St. Peter Schaan</b>, älteste Kirche des Landes.</li></ul>`},
+{q:"Von den Landesherrschaften zum Fürstentum: Welche Etappen führten zu Liechtenstein?",a:`<dl class="fact">
+<dt>um 500</dt><dd>Frankenreich (Chlodwig); um 800 Karl der Grosse. Bis 1806 Teil des Heiligen Römischen Reichs.</dd>
+<dt>Mittelalter</dt><dd>Herren von Schellenberg (Unterland), Grafen von Montfort/Werdenberg-Sargans (Oberland).</dd>
+<dt>1342</dt><dd>Grafschaft Vaduz durch Erbteilung; Schloss Vaduz erstmals Sitz eines Landesherrn.</dd>
+<dt>1416</dt><dd>Freiherren von Brandis (aus Bern; auch Maienfeld). 1499 Ludwig von Brandis auf Schloss Vaduz im Schwabenkrieg.</dd>
+<dt>1510</dt><dd>Grafen von Sulz: Rondelle am Schloss; FL bleibt in der Reformation katholisch.</dd>
+<dt>1613</dt><dd>Grafen von Hohenems; Vaduz verliert Residenzfunktion; Hexenprozesse, Verschuldung.</dd>
+<dt>1699</dt><dd>Fürst Johann Adam Andreas (Hans-Adam I.) kauft Schellenberg; 16. März 1699 Treueeid in Bendern.</dd>
+<dt>1712</dt><dd>Kauf der Grafschaft Vaduz. Mitbewerber Bischof von Chur und Fürstabt von St. Gallen boten weniger (sonst wäre FL heute wohl ein Kanton).</dd>
+<dt>1719</dt><dd>Anton Florian: Vereinigung zum Reichsfürstentum; Sitz und Stimme im Reichsfürstenrat (Prestige).</dd>
+<dt>1806</dt><dd>Rheinbund → Souveränität «von Napoleons Gnaden»; «Vitamin B»: Fürst Johann I. als Feldherr auch von Napoleon respektiert (Austerlitz 1805).</dd>
+<dt>1815–66</dt><dd>Deutscher Bund; eigenes Militär 60, später 80 Mann; Schwimmweiher südlich des Schlosses; 1866 Militär aufgelöst (zu teuer). 1871 nicht ins Deutsche Reich: keine Grenze zum Reich, enge Bindung an Österreich.</dd>
+<dt>1938</dt><dd>Franz Josef II. nimmt als erster Fürst Wohnsitz im Land.</dd>
+</dl>`},
+{q:"Was geschah auf dem Schwurplatz in Bendern am 16. März 1699, und warum zögerten die Unterländer?",a:`<ul><li>Huldigung (Treueeid) der Untertanen des Unterlands an Fürst Johann Adam Andreas.</li><li>Schwören mussten alle wehrfähigen Männer ab 16 Jahren sowie die Witwen.</li><li>Stundenlange Verhandlungen mit Landammann und Richtern; erst nach Zusicherung der <b>alten Rechte</b> und dass sie <b>keine Schulden der Hohenemser</b> übernehmen müssen, leisteten sie den Eid.</li><li>Zeigt: Untertanen waren nicht rechtlos, sie konnten verhandeln.</li></ul>`},
+{q:"Liechtenstein im 19. Jahrhundert: Not, Revolution 1848, Verfassung 1862.",a:`<ul>
+<li>Hungersnot 1816/17, abgeschwächt 1846; Unzufriedenheit.</li>
+<li>Fürst Alois II. (1836–58) besucht 1842 als erster regierender Fürst das Land (Volksfest).</li>
+<li><b>1848</b>: Peter Kaiser (1793–1864, Lehrer, Historiker aus Mauren, meist in der Schweiz tätig) führt die Bewegung; sachlich und gewaltfrei; Bittschrift 22. März 1848: «Wir wollen in Zukunft als Bürger, u. nicht als Unterthanen behandelt sein.» In FL wurde nur ein unbeliebter Beamter an die Grenze gestellt.</li>
+<li><b>1862</b> Verfassung (Johann II.): Landtag mit Gesetzgebungskompetenz; Religions-, Versammlungs- und Vereinsfreiheit → Vereine entstehen.</li>
+<li><b>1852</b> Zollvertrag mit Österreich → ab 1860 Textilfabriken (Schweizer Industrielle) in Vaduz und Triesen, zollfreier Export in den österreichisch-ungarischen Raum; Krise im Ersten Weltkrieg.</li>
+<li>Johann II. «der Gute» (1858–1929, längste Regierungszeit) finanzierte Kirchenneubauten (Vaduz, Schaan, Eschen, Ruggell, Balzers), Regierungsgebäude, Fürstensteig.</li></ul>`},
+{q:"Neuorientierung nach dem Ersten Weltkrieg: Was änderte sich?",a:`<ul><li>Lösung vom Kriegsverlierer Österreich; Zollvertrag 1919 gekündigt.</li><li><b>1921</b> Verfassung: Ausbau der Volksrechte, Initiative und Referendum nach Schweizer Vorbild.</li><li><b>1923</b> Zollvertrag mit der Schweiz (gilt bis heute), <b>1924</b> Franken.</li><li>Treibende Kraft: Wilhelm Beck, Volkspartei. Parteiengründungen 1918.</li><li>1920 Gründung der Bank in Liechtenstein; Binnenkanal 1931–43 als Arbeitsbeschaffung.</li></ul>`},
+{q:"Liechtenstein im Zweiten Weltkrieg: Bedrohung, Widerstand, Alltag.",a:`<ul>
+<li>Anschluss Österreichs 12./13. März 1938 → FL grenzt ans Deutsche Reich. Doppelte Bedrohung: Hitlers Aussenpolitik und einheimische NS-Anhänger (VDBL).</li>
+<li>Reaktion: Koalitionsregierung FBP/VU eine Woche nach dem Anschluss (Regierungschef Josef Hoop, Stv. Alois Vogt; Regierungsräte Anton Frommelt und Arnold Hoop, ab 1940 Johann Georg Hasler); Wohnsitz des Fürsten in Vaduz (1938).</li>
+<li>März 1939: Staatsbesuch Franz Josefs II. in Berlin (für Hitler unbedeutend); kurz danach Einmarsch in Prag und <b>gescheiterter Putschversuch</b> der NS-Anhänger (Marsch auf Vaduz).</li>
+<li>Propaganda: «Der Umbruch» (1940–43), Glückwunsch zu Hitlers Geburtstag 1941, antijüdische Hetze 1942 («Wir fordern ein Judenlager!»).</li>
+<li>Widerstand: katholische Kirche (Pfarrer Josef Wachter, Mauren; Sr. Timothea Ganghofer, Zamser Schwestern), Pfadfinder (seit 1931, Mädchen 1932) gezielt gefördert, fürstentreu.</li>
+<li>Alltag: Anbauflächen verdoppelt; Rationierung 1939–1948 (Schweizer Kriegswirtschaft); obligatorischer Landdienst junger Männer 1942–46 (letzter Jahrgang 1929).</li>
+<li>Fürstenhochzeit Gina und Franz Josef II., 7. März 1943, als Lichtblick.</li>
+<li>Krieg nahe: Bombenangriff auf Feldkirch Ende September 1943 (ca. 200 Tote).</li>
+<li>Kriegsende: Flüchtlinge in Schaanwald (3. Mai 1945), Fürstin Gina hilft, gründet das <b>Rote Kreuz</b>; ca. 500 Personen der nationalrussischen Armee unter Holmston-Smyslovsky über Hinterschellenberg (2./3. Mai 1945).</li>
+<li>Pfingsten 1945: Kundgebung mit Galgen in Schaan; Abrechnung mit NS-Anhängern; Alfons Goop (VDBL-Leiter) zu Gefängnis verurteilt, andere kamen glimpflich davon.</li></ul>`}
+]},
+{g:"Balzers",items:[
+{q:"Pfarrkirche St. Nikolaus und Martin in Balzers: Warum gerade dort, und wer bezahlte?",a:`<ul><li>1908–1912, Architekt Gustav Ritter von Neumann (auch Regierungsgebäude, Kirche Schaan); Balzner Marmor (Abbau ab 1869, Export bis Hamburg).</li><li>Bevölkerung 1836–1911 von 910 auf 1532; 1885 noch Gemeinderatsbeschluss gegen den «ganz und gar nicht notwendigen Kirchenbau», Wasserversorgung (Typhus!) hatte Vorrang.</li><li>Kosten 330 000 Kronen, Fürst Johann II. zahlte ⅔ (ca. 220 000); «Fürst-Johann-Jubiläumskirche» (50 Jahre Regierung 1908); Mosaike Tiroler Glasmalerei Innsbruck. Fürst besuchte sie 1919.</li><li>Standort am Burghügel <b>zwischen Balzers und Mäls</b>: neues gemeinsames Zentrum; 1926 erstes Gemeindehaus daneben.</li></ul>`},
+{q:"Burg Gutenberg: Vom habsburgischen Stützpunkt zum Landesbesitz.",a:`<ul><li>Donatus-Kirchlein auf dem Hügel ca. 800 bis 1750. Burg wohl 12. Jh.; nach 1250 Freiherren von Frauenberg (Greif → Balzner Wappen).</li><li>1314–1824 <b>Habsburger</b>; Februar 1499 widersteht sie im Schwabenkrieg der eidgenössischen Belagerung. Folge des Krieges: Schweiz de facto aus dem Reich gelöst, Rhein wird politische Grenze.</li><li>Vögte bis ca. 1750, dann Verfall; 1824 an Gemeinde Balzers, 1854 ans Fürstenhaus; ab 1860 Rebterrassen.</li><li>1905 <b>Egon Rheinberger</b>: Wiederaufbau 1906–10 im Stil der Burgenromantik, Wald gepflanzt, 1920–36 Gastwirtschaft mit Maria Schädler.</li><li>1951 Hermine Kindle de Contreras Torres (Schauspielerin, Triesen/Mexiko); 1979 Land Liechtenstein; Wohnrecht bis 2001, seither im Sommer zugänglich. Kapellenturm nach Vorbild St. Mamerten Triesen.</li></ul>`},
+{q:"St. Luzisteig und Ellhorn: Warum sind sie wichtig?",a:`<ul><li><b>Luzisteig</b>: Pass Balzers–Maienfeld, benannt nach dem hl. Luzius (Missionar 5./6. Jh., Patron von Chur, seit spätem 18. Jh. Landespatron FL); strategisch umkämpft. Schiessübungen setzten den Balzner Wald in Brand (zuletzt Dez. 1985) → 1992 Waffenplatz-Kommission: nur noch nicht brandgefährliche Munition, Lärmbegrenzung.</li><li><b>Ellhorn</b>: 1948 an die Schweiz abgetreten (von dort konnte man das Sarganserland und die Bahn beschiessen); Schweiz bemühte sich schon 1938/39; Tausch gegen gleich grosse Flächen im Fläscher Riet und auf der Mälsner Allmend; in Balzers vehement bekämpft.</li></ul>`},
+{q:"Kapelle St. Peter in Mäls: Baugeschichte und Kunstwerke.",a:`<ul><li>Ursprünglich Privatkapelle eines Gutshofs (evtl. Turmhaus daneben), wie St. Florin in Vaduz.</li><li>Erster Bau um 1300 (Nordteil, vermauerter Westeingang, kleines Fenster); Erweiterung um 1510 mit Altarraum, Eingang nach Norden; Turm um 1600 (zwei Glocken).</li><li>Thronende Muttergottes um 1410/20.</li><li><b>Flügelaltar 1516</b>: Petrus ohne Bart in päpstlicher Kleidung, Buch und Schlüssel; rechts Paulus mit Schwert, links Johannes mit Kelch. Predella: Anna, Maria und Jesuskind, Einfluss der <b>Donauschule</b> (um 1520); vermutlich mehrere Künstler.</li></ul>`}
+]},
+{g:"Vaduz",items:[
+{q:"Schloss Vaduz: Welche Phasen lassen sich unterscheiden?",a:`<ul><li>Um 1200 Anfänge; 1342 Sitz des Grafen von Vaduz. Burgen = Herrschaftssicherung und Kontrolle der Verkehrswege.</li><li>1499 Schwabenkrieg: Kaiser Maximilian wollte Reichssteuern und -gerichtsbarkeit durchsetzen; die Eidgenossen wehrten sich. Ludwig von Brandis (Berater des Kaisers) → Vaduz auf Reichsseite → Schweizer zerstören grosse Teile des Schlosses.</li><li>16. Jh. Grafen von Sulz: zwei halbrunde Rondelle mit bis 5 m dicken Mauern gegen Feuerwaffen.</li><li>1613 Hohenems → keine Residenz mehr; 17.–frühes 19. Jh. Gerichtssitzungen des Oberamts; 18. Jh. Verfall, Gefängnis, zeitweise Wirtshaus.</li><li>1905–1914 Wiederaufbau (Burgenromantik); seit 1938 Residenz der Fürstenfamilie.</li></ul>`},
+{q:"Kirche St. Florin und die kirchliche Selbständigkeit von Vaduz.",a:`<ul><li>Kapelle St. Florin seit gut 1000 Jahren, gehörte zu einem Herrenhof; ab 1342 Begräbnisort der Landesherrschaft; zwei <b>Hofkapläne</b> für das Seelenheil der Herrschaft, lebten von Abgaben und herrschaftlichem Weinbau.</li><li>Vaduz gehörte zur <b>Pfarrei Schaan</b> (Taufe, Heirat, Begräbnis dort; langer Weg). Ab 1837 eigene Kirchenbücher, <b>1873 eigene Pfarrei</b>.</li><li>Neubau 1868–1873, neugotisch, Friedrich von Schmidt (Wiener Rathaus). 205 000 Gulden, Fürst Johann II. zahlte 164 000 (ca. 80 %), Gemeinde 41 000; Bevölkerung leistete Fronarbeit (1869 über 200 Arbeiter). Einweihung 5. Oktober 1873 (Geburtstag Johanns II.). Steine der alten Kapelle für Rheindämme.</li><li>1960er Renovation, Fenster nach Entwürfen Martin Häusles (umgesetzt 1966 von Tochter Margarethe); Orgel entworfen von Josef Gabriel Rheinberger. Heute Kathedrale.</li></ul>`},
+{q:"Friedhofswesen und Fürstliche Gruft: Was erzählt der Fall des reformierten Geisshirten 1799?",a:`<ul><li>Gemeindefriedhof Vaduz seit 1844. Bis in die 1950er-Jahre wurden Reformierte zur Beerdigung in die Schweiz gebracht.</li><li>3. November 1799: Ein reformierter Geisshirt aus Sennwald (30 Jahre, mittellos) stirbt in Vaduz. Schaaner Pfarrer und Vaduzer Hofkapläne verweigern die Bestattung; Überführung unmöglich, weil Franzosen den Rhein sperren (Krieg). Landvogt Franz Xaver Menzinger: Auch er sei «nach dem Ebenbild Gottes erschaffen». Bestattung in Vaduz, aber <b>ohne Glockengeläut</b>.</li><li><b>Fürstliche Gruft</b> 1960 (Architekt Hans Rheinberger): Alte Grablege in Wranau (Mähren) nach Enteignung nach 1945 verloren, Fürst seit 1938 in Vaduz. Erste Beisetzung 1989: Fürstin Gina und Franz Josef II.</li></ul>`},
+{q:"Frauenstimmrecht in Liechtenstein: Etappen und Hintergründe.",a:`<dl class="fact"><dt>1968</dt><dd>Konsultativabstimmung: Frauen knapp dafür, Männer klar dagegen.</dd><dt>1971</dt><dd>Nein → Demonstration vor dem Regierungsgebäude: «Wir schämen uns für euch».</dd><dt>1973</dt><dd>erneut Nein.</dd><dt>1976–86</dt><dd>Gemeinden dürfen es einführen (zuerst Vaduz, zuletzt Balzers, Triesen, Triesenberg).</dd><dt>1978</dt><dd>Europaratsbeitritt mit Versprechen der Einführung.</dd><dt>1. 7. 1984</dt><dd>Ja mit 51,3 % der Männer. Vorher Gesetzesänderung: Ausländerinnen erst 5 Jahre nach Heirat eingebürgert.</dd></dl>`},
+{q:"Altabach, Rotes Haus und die «drei Landesnöte».",a:`<ul><li>Gasthaus Kirchthaler («Vaduzer Hof»): Landtag 1862–67; Wirt Franz Anton Kirchthaler selbst Abgeordneter.</li><li><b>Dorfbrand Altabach 1907</b>; Neubauten aus Stein (Franz Roeckle).</li><li>Drei Landesnöte: <b>Rhein</b> (Überschwemmung), <b>Rüfe</b> (Steinlawinen), <b>Föhn</b> (Brandgefahr bei Holz- und Schindelhäusern).</li><li><b>Rotes Haus</b>: 1525–1807 Kloster St. Johann im Toggenburg (Strassennamen Abtwingertweg, Zum St. Johanner), Weinbau mit Torkel; 1807 Familie Rheinberger; Wohnturm 1902–05 von Egon Rheinberger. Sage der Brüder Litscher (Brudermord um Hühner, um 1500) vs. Beleg: Josef Litscher übertrug das Haus 1525 dem Kloster, war da schon in Österreich.</li><li>Öffentliche Brunnen, unterhalten von Nachbarschafts-Genossenschaften; 1910 Rohrleitungen, Versorgung der Haushalte (Seuchenschutz).</li></ul>`}
+]},
+{g:"Triesenberg",items:[
+{q:"Masescha: Kapelle St. Theodul und kirchliche Organisation der Walser.",a:`<ul><li>Erster Siedlungsmittelpunkt um 1300; Kapelle St. Theodul wohl bald nach 1300; Chor mit Malereien um 1450 (Christus als Weltenrichter).</li><li>Seitenaltar um 1620 mit Pestheiligen <b>Sebastian</b> (römischer Soldat, 3. Jh., Pfeile) und <b>Rochus</b> (Pestbeule am Oberschenkel); Pest 14.–17. Jh.; Kapelle Nendeln 1640 ebenso geweiht.</li><li>Theodul: um 375 erster Bischof von Octodurum (Martigny); Legende: Teufel trägt die Glocke von Rom nach Sitten. Glasfenster August Wanner 1950; Glocken nach 1450 und 1859 (Feldkirch).</li><li>Bis 1768 Süden zur Pfarrei Triesen, Norden (Prufatscheng, Fromahus, Rotaboda) zu Schaan. 1689 Stiftung von Kriss für Wochengottesdienst (nur kurz wirksam). 1768 eigene Pfarrei und Kirche im heutigen Zentrum (Klagen über Abwesenheit bei Gottesdienst und Unterricht).</li><li>Siedlungsentwicklung: Einzelhöfe → Weiler (Karte 1756: Masescha, Litzi, Prufatscheng, Rotaboda); Tendenz nach unten.</li><li>Fürstensteig 1897/98 (Gaflei–Drei Schwestern, 6,4 km), 40 Jahre Johann II., von ihm bezahlt.</li></ul>`},
+{q:"Steg: Was erklärt die Siedlungsform, und welche Rolle spielt der Ort für die Energieversorgung?",a:`<ul><li>Gross-Steg (Nord) und Klein-Steg (Süd): Häuser umschliessen wie ein Zaun eine unverbaute Wiese, deren Nutzung den Haushalten zugeteilt war.</li><li><b>Maiensäss</b>: Vieh im Mai in den Steg, im Sommer auf die Alpen.</li><li>Viehwirtschaft dominant, kaum Ackerbau → Ernährungsnot im Ersten Weltkrieg; Mehranbau in den 1930ern und im Zweiten Weltkrieg (Kartoffeln, Getreide, Mais).</li><li>Tunnel 1867 («s'alt Tunäll») und neuer Tunnel 1946/47 (Alpwirtschaft, Bau Stausee und Saminakraftwerk).</li><li>Samina: Wasser aus Valüna und Malbun im Stausee Steg, über Masescha per Druckleitung ins Kraftwerk Vaduz; heute Pumpspeicherwerk.</li><li>Triesenberg hat seit 1921 Strom (bis 1927 aus Feldkirch, dann Lawena).</li><li>Raumplanung: Baugesetz 1947; Zonenpläne: Vaduz 1954 zuerst, <b>Triesenberg 2000 als letzte</b>, nur auf Druck der Regierung («freies Walsertum»).</li></ul>`}
+]},
+{g:"Unterland",items:[
+{q:"Kirchhügel Bendern: Kloster St. Luzi, Kirche Mariä Himmelfahrt, Fastentuch.",a:`<ul><li>Westlichster Ausläufer des Eschnerbergs; drei alte Pfarreien im Unterland: Bendern, Eschen, Mauren. Zu Bendern gehörten Schellenberg, Ruggell und über dem Rhein Haag, Salez, Sennwald (1564 reformiert).</li><li>Ab ca. 1200 im Besitz des Klosters <b>St. Luzi Chur</b>; 1538 Mönche aus Chur vertrieben → Kloster in Bendern bis 1636; Pfarrer bis ca. 1800. Wohnbau mit Treppengiebel = heutiges Pfarrhaus; Pfarrstall = Liechtenstein-Institut.</li><li>Siedlung seit 5./6. Jh., Kirche 7./8. Jh., Kern um 1300; Ablassbrief 1325; Neuweihe 1481 (Sternrippengewölbe); Turm 1509 (Mauern 2 m); neugotischer Umbau 19. Jh.; Chorfenster Josef Seger um 1970.</li><li>Alte Glocken vor dem Eingang: 1509 (Kiesling/Folmer, Biberach, «Anno Domini M CCCCC IX»), 1663 (Sturzenegger, Feldkirch), kleinste aus dem 14. Jh.</li><li><b>Fastentuch 1612</b>: Szenen aus dem Leben Jesu, wohl Feldkircher Künstler; «Bibel» für Analphabeten (Schulpflicht erst 1805); verschwunden, 1947 auf dem Heuboden des Pfarrstalls gefunden (Pfarrer Albert Schlatter), 1971 in Wien restauriert; Original im Landesmuseum, Kopie in Bendern.</li></ul>`}
+]}];
+
+/* ---------- Bilder ---------- */
+const BILDER=[
+{p:2,t:"Henkelkrug vom Lutzengüetle",a:`<p><b>Was:</b> Rekonstruierter Henkelkrug mit eingeritzten Verzierungen, um 4000 v. Chr. (Jungsteinzeit), Lutzengüetle, Gamprin-Bendern; Landesmuseum.</p><p><b>Kontext:</b> einer der ältesten Siedlungsorte; Grabungen ab 1937 durch den Historischen Verein, während des Zweiten Weltkriegs fortgesetzt.</p><p><b>Pointe:</b> In der Bedrohung von aussen erforschte das Land seine eigenen Anfänge: Archäologie als Identitätsstiftung.</p>`},
+{p:3,t:"Modell des römischen Kastells Schaan",a:`<p><b>Was:</b> Kastell aus dem 4. Jh. n. Chr., ca. 57×60 m, Ecktürme, Tor im Norden; markiert: Lage von St. Peter.</p><p><b>Kontext:</b> ab 15 v. Chr. römisch, Provinz Raetia prima (Chur); Sicherung der Strasse Mailand–Augsburg.</p><p><b>Pointe:</b> Kontinuität des Ortes: Auf den Mauern entstand im 5. Jh. St. Peter, die älteste Kirche des Landes. Durchgangsland seit 2000 Jahren.</p>`},
+{p:4,t:"Übersicht der Landesherrschaften",a:`<p><b>Was:</b> Liste: Herren von Schellenberg, Grafen von Montfort/Werdenberg/Sargans, Vaduz 1342, Brandis 1416, Sulz 1510, Hohenems 1613, Liechtenstein 1699/1712; dazu «Volk: 1848 / 1862 / 1921».</p><p><b>Pointe:</b> Wechselnde, meist ortsabwesende Herren; die Bevölkerung war lange leibeigen und erkämpfte erst im 19./20. Jh. Mitbestimmung (Revolution 1848, Verfassungen 1862 und 1921).</p>`},
+{p:5,t:"Fürst Johann Adam Andreas (Hans-Adam I.)",a:`<p><b>Was:</b> Porträt des Fürsten, der 1699 Schellenberg und (in seinem Todesjahr) 1712 Vaduz erwarb.</p><p><b>Kontext:</b> Verkauf nach dem Ende der Hohenemser (Hexenprozesse, Schulden); Bischof von Chur und Fürstabt von St. Gallen boten weniger.</p><p><b>Pointe:</b> Ohne diesen Kauf wäre das Gebiet wohl heute Teil eines Schweizer Kantons. Schwurplatz Bendern 1699.</p>`},
+{p:6,t:"Fürst Anton Florian",a:`<p><b>Was:</b> Porträt; 1719 Vereinigung von Vaduz und Schellenberg zum Reichsfürstentum Liechtenstein.</p><p><b>Pointe:</b> Der Staat entstand, damit das Fürstenhaus Sitz und Stimme im Reichsfürstenrat erhielt (Prestige); die Fürsten lebten weiter in Wien und Mähren.</p>`},
+{p:7,t:"Austerlitz, Dezember 1805",a:`<p><b>Was:</b> Gemälde: Napoleon, Kaiser Franz von Österreich und Fürst Johann I. von Liechtenstein auf dem Schlachtfeld.</p><p><b>Kontext:</b> Französische Revolution 1789, Napoleon Kaiser 1804, Auflösung des Reichs 1806.</p><p><b>Pointe:</b> «Vitamin B»: Johann I. war auch bei Napoleon respektiert → Aufnahme in den Rheinbund 1806 → Souveränität.</p>`},
+{p:8,t:"Karte Deutscher Bund 1815–1866",a:`<p><b>Was:</b> Karte des Deutschen Bundes mit Liechtenstein.</p><p><b>Kontext:</b> Wiener Kongress 1815; Pflicht zur Truppenstellung: Militär 60, später 80 Mann; Weiher zum Schwimmenlernen.</p><p><b>Pointe:</b> 1866 Ende des Bundes, Militär aufgelöst (zu teuer); 1871 blieb FL unabhängig, weil es nicht ans Deutsche Reich grenzte und eng mit Österreich verbunden war.</p>`},
+{p:9,t:"Fürst Alois II. und Peter Kaiser",a:`<p><b>Was:</b> Porträts von Peter Kaiser (1793–1864) und Fürst Alois II. (1796–1858).</p><p><b>Kontext:</b> 1842 erster Fürstenbesuch im Land; Hungerjahre 1816/17 und 1846; Revolution 1848.</p><p><b>Pointe:</b> Gegenüberstellung von Herrscher und Volksvertreter: Kaiser führte die Bewegung gewaltfrei und sachlich.</p>`},
+{p:10,t:"März 1848: «Wir wollen … als Bürger»",a:`<p><b>Was:</b> Handschriftliches Zitat aus Peter Kaisers Schreiben an den Fürsten vom 22. März 1848: «Wir wollen in Zukunft als Bürger, u. nicht als Unterthanen behandelt sein.»</p><p><b>Pointe:</b> Kernforderung der Revolution: Vom Untertanen zum Bürger. Ergebnis langfristig: Verfassung 1862. In FL nur ein Beamter «an die Grenze gestellt». Peter-Kaiser-Platz in Vaduz.</p>`},
+{p:11,t:"Fürst Johann II.",a:`<p><b>Was:</b> Porträt des Fürsten (1858–1929), mit «Verfassungen 1862 und 1921».</p><p><b>Pointe:</b> Längste Regierungszeit, «der Gute»: Verfassung 1862 (Landtag, Freiheitsrechte), 1921 Volksrechte; finanzierte Kirchen (Vaduz 80 %, Balzers ⅔), Regierungsgebäude, Fürstensteig. Besuchte das Land selten (z. B. 1919).</p>`},
+{p:12,t:"Weberei Jenny, Spoerry & Cie. in Triesen",a:`<p><b>Was:</b> Fabrik hinter der alten Marienkapelle in Triesen.</p><p><b>Kontext:</b> Zollvertrag mit Österreich 1852 → ab 1860 Schweizer Textilfabriken, zollfreier Export; ab 1883 eigener Strom; Fussmarsch bis zwei Stunden.</p><p><b>Pointe:</b> Erste Industrialisierung; Krise im Ersten Weltkrieg (keine Rohstoffe). Bild zeigt Spannung Tradition (Kapelle) / Moderne (Fabrik).</p>`},
+{p:13,t:"Wilhelm Beck",a:`<p><b>Was:</b> Porträt des Triesenberger Juristen und Politikers.</p><p><b>Pointe:</b> Treibende Kraft der Neuorientierung zur Schweiz (Zollvertrag 1923, Franken 1924), Gründer der «Oberrheinischen Nachrichten» (1914) und Kopf der Volkspartei (1918), Verfassung 1921 mit vielen Volksrechten.</p>`},
+{p:14,t:"Fürst Franz I., Fürstin Elsa, Pfarrer Anton Frommelt",a:`<p><b>Was:</b> Foto 1929; links Pfarrer Frommelt.</p><p><b>Pointe:</b> Franz I. folgte 1929 seinem Bruder Johann II. Frommelt (FBP, Mehrheit seit 1928, Landtag, Regierung) prägte die klare Haltung der Bürgerpartei gegen den Nationalsozialismus.</p>`},
+{p:15,t:"Übersicht der Parteien",a:`<p><b>Was:</b> Christlich-soziale Volkspartei 1918 (rot), FBP 1918 (schwarz), Heimatdienst 1933, VU 1936 (VP+LHD), VDBL 1938.</p><p><b>Pointe:</b> Parteien als Folge der Neuorientierung 1918; Radikalisierung in den 1930ern; Fusion zur VU; NS-Bewegung VDBL. Siehe Prüfungsthema Parteien.</p>`},
+{p:16,t:"Anschluss Österreichs 1938, Hitler auf dem Heldenplatz",a:`<p><b>Was:</b> Massenkundgebung in Wien, März 1938.</p><p><b>Pointe:</b> Seit 13. März 1938 grenzt Liechtenstein direkt an das Deutsche Reich → doppelte Bedrohung (Hitler und einheimische NS-Anhänger) → Koalition FBP/VU, Wohnsitz des Fürsten in Vaduz.</p>`},
+{p:17,t:"Koalitionsregierung 1938–1945",a:`<p><b>Was:</b> Fotos: Regierungschef Josef Hoop (FBP), Stellvertreter Alois Vogt (VU), Regierungsräte Anton Frommelt und Arnold Hoop / J. G. Hasler.</p><p><b>Pointe:</b> «Schulterschluss» eine Woche nach dem Anschluss, auch Proporz Ober-/Unterland: Innere Geschlossenheit als Schutz der Unabhängigkeit.</p>`},
+{p:18,t:"Fürst Franz Josef II. in Berlin, März 1939",a:`<p><b>Was:</b> Staatsbesuch mit militärischen Ehren (2. März 1939); Einblendungen: 15. März Einmarsch in Prag, 24. März NS-Putschversuch in FL.</p><p><b>Pointe:</b> Für Hitler unbedeutend, eher lästig; die Daten zeigen die prekäre Lage: Wenige Tage später scheiterte der Putsch der Volksdeutschen.</p>`},
+{p:19,t:"Bombenangriff auf Feldkirch 1943",a:`<p><b>Was:</b> Zerstörte Gebäude (Schülerinnenheim, Lazarett Antoniusheim Tisis), Ende September 1943, ca. 200 Tote.</p><p><b>Pointe:</b> Der Krieg kam bis fast an die Landesgrenze; Liechtenstein blieb verschont.</p>`},
+{p:20,t:"Europakarte 1941/42",a:`<p><b>Was:</b> Machtbereich Deutschlands und Italiens; neutral (weiss): Schweiz, Liechtenstein, Schweden, Spanien, Portugal, Andorra, Irland, Türkei.</p><p><b>Pointe:</b> Liechtenstein als kleine neutrale Insel; Wende mit Stalingrad 1942/43.</p>`},
+{p:21,t:"«Der Umbruch» mit Hitler-Porträt, April 1941",a:`<p><b>Was:</b> Kampfblatt der Volksdeutschen Bewegung (1940–43), gratuliert Hitler zum 52. Geburtstag (19. April 1941).</p><p><b>Pointe:</b> Es gab in FL eine offen NS-freundliche Bewegung mit eigener Presse. Quellenkritik: Wer schreibt, für wen, mit welchem Ziel?</p>`},
+{p:22,t:"Antijüdische Propaganda im «Umbruch» 1942",a:`<p><b>Was:</b> Parolen: «Wer von Juden isst, stirbt daran», «Wir fordern ein Judenlager!», «Der gelbe Stern gehört auch den Juden in Liechtenstein».</p><p><b>Pointe:</b> Hetze gegen die (finanz-)eingebürgerten Juden; Gelber Stern im Reich ab 1941. Verbindung zu Rotter (1933) und Eichmann-Schreiben (1942).</p>`},
+{p:23,t:"Geistlichkeit: Pfarrer Josef Wachter und Sr. Timothea Ganghofer",a:`<p><b>Was:</b> Porträts eines Mauren Pfarrers und einer Zamser Schwester (Bürgerheim Vaduz).</p><p><b>Pointe:</b> Katholische Kirche als Gegenkraft zum Nationalsozialismus; Ordensschwestern prägten Pflege und Schule über Jahrzehnte.</p>`},
+{p:24,t:"Pfadfinder bilden «Liechtenstein» am Rheindamm",a:`<p><b>Was:</b> Pfadfindergruppe formt den Schriftzug.</p><p><b>Pointe:</b> Pfadi seit 1931 (Mädchen 1932), patriotisch und fürstentreu, von Fürst und Regierung gefördert, um Jugendliche dem NS-Einfluss zu entziehen. Symbolische Selbstbehauptung.</p>`},
+{p:25,t:"Fürstenhochzeit, 7. März 1943",a:`<p><b>Was:</b> Trauung von Gina und Franz Josef II. in der Vaduzer Pfarrkirche.</p><p><b>Pointe:</b> Lichtblick im Krieg; Fürstenhaus erstmals im Land ansässig (1938) → Identifikation, Monarchie als Klammer der Nation.</p>`},
+{p:26,t:"Lebensmittelrationierung 1939–1948",a:`<p><b>Was:</b> Lebensmittelkarte (Marken für Brot, Mehl, Mais, Fleisch, Kaffee).</p><p><b>Pointe:</b> Einbezug in die Schweizer Kriegswirtschaft (Zollvertrag 1923!); Anbaufläche verdoppelt, trotzdem Engpässe; Rationierung bis 1948.</p>`},
+{p:27,t:"Landdienst",a:`<p><b>Was:</b> Junger Mann bei Feldarbeit.</p><p><b>Pointe:</b> Obligatorischer Landdienst für junge Männer 1942–1946 (zuletzt Jahrgang 1929) für den Mehranbau; vgl. Steg: Wiesen wurden vorübergehend Äcker.</p>`},
+{p:28,t:"Schreiben des Reichssicherheitshauptamts 1942",a:`<p><b>Was:</b> Dokument aus Berlin (Februar 1942), Amt unter Adolf Eichmann, markierte Stellen.</p><p><b>Pointe:</b> Liechtenstein galt im Reich wegen der Einbürgerungen der 1930er-Jahre als «judenfreundlich» → Beunruhigung im Land. Eichmann: Organisator der Deportationen, mitverantwortlich für die Ermordung von rund sechs Millionen Menschen.</p>`},
+{p:29,t:"Grenze Schaanwald, Ende April / Anfang Mai 1945",a:`<p><b>Was:</b> Flüchtlingsstrom an der Grenze Tisis–Schaanwald (3. Mai 1945).</p><p><b>Pointe:</b> Kriegsende unmittelbar an der Grenze erlebbar; humanitäre Herausforderung für das kleine Land.</p>`},
+{p:30,t:"Fürstin Gina mit KZ-Häftling aus Dachau",a:`<p><b>Was:</b> Fürstin Gina betreut Flüchtlinge in Schaanwald; links ein entkommener Dachau-Häftling.</p><p><b>Pointe:</b> Gründung des Liechtensteinischen Roten Kreuzes 1945; Fürstin als Symbol humanitären Engagements.</p>`},
+{p:31,t:"Holmston-Smyslovsky mit Frau, Offizieren, FL-Polizist",a:`<p><b>Was:</b> Kommandant Arthur Holmston (eig. Smyslovsky) der nationalrussischen Armee (kämpfte auf deutscher Seite), Mai 1945.</p><p><b>Pointe:</b> Ca. 500 Personen kamen am 2./3. Mai 1945 über Hinterschellenberg; Liechtenstein nahm sie auf. <i>Zusatzwissen:</i> FL lieferte sie trotz sowjetischen Drucks nicht zwangsweise aus.</p>`},
+{p:32,t:"Pfingstmontag 1945, Lindenplatz Schaan",a:`<p><b>Was:</b> Kundgebung mit Plakaten und symbolischem Galgen (markiert).</p><p><b>Pointe:</b> Heimattreue forderten Abrechnung mit NS-Anhängern («Vaterlandsverräter»); VDBL-Leiter Alfons Goop verurteilt, andere kamen glimpflich davon. Thema Vergangenheitsbewältigung.</p>`},
+{p:33,t:"Saminakraftwerk",a:`<p><b>Was:</b> Luftbild mit Leitungen vom Stausee Steg nach Vaduz.</p><p><b>Pointe:</b> Nachkriegsboom braucht Strom; Lawena (1927) reicht nicht; Volksabstimmung 1947 (90 % Ja), Fertigstellung 1949; heute Pumpspeicherwerk.</p>`},
+{p:34,t:"Liechtenstein in der UNO seit 1990",a:`<p><b>Was:</b> Fürst Hans-Adam II. vor der UNO in New York; daneben Porträts von Johann Adam Andreas (um 1700) und Hans-Adam II.</p><p><b>Pointe:</b> Bogen über 300 Jahre: vom gekauften Reichsterritorium zum anerkannten Mitglied der Staatengemeinschaft. Aussenpolitische Profilierung (Europarat 1978, UNO 1990).</p>`},
+{p:"Balzers",t:"Käppchen des ausgesetzten Kindes (1797)",a:`<p><b>Was:</b> Kinderkäppchen, das das in Fläsch gefundene Neugeborene trug; die Bündner schickten es nach Vaduz.</p><p><b>Pointe:</b> Einziges erhaltenes Objekt eines namenlosen Kindes; steht für die Ächtung lediger Mütter (Christina Bürzle).</p>`},
+{p:"Balzers",t:"Bronzefiguren von Gutenberg",a:`<p><b>Was:</b> Ensemble aus zehn Bronzefiguren (500–100 v. Chr.), u. a. «Mars» (knapp 13 cm), Eber, Hirsch; 1932 entdeckt.</p><p><b>Pointe:</b> Weihegaben an einem Brandopferplatz; rätische Helme; Tiere als Begleiter keltischer Götter. Originale im Landesmuseum.</p>`},
+{p:"Lawena",t:"Siemens-Generator mit Sechsspänner / Werbefahrt",a:`<p><b>Was:</b> Fuhrhalter Bargetze und Schädler transportieren 1926 den Generator; Werbefahrt mit Ross, Wagen, Generator und Lampe.</p><p><b>Pointe:</b> Strom musste der skeptischen Bevölkerung erst «verkauft» werden (Abstimmung 1925 nur 56 % Ja); Gegensatz Pferd und Elektrizität zeigt den Epochenwechsel.</p>`}
+];
+
+/* ---------- Jahreszahlen ---------- */
+const ZAHLEN=[
+["um 4000 v. Chr.","Henkelkrug Lutzengüetle"],["15 v. Chr.","römische Herrschaft (Raetia prima)"],["4. Jh.","Kastell Schaan"],["um 1300","Walser am Triesenberg; Kirchenkern Bendern; St. Peter Mäls"],["1342","Grafschaft Vaduz"],["1355","erste Erwähnung Walser"],["1390","Urkunde nennt Zuschgen"],["1499","Schwabenkrieg (Vaduz zerstört, Gutenberg hält)"],["1516","Flügelaltar St. Peter Mäls"],["1525","Rotes Haus an Kloster St. Johann"],["1538–1636","Mönche von St. Luzi in Bendern"],["1612","Fastentuch Bendern"],["1618–48","Dreissigjähriger Krieg"],["1679/80","Hexenhinrichtungen Triesenberg"],["1681/82","Verbot der Hexenprozesse / Salzburger Gutachten"],["1699","Kauf Schellenberg; Huldigung Bendern 16. März"],["1712","Kauf Vaduz"],["1719","Reichsfürstentum"],["1768","Pfarrei Triesenberg"],["1785","letzte Hinrichtung (Barbara Erni)"],["1794","Gemeindegrenze Schellenberg–Ruggell"],["1797","Kindsaussetzung Bürzle"],["1804","Heiratsgesetz"],["1805","Schulpflicht"],["1806","Souveränität (Rheinbund)"],["1809","politische Gemeinden"],["1815–66","Deutscher Bund"],["1842","Fürstenbesuch Alois II.; Gemeindegesetz; Fall Haas"],["1848","Revolution, Peter Kaiser"],["1852","Zollvertrag mit Österreich"],["1862","Verfassung, Landtag"],["1864","Gemeindegesetz (Einkauf Hintersassen)"],["1864–68","Strasse nach Triesenberg (Tunnel 1867)"],["1873","Pfarrkirche/Pfarrei Vaduz"],["1883","erster Strom in Fabriken"],["1901","EW der Gemeinde Vaduz"],["1903–05","Regierungsgebäude"],["1907","Brand Altabach"],["1908–12","Kirche Balzers"],["1911","Ruggell sagt Nein zum Strom"],["1918","Parteiengründungen"],["1921","Verfassung; Strom in allen Gemeinden"],["1923/24","Zollvertrag Schweiz / Franken"],["1927","Lawenakraftwerk"],["1931","Einbürgerung Rotter in Mauren"],["1933","Rotter-Entführung; Heimatdienst; Ramco"],["1936","Vaterländische Union"],["1938","Anschluss Österreichs; Fürst in Vaduz; Koalition; VDBL"],["1939","Putschversuch"],["1943","Fürstenhochzeit; Feldkirch bombardiert"],["1945","Flüchtlinge Schaanwald/Schellenberg; Rotes Kreuz"],["1947–49","Saminakraftwerk"],["1948","Ellhorn an die Schweiz"],["1960","Fürstliche Gruft"],["1972","Landesmuseum im Amtsviertel"],["1975","Brauteinkaufstaxe abgeschafft"],["1978","Europarat"],["1984","Frauenstimmrecht"],["1989","Abschaffung Todesstrafe"],["1990","UNO-Beitritt"],["2000","Zonenplan Triesenberg (als letzte)"],["2008","Landtagsgebäude"]
+];
+
+/* ---------- Probeprüfung ---------- */
+const PROBE_T1=VERMITTLUNG.flatMap(g=>g.items).map((x,i)=>({...x,id:"v"+i}));
+
+/* ---------- State ---------- */
+let known={};
+try{known=JSON.parse(localStorage.getItem("gvo-known")||"{}")}catch(e){}
+function save(){try{localStorage.setItem("gvo-known",JSON.stringify(known))}catch(e){}updateProgress()}
+function updateProgress(){const n=Object.values(known).filter(Boolean).length;document.getElementById("progress").textContent=n+(n===1?" Karte":" Karten")+" als «sitzt» markiert"}
+
+function cardHTML(id,tag,q,a){
+ return `<article class="card${known[id]?" known":""}" data-id="${id}">
+ ${tag?`<div class="tag">${tag}</div>`:""}<h3>${q}</h3>
+ <div class="row"><button class="show" aria-expanded="false">Musterantwort zeigen</button>
+ <button class="ok" aria-pressed="${known[id]?"true":"false"}">${known[id]?"✓ Sitzt":"Sitzt"}</button></div>
+ <div class="ans" hidden>${a}</div></article>`}
+
+function groupsHTML(prefix,groups,intro){
+ let h=`<p class="intro">${intro}</p><div class="tools"><button data-act="open">Alle aufdecken</button><button data-act="close">Alle zudecken</button><button data-act="hideknown">Nur offene Karten</button></div>`;
+ groups.forEach((g,gi)=>{h+=`<div class="group">${g.g}</div><div class="list">`;
+  g.items.forEach((it,ii)=>{h+=cardHTML(prefix+gi+"-"+ii,it.tag||"",it.q,it.a)});h+="</div>"});
+ return h}
+
+function render(tab){
+ const v=document.getElementById("view");let h="";
+ if(tab==="vermittlung") h=groupsHTML("v",VERMITTLUNG,"<b>Prüfungsteil 1:</b> «Was würde ich meinen Schülern von den Besichtigungen vermitteln?» bzw. je eine Frage zu den Vorteilen einer Erkundung vor Ort und zur Nachwirkung und Weitergabe des Gehörten. Überlege zuerst selbst, dann aufdecken.");
+ else if(tab==="themen") h=groupsHTML("t",THEMEN,"<b>Prüfungsteile 2 und 3:</b> Aus fünf vorgeschlagenen Fragen wählst du eine. Hier sind <b>alle 13 Themen</b> aus der Liste «Mögliche Prüfungsthemen» als ausführliche Musterantworten, geordnet nach Exkursionsort.");
+ else if(tab==="weitere") h=groupsHTML("w",WEITERE,"Alles Weitere aus Einführung und Exkursionen, das nicht ausdrücklich auf der Themenliste steht, aber als Kontext oder Nachfrage kommen kann.");
+ else if(tab==="bilder"){
+  h=`<p class="intro"><b>Prüfungsteil 4:</b> Eines von zwei oder drei Bildern auswählen, kommentieren und in den historischen Kontext stellen. Es kommen nur Bilder aus dem verschickten Material. Schema: <b>Was sehe ich? → Wann, wo, wer? → Kontext → Bedeutung/Pointe → Verbindung zu einem Exkursionsort.</b> Seitenzahlen beziehen sich auf das Handout.</p><div class="tools"><button data-act="open">Alle aufdecken</button><button data-act="close">Alle zudecken</button><button data-act="hideknown">Nur offene Karten</button></div><div class="list">`;
+  BILDER.forEach((b,i)=>{h+=cardHTML("b"+i,typeof b.p==="number"?"Handout S. "+b.p:"Exkursion "+b.p,b.t+": Kommentieren Sie das Bild.",b.a)});h+="</div>"}
+ else if(tab==="zahlen"){
+  h=`<p class="intro">Schnellrunde: Was geschah in diesem Jahr? Karte antippen zum Aufdecken.</p><div class="tools"><button data-act="shuffle">Mischen</button><button data-act="open">Alle aufdecken</button><button data-act="close">Alle zudecken</button></div><div class="list" id="zl">`;
+  h+=zahlenHTML(ZAHLEN.map((z,i)=>i));h+="</div>"}
+ else h=probeHTML();
+ v.innerHTML=h;
+}
+function zahlenHTML(order){return order.map(i=>{const z=ZAHLEN[i];return `<article class="card${known["z"+i]?" known":""}" data-id="z${i}"><h3>${z[0]}</h3><div class="row"><button class="show" aria-expanded="false">Aufdecken</button><button class="ok" aria-pressed="${known["z"+i]?"true":"false"}">${known["z"+i]?"✓ Sitzt":"Sitzt"}</button></div><div class="ans" hidden><p>${z[1]}</p></div></article>`}).join("")}
+
+function pick(arr,n){const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a.slice(0,n)}
+function probeHTML(){
+ const t1=pick(PROBE_T1.filter(x=>!x.q.includes("persönlich")),2);
+ const themen=THEMEN.flatMap((g,gi)=>g.items.map((it,ii)=>({...it,id:"t"+gi+"-"+ii})));
+ const t5=pick(themen,5);
+ const b3=pick(BILDER.map((b,i)=>({...b,id:"b"+i})).filter(b=>typeof b.p==="number"),3);
+ const link=(tab,id,txt)=>`<a data-go="${tab}" data-target="${id}">${txt}</a>`;
+ return `<p class="intro">Eine zufällige Prüfung nach Herrn Biedermanns Aufbau. Nimm dir pro Teil Zeit, beantworte schriftlich oder laut, und klicke danach auf eine Frage, um zur Musterantwort zu springen.</p>
+ <div class="tools"><button data-act="newprobe">Neue Probeprüfung</button></div>
+ <div class="exam">
+ <section class="part"><h2>Teil 1 · Vor Ort vermitteln</h2><ol>${t1.map(x=>`<li>${link("vermittlung",x.id,x.q)}</li>`).join("")}</ol></section>
+ <section class="part"><h2>Teile 2 und 3 · Wähle eine von fünf Fragen</h2><ol>${t5.map(x=>`<li>${link("themen",x.id,x.q)}</li>`).join("")}</ol></section>
+ <section class="part"><h2>Teil 4 · Wähle ein Bild und kommentiere es</h2><ol>${b3.map(x=>`<li>${link("bilder",x.id,x.t+" (Handout S. "+x.p+")")}</li>`).join("")}</ol></section>
+ </div>`}
+
+/* map Teil-1 probe ids to card ids */
+function t1CardId(pid){let n=parseInt(pid.slice(1));let gi=0;for(const g of VERMITTLUNG){if(n<g.items.length)return "v"+gi+"-"+n;n-=g.items.length;gi++}}
+
+let current="probe";
+function setTab(id,scrollTo){
+ current=id;document.querySelectorAll("#tabs button").forEach(b=>b.setAttribute("aria-selected",b.dataset.tab===id?"true":"false"));
+ render(id);try{localStorage.setItem("gvo-tab",id)}catch(e){}
+ if(scrollTo){const el=document.querySelector(`[data-id="${scrollTo}"]`);if(el){openCard(el,true);el.scrollIntoView({block:"start"});window.scrollBy(0,-70)}}
+ else window.scrollTo(0,0);
+}
+function openCard(card,open){const a=card.querySelector(".ans"),b=card.querySelector(".show");a.hidden=!open;b.setAttribute("aria-expanded",open);b.textContent=open?(b.textContent.startsWith("Auf")||b.textContent.startsWith("Zu")?"Zudecken":"Antwort verbergen"):(card.dataset.id.startsWith("z")?"Aufdecken":"Musterantwort zeigen")}
+
+document.getElementById("tabs").innerHTML=TABS.map(t=>`<button role="tab" data-tab="${t.id}" aria-selected="false">${t.label}</button>`).join("");
+document.getElementById("tabs").addEventListener("click",e=>{const b=e.target.closest("button");if(b)setTab(b.dataset.tab)});
+
+let hideKnown=false;
+document.getElementById("view").addEventListener("click",e=>{
+ const go=e.target.closest("[data-go]");
+ if(go){let t=go.dataset.target;if(go.dataset.go==="vermittlung")t=t1CardId(t);setTab(go.dataset.go,t);return}
+ const act=e.target.closest("[data-act]");
+ if(act){const a=act.dataset.act;
+  if(a==="open")document.querySelectorAll(".card").forEach(c=>openCard(c,true));
+  if(a==="close")document.querySelectorAll(".card").forEach(c=>openCard(c,false));
+  if(a==="newprobe")render("probe");
+  if(a==="shuffle")document.getElementById("zl").innerHTML=zahlenHTML(pick(ZAHLEN.map((z,i)=>i),ZAHLEN.length));
+  if(a==="hideknown"){hideKnown=!hideKnown;act.textContent=hideKnown?"Alle Karten zeigen":"Nur offene Karten";document.querySelectorAll(".card").forEach(c=>c.hidden=hideKnown&&!!known[c.dataset.id]);document.querySelectorAll(".group").forEach(g=>{const l=g.nextElementSibling;g.hidden=l&&[...l.children].every(c=>c.hidden)})}
+  return}
+ const card=e.target.closest(".card");if(!card)return;
+ if(e.target.closest(".show"))openCard(card,card.querySelector(".ans").hidden);
+ else if(e.target.closest(".ok")){const id=card.dataset.id;known[id]=!known[id];const b=card.querySelector(".ok");b.setAttribute("aria-pressed",known[id]);b.textContent=known[id]?"✓ Sitzt":"Sitzt";card.classList.toggle("known",!!known[id]);save()}
+});
+
+let start="probe";try{start=localStorage.getItem("gvo-tab")||"probe"}catch(e){}
+if(!TABS.some(t=>t.id===start))start="probe";
+setTab(start);updateProgress();
+</script>
+
+</body></html>
