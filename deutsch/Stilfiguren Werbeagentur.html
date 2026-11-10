@@ -1,0 +1,719 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Die Werbe-Agentur</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@400;500;700&family=Permanent+Marker&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#efe8da; --white:#fffdf7; --ink:#121212; --muted:#5b544a;
+  --pink:#ff2d8a; --blue:#2337ff; --yellow:#ffe03a; --green:#0fa968; --red:#ff2d8a; --soft:#e4dccb;
+  color-scheme: light;
+}
+*{box-sizing:border-box}
+html,body{margin:0;color:var(--ink);font-family:"DM Sans",system-ui,sans-serif;font-size:17px;line-height:1.45}
+body{background-color:var(--paper);
+  background-image:radial-gradient(rgba(0,0,0,.05) 1px,transparent 1.2px),radial-gradient(rgba(0,0,0,.035) 1px,transparent 1.2px);
+  background-size:5px 5px,7px 7px;background-position:0 0,2px 3px;min-height:100vh;overflow-x:hidden}
+button{font:inherit;color:inherit;cursor:pointer}
+h1,h2,h3,.display{font-family:"Anton","Oswald",Impact,sans-serif;font-weight:400;text-transform:uppercase;letter-spacing:.01em;margin:0;line-height:1}
+.hand{font-family:"Permanent Marker","Comic Sans MS",cursive}
+/* ---------- Collage-Hintergrund ---------- */
+.bg{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.bgword{position:absolute;font-family:"Anton",Impact,sans-serif;line-height:.78;writing-mode:vertical-rl;transform:rotate(180deg);text-transform:uppercase;user-select:none}
+.bgword.w1{left:-2vh;top:-2vh;font-size:min(42vh,30vw);color:var(--pink)}
+.bgword.w2{right:-3vh;bottom:-3vh;font-size:min(46vh,32vw);color:var(--blue);transform:none}
+.halftone{position:absolute;right:6%;top:8%;width:220px;height:220px;background:radial-gradient(var(--pink) 30%,transparent 32%) 0 0/14px 14px;opacity:.55;transform:rotate(12deg);-webkit-mask:radial-gradient(circle,#000 40%,transparent 70%);mask:radial-gradient(circle,#000 40%,transparent 70%)}
+.halftone.h2{left:4%;right:auto;top:auto;bottom:6%;background:radial-gradient(var(--blue) 30%,transparent 32%) 0 0/12px 12px}
+.scrib{position:absolute;opacity:.9}
+@media (max-width:900px){.bgword{opacity:.22}.halftone{opacity:.25}.scrib{display:none}}
+.wrap{position:relative;z-index:1;max-width:880px;margin:0 auto;padding:16px 16px 56px}
+/* ---------- Kopfzeile ---------- */
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:6px 0 18px;margin-bottom:14px;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:10px}
+.logo .mark{background:var(--ink);color:var(--white);font-family:"Anton",Impact,sans-serif;font-size:22px;padding:6px 12px 4px;transform:rotate(-3deg);box-shadow:4px 4px 0 var(--pink);text-transform:uppercase;line-height:1}
+.logo>div:last-child{font-weight:700}
+.logo small{display:block;font-family:"Permanent Marker",cursive;font-weight:400;color:var(--blue);font-size:14px;transform:rotate(-2deg)}
+.stats{display:flex;gap:8px;flex-wrap:wrap}
+.chip{background:var(--yellow);padding:6px 12px 5px;font-family:"Anton",Impact,sans-serif;font-size:16px;letter-spacing:.03em;white-space:nowrap;transform:rotate(1.5deg);box-shadow:2px 2px 0 var(--ink)}
+.chip:nth-child(2){background:var(--white);transform:rotate(-1.5deg)}
+.chip.hot{background:var(--pink);color:#fff}
+.iconbtn{background:var(--white);border:2px solid var(--ink);padding:4px 10px;font-size:15px}
+/* ---------- Screens ---------- */
+.screen{display:none}.screen.on{display:block;animation:pop .3s cubic-bezier(.2,1.4,.4,1)}
+@keyframes pop{from{opacity:0;transform:translateY(10px) rotate(-.5deg)}to{opacity:1;transform:none}}
+.hero{display:grid;gap:22px}
+.hero h1{font-size:clamp(46px,10vw,92px);line-height:.92}
+.hero h1 .a{background:var(--ink);color:var(--white);padding:0 .12em;display:inline-block;transform:rotate(-1.5deg)}
+.hero h1 .b{color:var(--pink)}
+.hero h1 .c{color:var(--blue)}
+.tagline{display:inline-block;font-family:"Permanent Marker",cursive;font-size:22px;background:var(--yellow);padding:6px 14px;transform:rotate(-2deg);margin-top:16px;box-shadow:3px 3px 0 var(--ink)}
+.lead{max-width:60ch;margin:14px 0 0;font-size:17px;background:var(--white);padding:12px 14px;border-left:6px solid var(--blue)}
+.panel{position:relative;background:var(--white);padding:22px 20px 20px;box-shadow:7px 7px 0 var(--ink);border:2px solid var(--ink)}
+.panel::before{content:"";position:absolute;top:-13px;left:24px;width:110px;height:26px;background:rgba(255,224,58,.85);transform:rotate(-4deg);box-shadow:0 1px 2px rgba(0,0,0,.15)}
+.panel.tape-pink::before{background:rgba(255,45,138,.75);left:auto;right:30px;transform:rotate(5deg)}
+.panel.tape-blue::before{background:rgba(35,55,255,.6)}
+.label{display:inline-block;background:var(--ink);color:var(--white);font-family:"Anton",Impact,sans-serif;text-transform:uppercase;font-size:15px;letter-spacing:.06em;padding:4px 10px 3px;margin-bottom:10px;transform:rotate(-1deg)}
+input[type=text]{width:100%;font:inherit;font-weight:700;padding:12px 14px;border:2px solid var(--ink);background:var(--paper);color:var(--ink)}
+input[type=text]:focus{outline:none;box-shadow:4px 4px 0 var(--pink)}
+.levels{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.level{text-align:left;background:var(--paper);border:2px solid var(--ink);padding:14px;transition:.15s}
+.level:nth-child(1){transform:rotate(-.6deg)}.level:nth-child(2){transform:rotate(.5deg)}.level:nth-child(3){transform:rotate(-.3deg)}
+.level:hover{box-shadow:4px 4px 0 var(--ink);transform:translate(-2px,-2px)}
+.level.sel{background:var(--blue);color:#fff;box-shadow:5px 5px 0 var(--pink)}
+.level b{display:block;font-family:"Anton",Impact,sans-serif;font-weight:400;font-size:26px;text-transform:uppercase;line-height:1.05;margin-bottom:4px}
+.level span{font-size:14px}
+.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.toggle{display:flex;align-items:center;gap:10px;font-weight:700}
+.toggle input{width:22px;height:22px;accent-color:var(--pink)}
+.big{background:var(--ink);color:var(--yellow);border:none;padding:14px 24px 12px;font-family:"Anton",Impact,sans-serif;font-size:22px;text-transform:uppercase;letter-spacing:.03em;box-shadow:5px 5px 0 var(--pink);transition:.1s;transform:rotate(-1deg)}
+.big:hover{transform:rotate(-1deg) translate(-2px,-2px);box-shadow:7px 7px 0 var(--pink)}
+.big:active{transform:rotate(-1deg) translate(3px,3px);box-shadow:1px 1px 0 var(--pink)}
+.ghost{background:var(--white);border:2px solid var(--ink);padding:10px 16px;font-weight:700;box-shadow:3px 3px 0 var(--ink)}
+.ghost:disabled{opacity:.5;cursor:default}
+.career{display:grid;gap:10px}
+.career b{font-family:"Anton",Impact,sans-serif;font-weight:400;font-size:22px;text-transform:uppercase}
+.bar{height:16px;background:var(--paper);border:2px solid var(--ink);overflow:hidden}
+.bar i{display:block;height:100%;width:0;transition:width .6s;background:repeating-linear-gradient(-45deg,var(--pink) 0 10px,#ff5ca6 10px 20px)}
+.muted{color:var(--muted);font-size:14px}
+/* ---------- Spiel ---------- */
+.progress{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.progress span{font-family:"Anton",Impact,sans-serif;font-size:22px;text-transform:uppercase;background:var(--ink);color:#fff;padding:3px 10px 2px;transform:rotate(-1.5deg)}
+.dots{display:flex;gap:5px}
+.dots i{width:14px;height:14px;background:var(--white);border:2px solid var(--ink)}
+.dots i.ok{background:var(--yellow)}
+.dots i.no{background:var(--pink)}
+.dots i.now{background:var(--blue);transform:rotate(45deg) scale(.85)}
+.timer{height:12px;background:var(--ink);overflow:hidden;margin-bottom:16px;display:none}
+.timer i{display:block;height:100%;background:var(--yellow);width:100%}
+.brief{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:start}
+.avatar{width:84px;height:84px;background:var(--yellow);border:2px solid var(--ink);display:grid;place-items:center;font-size:46px;transform:rotate(-4deg);box-shadow:4px 4px 0 var(--blue)}
+.client small{font-family:"Permanent Marker",cursive;color:var(--blue);display:block;font-size:15px}
+.client h2{font-size:clamp(34px,6vw,48px);line-height:.95;margin:2px 0 4px}
+.bubble{margin-top:10px;background:var(--paper);border:2px solid var(--ink);padding:13px 15px;font-size:18px;font-weight:500;position:relative}
+.bubble::before{content:"";position:absolute;left:-12px;top:14px;border:10px solid transparent;border-right-color:var(--ink);border-left:0}
+.bubble b{background:var(--pink);color:#fff;padding:1px 7px;font-weight:700;white-space:nowrap}
+.bubble .quote{display:block;margin:8px 0;font-family:"Anton",Impact,sans-serif;font-weight:400;font-size:clamp(22px,4vw,30px);line-height:1.1;text-transform:none;letter-spacing:.01em}
+.opts{display:grid;gap:12px;margin-top:22px}
+.opts.figs{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
+.opt{position:relative;text-align:left;background:var(--white);border:2px solid var(--ink);padding:13px 14px;display:flex;gap:12px;align-items:flex-start;transition:.12s;box-shadow:3px 3px 0 var(--ink)}
+.opt:nth-child(odd){transform:rotate(-.5deg)}.opt:nth-child(even){transform:rotate(.45deg)}
+.opt:hover:not(:disabled){transform:translate(-2px,-2px) rotate(0);box-shadow:6px 6px 0 var(--blue)}
+.opt .k{flex:none;width:28px;height:28px;background:var(--ink);color:var(--yellow);display:grid;place-items:center;font-family:"Anton",Impact,sans-serif;font-size:16px}
+.opt.slogan{font-size:18px;font-weight:700}
+.opts.figs .opt b{font-family:"Anton",Impact,sans-serif;font-weight:400;font-size:21px;text-transform:uppercase;letter-spacing:.02em}
+.opt.right{background:var(--yellow);box-shadow:5px 5px 0 var(--ink)}
+.opt.right::after{content:"✓";position:absolute;right:-10px;top:-14px;font-family:"Permanent Marker",cursive;font-size:38px;color:var(--green);transform:rotate(10deg)}
+.opt.wrong{background:#ffd3e6}
+.opt.wrong::after{content:"";position:absolute;left:8px;right:8px;top:50%;height:4px;background:var(--pink);transform:rotate(-2deg);border-radius:4px}
+.opt:disabled{cursor:default}
+.opt .tag{display:block;font-family:"Permanent Marker",cursive;font-weight:400;font-size:14px;margin-top:4px;color:var(--blue)}
+.feedback{margin-top:20px;padding:16px 18px;border:2px solid var(--ink);display:none;position:relative}
+.feedback.ok{background:var(--yellow)}
+.feedback.no{background:#ffd3e6}
+.feedback h3{font-size:30px;margin-bottom:6px}
+.feedback p{margin:6px 0}
+.feedback .def{background:var(--white);padding:9px 12px;border:2px solid var(--ink);font-size:15px}
+.feedback .muted{color:#3d372f}
+.gamebar{display:flex;justify-content:space-between;gap:12px;margin-top:20px;flex-wrap:wrap;align-items:center}
+/* ---------- Bericht ---------- */
+.report h2{font-size:clamp(40px,8vw,64px)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:18px 0}
+.kpi{background:var(--paper);border:2px solid var(--ink);padding:12px;box-shadow:3px 3px 0 var(--ink)}
+.kpi:nth-child(1){background:var(--yellow)}.kpi:nth-child(2){background:var(--pink);color:#fff}.kpi:nth-child(2) .muted{color:#fff}.kpi:nth-child(3){background:var(--blue);color:#fff}.kpi:nth-child(3) .muted{color:#dfe3ff}
+.kpi b{display:block;font-family:"Anton",Impact,sans-serif;font-weight:400;font-size:38px;line-height:1.1}
+.miss{border-top:2px dashed var(--ink);padding:10px 0;font-size:15px}
+.miss q{font-weight:700;font-size:17px;quotes:"„" "“"}
+.rankup{background:var(--blue);color:#fff;border:2px solid var(--ink);padding:12px 16px;font-family:"Anton",Impact,sans-serif;font-size:24px;text-transform:uppercase;margin-top:12px;display:none;box-shadow:5px 5px 0 var(--pink);transform:rotate(-1deg)}
+/* ---------- Spickzettel ---------- */
+.overlay{position:fixed;inset:0;background:rgba(18,18,18,.6);display:none;align-items:flex-start;justify-content:center;padding:24px 16px;overflow:auto;z-index:10}
+.overlay.on{display:flex}
+.sheet{background:var(--white);border:2px solid var(--ink);max-width:720px;width:100%;padding:20px;box-shadow:8px 8px 0 var(--yellow)}
+.sheet h2{font-size:36px}
+.sheet dl{margin:12px 0 0}
+.sheet dt{font-weight:700;margin-top:12px;display:inline-block;background:var(--yellow);padding:0 6px}
+.sheet dd{margin:3px 0 0;color:var(--muted);font-size:15px}
+.sheet .warn{background:var(--pink);color:#fff;padding:8px 12px;font-size:14px;font-weight:700}
+.burst{position:fixed;pointer-events:none;font-size:30px;animation:fly 1.1s ease-out forwards;z-index:20}
+@keyframes fly{to{transform:translate(var(--dx),var(--dy)) rotate(var(--r));opacity:0}}
+@media (max-width:520px){
+  .brief{grid-template-columns:1fr}.avatar{width:62px;height:62px;font-size:34px}
+  .bubble::before{display:none}
+  .panel{box-shadow:4px 4px 0 var(--ink);padding:20px 14px 16px}
+  .big{font-size:19px}
+}
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true">
+  <div class="bgword w1">Idee</div>
+  <div class="bgword w2">Slogan</div>
+  <div class="halftone"></div><div class="halftone h2"></div>
+  <svg class="scrib" style="left:20%;top:3%;width:170px" viewBox="0 0 170 60"><path d="M5 40 C30 5,45 55,70 20 S110 50,130 15 S160 30,165 10" fill="none" stroke="#ffe03a" stroke-width="5" stroke-linecap="round"/></svg>
+  <svg class="scrib" style="right:14%;bottom:18%;width:120px" viewBox="0 0 120 120"><path d="M10 60 L110 60 M60 10 L60 110" stroke="#ffe03a" stroke-width="9" stroke-linecap="round"/></svg>
+  <svg class="scrib" style="left:6%;bottom:30%;width:150px" viewBox="0 0 150 90"><path d="M8 70 Q40 10 70 60 T140 30" fill="none" stroke="#121212" stroke-width="3"/><path d="M12 80 Q45 20 75 70 T145 40" fill="none" stroke="#121212" stroke-width="2"/></svg>
+</div>
+<div class="wrap">
+  <header class="top">
+    <div class="logo"><div class="mark" id="agencyTitle">Die Werbe-Agentur</div><div><small id="rankLine">Praktikant:in</small></div></div>
+    <div class="stats">
+      <span class="chip" id="chipMoney">💰 0 Fr.</span>
+      <span class="chip" id="chipStreak">🔥 0</span>
+      <button class="iconbtn" id="btnSound" aria-label="Ton an/aus">🔊</button>
+    </div>
+  </header>
+
+  <!-- START -->
+  <section class="screen on" id="sStart">
+    <div class="hero">
+      <div>
+        <h1><span class="a">Willkommen</span><br>in der <span class="b">Werbe</span>-<br><span class="c">Agentur!</span></h1>
+        <div class="tagline">Kleine Wörter. Grosse Wirkung.</div>
+        <p class="lead">Du arbeitest als Texter:in. Kund:innen wollen Slogans mit ganz bestimmten Stilfiguren – und manchmal musst du herausfinden, welche Figur in einem Slogan steckt. Jeder Arbeitstag hat 10 Aufträge. Gute Arbeit bringt Honorar und Beförderungen!</p>
+      </div>
+      <div class="panel" style="display:grid;gap:18px">
+        <div>
+          <label class="label" for="agency">Name deiner Agentur</label>
+          <input type="text" id="agency" maxlength="30" placeholder="z. B. Slogan-Schmiede">
+        </div>
+        <div>
+          <span class="label">Abteilung wählen</span>
+          <div class="levels" id="levels"></div>
+        </div>
+        <div class="row" style="justify-content:space-between">
+          <label class="toggle"><input type="checkbox" id="deadline"> ⏱️ Deadline-Modus (25 Sekunden pro Auftrag, Zeitbonus)</label>
+          <button class="big" id="btnStart">Arbeitstag starten →</button>
+        </div>
+      </div>
+      <div class="panel career tape-pink">
+        <div class="row" style="justify-content:space-between"><b id="careerRank">Praktikant:in</b><span class="muted" id="careerTotal">Gesamt-Honorar: 0 Fr.</span></div>
+        <div class="bar"><i id="careerBar"></i></div>
+        <span class="muted" id="careerNext"></span>
+        <div class="row"><button class="ghost" id="btnCheat1">📒 Spickzettel ansehen</button></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GAME -->
+  <section class="screen" id="sGame">
+    <div class="progress"><span id="qNum">Auftrag 1 / 10</span><div class="dots" id="dots"></div></div>
+    <div class="timer" id="timer"><i id="timerBar"></i></div>
+    <div class="panel">
+      <div class="brief">
+        <div class="avatar" id="cEmoji">🧊</div>
+        <div class="client">
+          <small id="cWhat">Eistee</small>
+          <h2 id="cName">GletscherKick</h2>
+          <div class="bubble" id="cBrief"></div>
+        </div>
+      </div>
+      <div class="opts" id="opts"></div>
+      <div class="feedback" id="feedback"></div>
+    </div>
+    <div class="gamebar">
+      <button class="ghost" id="btnCheat2">📒 Spickzettel <span class="muted">(halbes Honorar)</span></button>
+      <button class="big" id="btnNext" style="display:none">Nächster Auftrag →</button>
+    </div>
+  </section>
+
+  <!-- REPORT -->
+  <section class="screen report" id="sReport">
+    <div class="panel tape-blue">
+      <span class="label">Tagesbericht</span>
+      <h2 id="rTitle">Feierabend!</h2>
+      <div class="kpis">
+        <div class="kpi"><span class="muted">Zufriedene Kund:innen</span><b id="rOk">0 / 10</b></div>
+        <div class="kpi"><span class="muted">Honorar heute</span><b id="rMoney">0 Fr.</b></div>
+        <div class="kpi"><span class="muted">Beste Serie</span><b id="rStreak">0</b></div>
+      </div>
+      <div class="rankup" id="rRankup"></div>
+      <div id="rMisses"></div>
+      <div class="row" style="margin-top:16px">
+        <button class="big" id="btnAgain">Neuer Arbeitstag →</button>
+        <button class="ghost" id="btnHome">Zur Agentur</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- CHEAT SHEET -->
+<div class="overlay" id="cheat" role="dialog" aria-modal="true" aria-labelledby="cheatTitle">
+  <div class="sheet">
+    <div class="row" style="justify-content:space-between"><h2 id="cheatTitle">📒 Spickzettel</h2><button class="ghost" id="btnCloseCheat">Schliessen</button></div>
+    <p class="warn" id="cheatWarn" style="display:none">Die Chefin hilft dir – für diesen Auftrag gibt es nur das halbe Honorar.</p>
+    <dl id="cheatList"></dl>
+  </div>
+</div>
+
+<script>
+/* ===================== Stilfiguren ===================== */
+const FIG = {
+ ANT:["Antithese","Gegensätzliche Begriffe oder Gedanken werden einander gegenübergestellt."],
+ DIM:["Diminutiv","Verkleinerungsform eines Wortes (meist mit -chen oder -lein)."],
+ EUP:["Euphemismus","Ein unangenehmer Sachverhalt wird mit beschönigenden oder schonenden Worten umschrieben."],
+ HEN:["Hendiadyoin","Ein Begriff wird durch zwei mit «und» verbundene, bedeutungsähnliche Wörter ausgedrückt und dadurch verstärkt."],
+ HYP:["Hyperbel","Starke Übertreibung."],
+ IRO:["Ironie","Man sagt (meist) das Gegenteil von dem, was man meint – der Zusammenhang verrät es."],
+ LIT:["Litotes","Etwas wird betont, indem man das Gegenteil verneint."],
+ MET:["Metapher","Ein Wort wird in übertragener, bildhafter Bedeutung verwendet – ohne «wie»."],
+ MTN:["Metonymie","Das Gemeinte wird durch einen Begriff ersetzt, der eng damit zusammenhängt (z. B. Ort, Gefäss, Autor)."],
+ NEO:["Neologismus","Ein neu gebildetes Wort oder eine neue Bedeutung eines bestehenden Wortes."],
+ OXY:["Oxymoron","Zwei sich widersprechende Begriffe werden direkt zu einem Ausdruck verbunden."],
+ PAR:["Paradoxon","Eine scheinbar widersprüchliche Aussage, die bei genauerem Nachdenken einen nachvollziehbaren Sinn ergibt."],
+ PER:["Periphrase","Ein Begriff wird durch eine Umschreibung ersetzt."],
+ PLE:["Pleonasmus","Eine Eigenschaft wird genannt, die im Wort schon enthalten ist."],
+ SYN:["Synonymie","Für dieselbe Sache werden im Text abwechselnd sinnverwandte Wörter verwendet."],
+ TAU:["Tautologie","Dasselbe wird doppelt gesagt: mit demselben Wort oder mit gleichbedeutenden Wörtern."],
+ AKK:["Akkumulation","Mehrere Begriffe, die zu einem gemeinsamen Oberbegriff gehören, werden aneinandergereiht."],
+ ANA:["Anapher","Ein Wort oder eine Wortgruppe wird am Anfang aufeinanderfolgender Sätze oder Satzteile wiederholt."],
+ ADI:["Anadiplose","Ein Wort oder eine Wortgruppe am Ende eines Satzes wird am Anfang des folgenden wiederholt."],
+ ASY:["Asyndeton","Wörter oder Satzteile werden ohne Bindewort («und») aneinandergereiht."],
+ CHI:["Chiasmus","Satzglieder werden spiegelbildlich überkreuzt angeordnet (A – B / B – A)."],
+ ELL:["Ellipse","Wörter, die man sich dazudenken kann, werden weggelassen."],
+ EPI:["Epipher","Ein Wort oder eine Wortgruppe wird am Ende aufeinanderfolgender Sätze oder Satzteile wiederholt."],
+ INV:["Inversion","Die übliche, unauffällige Wortfolge wird verändert, um einen Satzteil hervorzuheben."],
+ KLI:["Klimax","Ausdrücke werden so angeordnet, dass ihre Stärke oder Bedeutung zunimmt (meist dreistufig)."],
+ KYK:["Kyklos","Ein Satz beginnt und endet mit demselben Wort oder derselben Wortgruppe."],
+ PAL:["Parallelismus","Aufeinanderfolgende Sätze oder Satzteile haben den gleichen Aufbau."],
+ POL:["Polysyndeton","Wörter oder Satzteile werden mit wiederholtem Bindewort verbunden."],
+ VER:["Vergleich","Zwei unterschiedliche Dinge werden wegen einer Gemeinsamkeit verglichen, meist mit «wie» oder «als ob»."],
+ PSN:["Personifikation","Dingen, Tieren oder Naturerscheinungen werden menschliche Eigenschaften oder Handlungen zugeschrieben."],
+ ALL:["Alliteration","Mehrere benachbarte Wörter beginnen mit demselben Laut."],
+ RF:["Rhetorische Frage","Eine Frage, auf die keine Antwort erwartet wird, weil die Antwort schon feststeht."]
+};
+const MASC=["DIM","EUP","NEO","PLE","CHI","PAL","KYK","VER"], NEUT=["HEN","PAR","OXY","ASY","POL"];
+// Unbestimmter Artikel: c = "nom" | "acc" | "dat"; neg = kein/keine
+function ein(f,c,neg){const g=MASC.includes(f)?"m":NEUT.includes(f)?"n":"f";
+  const t={nom:{m:"ein",n:"ein",f:"eine"},acc:{m:"einen",n:"ein",f:"eine"},dat:{m:"einem",n:"einem",f:"einer"}}[c][g];
+  return neg?"k"+t:t}
+const fig=(f,c,neg)=>ein(f,c,neg)+" <b>"+FIG[f][0]+"</b>";
+const L1 = ["ANT","HYP","IRO","MET","ANA","KLI","VER","PSN","ALL","RF"];
+const L2new = ["LIT","EUP","OXY","PAR","PLE","NEO","DIM","PER","ELL","CHI","PAL","EPI","POL","ASY","AKK"];
+const L3new = ["HEN","TAU","MTN","SYN","ADI","INV","KYK"];
+const LEVELS = [
+ {name:"Praktikum", desc:"10 Einstiegs-Figuren: Metapher, Vergleich, Personifikation, Alliteration, Anapher, Klimax …", figs:L1, focus:L1},
+ {name:"Junior-Team", desc:"+15 weitere Figuren: Litotes, Oxymoron, Ellipse, Chiasmus, Parallelismus …", figs:[...L1,...L2new], focus:L2new},
+ {name:"Profi-Abteilung", desc:"Alle 32 Figuren – inkl. Hendiadyoin, Tautologie, Metonymie, Kyklos …", figs:[...L1,...L2new,...L3new], focus:L3new}
+];
+
+/* ===================== Kund:innen & Slogans (alle fiktiv) ===================== */
+// [Slogan, Hauptfigur, [weitere Figuren, die auch drinstecken]]
+const CLIENTS = [
+ {name:"GletscherKick", what:"Eistee", emoji:"🧊", who:"Frau Gerber, Marketing", s:[
+  ["GletscherKick – ein Bergbach in der Flasche.","MET",[]],
+  ["Erfrischend wie ein Sprung in den Bergsee.","VER",[]],
+  ["Die Zitrone flüstert: Trink mich!","PSN",[]],
+  ["Der kälteste Tee des Universums.","HYP",[]],
+  ["Herrlich, diese lauwarme Limo im Sommer … Oder doch lieber GletscherKick?","IRO",["RF"]],
+  ["Kühler Kick für kluge Köpfe.","ALL",[]],
+  ["Mehr Frische. Mehr Geschmack. Mehr Kick.","ANA",["PAL","ELL"]],
+  ["Wer sagt schon Nein zu einem eiskalten Tee?","RF",[]],
+  ["Die Sonne brennt, du bleibst cool.","ANT",["PAL"]],
+  ["Kühl, kälter, GletscherKick.","KLI",["ASY","ELL"]],
+  ["Nur ein Schlückchen – versprochen!","DIM",["ELL"]],
+  ["Mit natürlichem Bergwasser aus der Natur.","PLE",[]],
+  ["Durst? GletscherKick!","ELL",[]],
+  ["Und es zischt und sprudelt und prickelt und kühlt.","POL",[]],
+  ["Im Büro GletscherKick, beim Sport GletscherKick, am See GletscherKick.","EPI",["PAL","ELL"]],
+  ["Garantiert nicht lauwarm.","LIT",["ELL"]],
+  ["GletscherKick – frisch und munter durch den Tag.","HEN",["ELL"]],
+  ["GletscherKick – einfach durstwegzischbar.","NEO",[]],
+  ["Die ganze Schule trinkt GletscherKick.","MTN",[]],
+  ["Gönn dir eine Pause. Eine Pause mit GletscherKick.","ADI",["ELL"]],
+  ["Eiskalt ist er, unser GletscherKick.","INV",[]]
+ ]},
+ {name:"Flitzer", what:"E-Bike", emoji:"🚲", who:"Herr Büchel, Verkaufsleiter", s:[
+  ["Flitzer – deine Flügel für die Stadt.","MET",[]],
+  ["Leise wie eine Katze, schnell wie ein Pfeil.","VER",["PAL"]],
+  ["Flitzer freut sich schon auf deinen Arbeitsweg.","PSN",[]],
+  ["In null Komma nichts quer durch die ganze Stadt.","HYP",[]],
+  ["Herrlich, so ein Stau am Morgen … Oder doch lieber Flitzer?","IRO",["RF"]],
+  ["Flitzer – flott durch den Feierabendverkehr.","ALL",[]],
+  ["Weniger Stau. Weniger Stress. Weniger Abgase.","ANA",["PAL","ELL","AKK"]],
+  ["Warum im Stau stehen, wenn du flitzen kannst?","RF",[]],
+  ["Kleiner Motor, grosse Freiheit.","ANT",["PAL","ELL"]],
+  ["Rollen, fahren, fliegen – mit Flitzer.","KLI",["ASY"]],
+  ["Flitzer – einfach stauvorbeifahrbar.","NEO",[]],
+  ["Du bewegst das Velo, das Velo bewegt dich.","CHI",[]],
+  ["Langsamer fahren, schneller ankommen.","PAR",["ANT","PAL"]],
+  ["Und du fährst und lachst und winkst und überholst.","POL",[]],
+  ["Zur Schule mit Flitzer, zur Arbeit mit Flitzer, zum See mit Flitzer.","EPI",["PAL","ELL"]],
+  ["Für alle, die beim Bergauffahren gerne etwas Unterstützung annehmen.","EUP",[]],
+  ["Flitzer – mit Herz und Seele gebaut.","HEN",[]],
+  ["Ein Rundfährtchen gefällig?","DIM",["ELL","RF"]],
+  ["Nicht gerade langsam.","LIT",["ELL"]],
+  ["Jetzt neu: die brandneue Generation!","PLE",[]],
+  ["Der Akku hält lange, der Rahmen ist leicht.","PAL",[]],
+  ["Stau? Nein danke!","ELL",[]],
+  ["Aufsteigen, losfahren, ankommen.","ASY",[]],
+  ["Flitzer – der leise Donner auf zwei Rädern.","OXY",["MET","PER"]],
+  ["Leise surrt er durch die Stadt, der Flitzer.","INV",[]],
+  ["Freiheit auf zwei Rädern – das ist Freiheit.","KYK",[]],
+  ["Velo ist Velo? Nicht ganz – Flitzer ist mehr.","TAU",["RF"]]
+ ]},
+ {name:"Traumwolke", what:"Kopfkissen", emoji:"☁️", who:"Frau Marxer, Geschäftsführerin", s:[
+  ["Weich wie eine Wolke.","VER",["ELL"]],
+  ["Traumwolke – dein Hafen für die Nacht.","MET",[]],
+  ["Dein Kissen wartet schon auf dich.","PSN",[]],
+  ["So weich, dass du nie wieder aufstehen willst.","HYP",[]],
+  ["Wunderbar, so ein harter Stein unter dem Kopf … Oder doch lieber Traumwolke?","IRO",["RF"]],
+  ["Wunderbar weich, wohlig warm.","ALL",["PAL","ELL"]],
+  ["Gute Nacht, gute Träume, guter Morgen.","ANA",["PAL","ELL"]],
+  ["Wer will morgens schon müde sein?","RF",[]],
+  ["Der Tag war hart, die Nacht wird weich.","ANT",["PAL"]],
+  ["Liegen, entspannen, träumen.","KLI",["ASY"]],
+  ["Ein Nickerchen auf dem Wölkchen.","DIM",["MET","ELL"]],
+  ["Nicht gerade unbequem.","LIT",["ELL"]],
+  ["Für alle, die morgens etwas länger zum Aufwachen brauchen.","EUP",[]],
+  ["Ruhe – endlich wieder Ruhe.","KYK",["ELL"]],
+  ["Schlaf ist Schlaf – aber auf Traumwolke ist er besser.","TAU",[]],
+  ["Himmlisch weich ist sie, die Traumwolke.","INV",[]],
+  ["Traumwolke – Ruhe und Frieden für deine Nacht.","HEN",["ELL"]],
+  ["Und du kuschelst und träumst und schläfst und lächelst.","POL",[]],
+  ["Gut geschlafen mit Traumwolke, gut geträumt mit Traumwolke.","EPI",["PAL","ANA","ELL"]],
+  ["Traumwolke – der Morgenmuffel-Wegzauberer.","NEO",[]],
+  ["Ganz Europa schläft auf Traumwolke.","MTN",["HYP"]]
+ ]},
+ {name:"Knusperberg", what:"Müesli", emoji:"🥣", who:"Herr Frick, Produktmanager", s:[
+  ["Knusperberg – der Motor für deinen Morgen.","MET",[]],
+  ["Knackig wie ein frischer Apfel.","VER",["ELL"]],
+  ["Die Haferflocken tanzen in deiner Schüssel.","PSN",[]],
+  ["Das knusprigste Müesli seit Erfindung des Frühstücks.","HYP",["ELL"]],
+  ["Toll, schon wieder ein Frühstück, das nach Karton schmeckt … Oder doch lieber Knusperberg?","IRO",["RF"]],
+  ["Kerniger Knusperspass für kleine Kämpfer.","ALL",[]],
+  ["Mit Nüssen. Mit Früchten. Mit Liebe.","ANA",["PAL","ELL"]],
+  ["Wer frühstückt schon gerne langweilig?","RF",[]],
+  ["Klein in der Schüssel, gross in der Wirkung.","ANT",["PAL","ELL"]],
+  ["Wach, fit, unschlagbar.","KLI",["ASY","ELL"]],
+  ["Hafer, Nüsse, Beeren, Honig – alles drin.","AKK",["ASY","ELL"]],
+  ["Mit Hafer und Nüssen und Beeren und Honig.","POL",["AKK","ELL"]],
+  ["Natürlicher Bio-Hafer aus der Natur.","PLE",["ELL"]],
+  ["Ein Schüsselchen Glück am Morgen.","DIM",["MET","ELL"]],
+  ["Knusperberg ist knusprig. Das Müesli bleibt sogar in der Milch knackig.","SYN",[]],
+  ["Hunger? Knusperberg!","ELL",[]],
+  ["Die Milch ist kalt, das Müesli ist knackig.","PAL",[]],
+  ["Weniger ist mehr – auch beim Zucker.","PAR",[]],
+  ["Knusperberg – für die wichtigste Mahlzeit des Tages.","PER",["ELL"]],
+  ["Heute schon eine Schüssel gegessen?","MTN",["RF","ELL"]],
+  ["Gar nicht mal so ungesund.","LIT",["ELL"]],
+  ["Knusperberg – voll und ganz natürlich.","HEN",["ELL"]],
+  ["Gesund ist lecker – lecker ist gesund.","CHI",[]],
+  ["Frühstück – endlich wieder ein richtiges Frühstück.","KYK",["ELL"]],
+  ["Knackig bleibt es bis zum letzten Löffel.","INV",[]]
+ ]},
+ {name:"Sohlenglück", what:"Turnschuhe", emoji:"👟", who:"Frau Hasler, Marketing", s:[
+  ["Sohlenglück – Federn unter deinen Füssen.","MET",["ELL"]],
+  ["Leicht wie eine Feder.","VER",["ELL"]],
+  ["Diese Schuhe wollen rennen.","PSN",[]],
+  ["Mit Sohlenglück läufst du bis zum Mond.","HYP",[]],
+  ["Super, schon wieder Blasen an den Füssen … Oder doch lieber Sohlenglück?","IRO",["RF"]],
+  ["Sohlenglück: sportlich sicher stehen.","ALL",[]],
+  ["Jeder Schritt leicht. Jeder Sprung sicher. Jeder Lauf ein Sieg.","ANA",["PAL","ELL"]],
+  ["Wer will schon mit schweren Füssen laufen?","RF",[]],
+  ["Weich beim Aufkommen, hart im Wettkampf.","ANT",["PAL","ELL"]],
+  ["Gehen, joggen, sprinten.","KLI",["ASY"]],
+  ["Du trägst die Schuhe – die Schuhe tragen dich.","CHI",[]],
+  ["Bergauf Sohlenglück, bergab Sohlenglück, jeden Tag Sohlenglück.","EPI",["PAL","ELL"]],
+  ["Federleicht, atmungsaktiv, rutschfest.","ASY",["AKK","ELL"]],
+  ["Jetzt mit kostenlosem Gratis-Schuhbeutel!","PLE",["ELL"]],
+  ["Auch für Läufer:innen, die gern etwas gemütlicher unterwegs sind.","EUP",["ELL"]],
+  ["Die Sneakers sitzen perfekt. Kein anderer Laufschuh ist so bequem.","SYN",[]],
+  ["Auch für kleine Füsschen.","DIM",["ELL"]],
+  ["Sicher ist sicher: rutschfeste Sohlen.","TAU",[]],
+  ["Laufen – das ist mehr als nur Laufen.","KYK",[]],
+  ["Du rennst und springst und tanzt und fliegst.","POL",[]],
+  ["Sohlenglück – laufen ohne Ach und Weh.","HEN",[]],
+  ["Auf die Plätze, fertig, Sohlenglück!","ELL",[]]
+ ]},
+ {name:"Wellenreich", what:"Erlebnisbad", emoji:"🏊", who:"Herr Ospelt, Badleiter", s:[
+  ["Wellenreich – deine Insel mitten im Winter.","MET",[]],
+  ["Wie Ferien am Meer – nur näher.","VER",["ELL"]],
+  ["Das Wasser ruft schon nach dir.","PSN",[]],
+  ["Die längste Rutsche der Galaxis.","HYP",["ELL"]],
+  ["Herrlich, so ein grauer Novembertag zu Hause … Oder doch lieber Wellenreich?","IRO",["RF"]],
+  ["Wunderbar warmes Wasser.","ALL",["ELL"]],
+  ["Hier wird gerutscht. Hier wird getaucht. Hier wird gelacht.","ANA",["PAL"]],
+  ["Wer braucht schon Sommer, wenn er Wellenreich hat?","RF",[]],
+  ["Draussen Schnee, drinnen Sommer.","ANT",["PAL","ELL"]],
+  ["Nass, nässer, Wellenreich.","KLI",["ASY","ELL"]],
+  ["Wellenreich – dein winterlicher Sommer.","OXY",["MET"]],
+  ["Und du rutschst und tauchst und spritzt und lachst.","POL",[]],
+  ["Auch für Schwimmer:innen mit gemütlichem Tempo.","EUP",["ELL"]],
+  ["Gönn dir ein Päuschen im Whirlpool.","DIM",[]],
+  ["Ganz Vaduz rutscht bei uns.","MTN",["HYP"]],
+  ["Spring ins kühle Nass!","PER",[]],
+  ["Wellenreich – einfach rutschtastisch!","NEO",[]],
+  ["Nicht gerade langweilig.","LIT",["ELL"]],
+  ["Das Wasser ist warm, die Rutsche ist lang.","PAL",[]],
+  ["Kalt draussen? Ab ins Wellenreich!","ELL",[]],
+  ["Rutschen, tauchen, plantschen, entspannen.","ASY",["AKK"]],
+  ["Komm ins Wasser. Wasser macht glücklich.","ADI",[]],
+  ["Wellenreich – Spiel und Spass für alle.","HEN",["ALL","ELL"]]
+ ]},
+ {name:"Lesewurm", what:"Bibliotheks-App", emoji:"📚", who:"Frau Risch, Bibliothekarin", s:[
+  ["Lesewurm – dein Tor zu tausend Welten.","MET",[]],
+  ["Spannend wie eine Achterbahnfahrt.","VER",["ELL"]],
+  ["Die Bücher warten schon auf dich.","PSN",[]],
+  ["Mehr Geschichten, als du in drei Leben lesen kannst.","HYP",["ELL"]],
+  ["Super, schon wieder nichts zu tun am Sonntag … Oder doch lieber Lesewurm?","IRO",["RF"]],
+  ["Lesewurm – Lesespass für lange Leseabende.","ALL",["ELL"]],
+  ["Neue Welten. Neue Helden. Neue Abenteuer.","ANA",["PAL","ELL","AKK"]],
+  ["Wer hat schon genug Geschichten?","RF",[]],
+  ["Kleiner Bildschirm, riesige Welten.","ANT",["PAL","ELL"]],
+  ["Erst neugierig, dann gefesselt, dann süchtig nach Geschichten.","KLI",["ANA","ELL"]],
+  ["Mit Lesewurm hast du Goethe immer dabei.","MTN",[]],
+  ["Lesewurm – für alle Freunde des gedruckten Wortes.","PER",["ELL"]],
+  ["Unweglegbar spannend.","NEO",["ELL"]],
+  ["Bleib zu Hause und reise um die Welt.","PAR",[]],
+  ["Geschichten, Geschichten, nichts als Geschichten.","KYK",["ELL"]],
+  ["Lies ein Buch. Ein Buch verändert alles.","ADI",[]],
+  ["Unendlich ist die Welt der Bücher.","INV",["HYP"]],
+  ["Lesewurm – die lauteste Stille der Stadt.","OXY",["ELL"]],
+  ["Keine schlechte Idee für den Sonntag.","LIT",["ELL"]],
+  ["Neue Neuerscheinungen jede Woche!","PLE",["ELL"]],
+  ["Gratis und kostenlos für alle.","TAU",["HEN","ELL"]],
+  ["Lesewurm – mit Haut und Haaren in die Geschichte.","HEN",["ELL"]],
+  ["Krimis, Comics, Romane, Sachbücher – alles in einer App.","AKK",["ASY","ELL"]],
+  ["Die App ist gratis, die Auswahl ist riesig.","PAL",[]],
+  ["Ein Kapitelchen vor dem Schlafen?","DIM",["RF","ELL"]]
+ ]},
+ {name:"Funkelzahn", what:"Zahnpasta", emoji:"🪥", who:"Herr Kaiser, Werbeleiter", s:[
+  ["Funkelzahn – Sonnenschein für dein Lächeln.","MET",["ELL"]],
+  ["Strahlend weiss wie frischer Schnee.","VER",["ELL"]],
+  ["Deine Zähne werden dir danken.","PSN",[]],
+  ["Ein Lächeln, das man bis zum Mond sieht.","HYP",["ELL"]],
+  ["Wunderbar, dieser frische Knoblauchatem … Oder doch lieber Funkelzahn?","IRO",["RF"]],
+  ["Für frischen, fröhlichen Funkelatem.","ALL",["ELL"]],
+  ["Frischer Atem. Frisches Lächeln. Frischer Start.","ANA",["PAL","ELL"]],
+  ["Wer lächelt schon gerne mit gelben Zähnen?","RF",[]],
+  ["Kleine Tube, grosses Lächeln.","ANT",["PAL","ELL"]],
+  ["Sauber, glänzend, strahlend.","KLI",["ASY","ELL"]],
+  ["Für Zähne, die schon etwas Kaffee gesehen haben.","EUP",["ELL"]],
+  ["Weisse Zähne in strahlendem Weiss.","PLE",["ELL"]],
+  ["Dein Lächeln? Nicht zu übersehen.","LIT",["ELL"]],
+  ["Für strahlende Zähnchen.","DIM",["ELL"]],
+  ["Sauber ist sauber.","TAU",[]],
+  ["Funkelzahn – für die 32 Perlen in deinem Mund.","PER",["MET","ELL"]],
+  ["Funkelzahn – einfach funkeltastisch!","NEO",["ELL"]],
+  ["Scharfe Milde: die neue Minze.","OXY",["ELL"]],
+  ["Morgens Funkelzahn, abends Funkelzahn, immer Funkelzahn.","EPI",["PAL","ELL"]],
+  ["Gegen Karies, Zahnstein, Mundgeruch und gelbe Beläge.","AKK",["ELL"]],
+  ["Zeig dein Lächeln. Ein Lächeln öffnet Türen.","ADI",["MET"]]
+ ]}
+];
+const SLOGANS=[]; CLIENTS.forEach((c,ci)=>c.s.forEach(([t,f,a])=>SLOGANS.push({t,f,a,ci})));
+
+/* ===================== Hilfsfunktionen ===================== */
+const $=id=>document.getElementById(id);
+const rnd=n=>Math.floor(Math.random()*n);
+const pick=a=>a[rnd(a.length)];
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};
+const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const store={get(k,d){try{const v=localStorage.getItem("werbeagentur_"+k);return v===null?d:JSON.parse(v)}catch(e){return d}},
+             set(k,v){try{localStorage.setItem("werbeagentur_"+k,JSON.stringify(v))}catch(e){}}};
+
+/* ===================== Ton ===================== */
+let AC=null, sound=store.get("sound",true);
+function tone(freq,dur,type="sine",when=0,vol=.12){
+  if(!sound)return;
+  try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();
+    const o=AC.createOscillator(),g=AC.createGain(),t=AC.currentTime+when;
+    o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+    o.connect(g).connect(AC.destination);o.start(t);o.stop(t+dur);}catch(e){}
+}
+const sfx={ok(){tone(660,.12,"triangle");tone(990,.18,"triangle",.1)},
+           no(){tone(180,.25,"sawtooth",0,.07)},
+           cash(){[880,1175,1568].forEach((f,i)=>tone(f,.12,"square",i*.07,.05))},
+           rank(){[523,659,784,1046].forEach((f,i)=>tone(f,.2,"triangle",i*.12))}};
+
+/* ===================== Ränge ===================== */
+const RANKS=[[0,"Praktikant:in"],[1500,"Junior-Texter:in"],[4000,"Texter:in"],[8000,"Senior-Texter:in"],[14000,"Art Director"],[22000,"Creative Director"]];
+const rankOf=m=>{let r=RANKS[0];for(const x of RANKS)if(m>=x[0])r=x;return r};
+const nextRank=m=>RANKS.find(x=>x[0]>m);
+
+/* ===================== Zustand ===================== */
+let level=store.get("level",0), career=store.get("career",0);
+let day=null;
+
+function renderTop(){
+  const name=store.get("agency","")||"Die Werbe-Agentur";
+  $("agencyTitle").textContent=name;
+  $("rankLine").textContent=rankOf(career)[1];
+  $("chipMoney").textContent="💰 "+(day?day.money:0)+" Fr.";
+  $("chipStreak").textContent="🔥 "+(day?day.streak:0);
+  $("chipStreak").classList.toggle("hot",!!day&&day.streak>=3);
+  $("btnSound").textContent=sound?"🔊":"🔇";
+}
+function renderStart(){
+  $("agency").value=store.get("agency","");
+  $("levels").innerHTML=LEVELS.map((l,i)=>`<button class="level${i===level?" sel":""}" data-l="${i}"><b>${l.name}</b><span>${l.desc}</span></button>`).join("");
+  $("levels").querySelectorAll(".level").forEach(b=>b.onclick=()=>{level=+b.dataset.l;store.set("level",level);renderStart()});
+  $("deadline").checked=store.get("deadline",false);
+  const r=rankOf(career),n=nextRank(career);
+  $("careerRank").textContent="Dein Rang: "+r[1];
+  $("careerTotal").textContent="Gesamt-Honorar: "+career+" Fr.";
+  $("careerBar").style.width=n?((career-r[0])/(n[0]-r[0])*100)+"%":"100%";
+  $("careerNext").textContent=n?`Noch ${n[0]-career} Fr. bis zur Beförderung zum/zur ${n[1]}.`:"Höchster Rang erreicht – Gratulation!";
+  renderTop();
+}
+function show(id){document.querySelectorAll(".screen").forEach(s=>s.classList.toggle("on",s.id===id));window.scrollTo({top:0,behavior:"smooth"})}
+
+/* ===================== Aufträge erzeugen ===================== */
+function makeQuestion(){
+  const L=LEVELS[level], figs=L.figs;
+  const avail=f=>SLOGANS.filter(s=>s.f===f&&!day.used.has(s.t));
+  // Neue Figuren der Stufe öfter abfragen
+  let pool=figs.filter(f=>avail(f).length);
+  const focus=L.focus.filter(f=>avail(f).length&&!day.figsAsked.includes(f));
+  const fresh=pool.filter(f=>!day.figsAsked.includes(f));
+  let f = (focus.length&&Math.random()<.6)?pick(focus):pick(fresh.length?fresh:pool);
+  // Modus A: passenden Slogan wählen
+  if(Math.random()<.5){
+    const cands=shuffle(avail(f));
+    for(const s of cands){
+      const others=SLOGANS.filter(o=>o.ci===s.ci&&o.f!==f&&figs.includes(o.f)&&!o.a.includes(f)&&!s.a.includes(o.f));
+      const byFig={};shuffle(others).forEach(o=>{if(!byFig[o.f])byFig[o.f]=o});
+      const ds=Object.values(byFig);
+      if(ds.length>=3){
+        const opts=shuffle([s,...ds.slice(0,3)]);
+        return {mode:"pick",fig:f,client:CLIENTS[s.ci],correct:s,opts};
+      }
+    }
+  }
+  // Modus B: Figur im Slogan erkennen
+  const s=pick(avail(f));
+  const wrong=shuffle(figs.filter(x=>x!==f&&!s.a.includes(x))).slice(0,3);
+  return {mode:"spot",fig:f,client:CLIENTS[s.ci],correct:s,opts:shuffle([f,...wrong])};
+}
+
+/* ===================== Spielablauf ===================== */
+let timerId=null, tLeft=0, q=null;
+const TOTAL=10, TIME=25;
+function startDay(){
+  const name=$("agency").value.trim();store.set("agency",name);
+  store.set("deadline",$("deadline").checked);
+  day={n:0,money:0,streak:0,best:0,ok:0,results:[],misses:[],used:new Set(),figsAsked:[],deadline:$("deadline").checked,startRank:rankOf(career)[1]};
+  renderTop();show("sGame");nextQuestion();
+}
+function nextQuestion(){
+  if(day.n>=TOTAL)return endDay();
+  q=makeQuestion();q.help=false;q.done=false;
+  day.used.add(q.correct.t);day.figsAsked.push(q.fig);
+  $("qNum").textContent=`Auftrag ${day.n+1} / ${TOTAL}`;
+  $("dots").innerHTML=Array.from({length:TOTAL},(_,i)=>`<i class="${i<day.n?(day.results[i]?"ok":"no"):i===day.n?"now":""}"></i>`).join("");
+  const c=q.client;
+  $("cEmoji").textContent=c.emoji;$("cWhat").textContent=c.what+" · "+c.who;$("cName").textContent=c.name;
+  const opts=$("opts");$("feedback").style.display="none";$("btnNext").style.display="none";$("btnCheat2").disabled=false;
+  if(q.mode==="pick"){
+    const f=q.fig;
+    $("cBrief").innerHTML=pick([`Wir brauchen einen Slogan mit ${fig(f,"dat")}!`,`Bitte liefere uns einen Slogan mit ${fig(f,"dat")}.`,`Unsere Chefin wünscht sich unbedingt ${fig(f,"acc")}.`,`Diesmal soll ${fig(f,"nom")} drinstecken!`])+" Welcher Entwurf passt?";
+    opts.className="opts";
+    opts.innerHTML=q.opts.map((s,i)=>`<button class="opt slogan" data-i="${i}"><span class="k">${i+1}</span><span>„${esc(s.t)}“</span></button>`).join("");
+  }else{
+    $("cBrief").innerHTML=esc(pick(["Die Konkurrenz wirbt mit diesem Slogan","Unser alter Slogan lautet","Ein Kollege hat diesen Entwurf geschrieben"]))+`:<span class="quote">„${esc(q.correct.t)}“</span>Welche Stilfigur steckt darin?`;
+    opts.className="opts figs";
+    opts.innerHTML=q.opts.map((f,i)=>`<button class="opt" data-i="${i}"><span class="k">${i+1}</span><span><b>${FIG[f][0]}</b></span></button>`).join("");
+  }
+  opts.querySelectorAll(".opt").forEach(b=>b.onclick=()=>answer(+b.dataset.i));
+  // Timer
+  clearInterval(timerId);
+  $("timer").style.display=day.deadline?"block":"none";
+  if(day.deadline){tLeft=TIME;$("timerBar").style.width="100%";
+    timerId=setInterval(()=>{if(cheatOpen)return;tLeft-=.1;$("timerBar").style.width=Math.max(0,tLeft/TIME*100)+"%";if(tLeft<=0){clearInterval(timerId);answer(-1)}},100);}
+}
+function answer(i){
+  if(q.done)return;q.done=true;clearInterval(timerId);
+  const btns=[...$("opts").querySelectorAll(".opt")];btns.forEach(b=>b.disabled=true);
+  const ok = i>=0 && (q.mode==="pick"? q.opts[i]===q.correct : q.opts[i]===q.fig);
+  const ci = q.mode==="pick"? q.opts.indexOf(q.correct) : q.opts.indexOf(q.fig);
+  btns[ci].classList.add("right");
+  if(!ok&&i>=0)btns[i].classList.add("wrong");
+  // Bei Modus A: Figuren unter den Entwürfen anzeigen
+  if(q.mode==="pick")btns.forEach((b,k)=>{const s=q.opts[k];b.querySelector("span:last-child").insertAdjacentHTML("beforeend",`<span class="tag">→ ${FIG[s.f][0]}</span>`)});
+  let fee=0;
+  if(ok){
+    day.streak++;day.best=Math.max(day.best,day.streak);day.ok++;
+    fee=100+Math.min(day.streak-1,5)*10+(day.deadline?Math.round(tLeft*2):0);
+    if(q.help)fee=Math.round(fee/2);
+    day.money+=fee;sfx.ok();setTimeout(sfx.cash,180);
+    burst(btns[ci]);
+  }else{
+    day.streak=0;sfx.no();
+    day.misses.push({q,chosen:i});
+  }
+  day.results.push(ok);
+  const F=FIG[q.fig];
+  let html;
+  if(ok){
+    html=`<h3>${pick(["Kunde begeistert!","Volltreffer!","Genau so!","Auftrag gewonnen!"])} +${fee} Fr.${q.help?" <span class='muted'>(halbiert)</span>":""}</h3>`;
+  }else if(i<0){
+    html=`<h3>⏰ Deadline verpasst!</h3>`;
+  }else{
+    const wf = q.mode==="pick"? q.opts[i].f : q.opts[i];
+    html=`<h3>${pick(["Kunde nicht überzeugt …","Leider daneben.","Das war es noch nicht."])}</h3>`+
+      (q.mode==="pick"?`<p>Dein Entwurf enthält ${fig(wf,"acc")} – gesucht war ${fig(q.fig,"nom")}.</p>`:`<p>Das ist ${fig(wf,"nom",true)}, sondern ${fig(q.fig,"nom")}.</p>`);
+  }
+  html+=`<p class="def"><b>${F[0]}:</b> ${F[1]}</p>`;
+  const extra=q.correct.a.map(x=>FIG[x][0]);
+  if(extra.length)html+=`<p class="muted">Übrigens: Im richtigen Slogan steckt zusätzlich: ${extra.join(", ")}.</p>`;
+  const fb=$("feedback");fb.className="feedback "+(ok?"ok":"no");fb.innerHTML=html;fb.style.display="block";
+  day.n++;
+  $("btnNext").textContent=day.n>=TOTAL?"Feierabend! →":"Nächster Auftrag →";
+  $("btnNext").style.display="inline-block";$("btnCheat2").disabled=true;
+  renderTop();
+  setTimeout(()=>$("btnNext").focus({preventScroll:true}),50);
+}
+function endDay(){
+  clearInterval(timerId);
+  const before=rankOf(career);career+=day.money;store.set("career",career);const after=rankOf(career);
+  $("rTitle").textContent=day.ok>=9?"Grandioser Arbeitstag!":day.ok>=7?"Starker Arbeitstag!":day.ok>=5?"Solider Arbeitstag.":"Morgen wird besser!";
+  $("rOk").textContent=day.ok+" / "+TOTAL;$("rMoney").textContent=day.money+" Fr.";$("rStreak").textContent=day.best;
+  const ru=$("rRankup");
+  if(after[1]!==before[1]){ru.style.display="block";ru.textContent="🎉 Beförderung! Du bist jetzt "+after[1]+".";sfx.rank();for(let k=0;k<4;k++)setTimeout(()=>burst(ru),k*200)}else ru.style.display="none";
+  $("rMisses").innerHTML=day.misses.length?`<h3 style="margin:14px 0 4px">Das üben wir noch:</h3>`+day.misses.map(m=>{
+      const F=FIG[m.q.fig];return `<div class="miss"><q>${esc(m.q.correct.t)}</q><br><b>${F[0]}</b> – ${F[1]}</div>`}).join(""):`<p style="margin-top:14px"><b>Keine Fehler – alle Kund:innen sind glücklich!</b></p>`;
+  show("sReport");renderTop();
+}
+function burst(el){
+  const r=el.getBoundingClientRect();
+  for(let k=0;k<8;k++){const s=document.createElement("span");s.className="burst";s.textContent=pick(["💰","✨","⭐","🪙"]);
+    s.style.left=(r.left+r.width/2)+"px";s.style.top=(r.top+r.height/2)+"px";
+    s.style.setProperty("--dx",(rnd(240)-120)+"px");s.style.setProperty("--dy",(-rnd(160)-40)+"px");s.style.setProperty("--r",(rnd(120)-60)+"deg");
+    document.body.appendChild(s);setTimeout(()=>s.remove(),1200);}
+}
+
+/* ===================== Spickzettel ===================== */
+let cheatOpen=false;
+function openCheat(inGame){
+  const figs=LEVELS[level].figs;
+  $("cheatList").innerHTML=figs.map(f=>`<dt>${FIG[f][0]}</dt><dd>${FIG[f][1]}</dd>`).join("");
+  $("cheatWarn").style.display=inGame?"block":"none";
+  if(inGame&&q&&!q.done)q.help=true;
+  $("cheat").classList.add("on");cheatOpen=true;$("btnCloseCheat").focus();
+}
+function closeCheat(){$("cheat").classList.remove("on");cheatOpen=false}
+
+/* ===================== Events ===================== */
+$("btnStart").onclick=startDay;
+$("btnAgain").onclick=()=>{renderStart();startDay()};
+$("btnHome").onclick=()=>{day=null;renderStart();show("sStart")};
+$("btnNext").onclick=nextQuestion;
+$("btnCheat1").onclick=()=>openCheat(false);
+$("btnCheat2").onclick=()=>openCheat(true);
+$("btnCloseCheat").onclick=closeCheat;
+$("cheat").onclick=e=>{if(e.target.id==="cheat")closeCheat()};
+$("btnSound").onclick=()=>{sound=!sound;store.set("sound",sound);renderTop()};
+$("agency").oninput=()=>{store.set("agency",$("agency").value.trim());renderTop()};
+document.addEventListener("keydown",e=>{
+  if(cheatOpen){if(e.key==="Escape")closeCheat();return}
+  if(!$("sGame").classList.contains("on"))return;
+  if(q&&!q.done&&/^[1-4]$/.test(e.key)){answer(+e.key-1)}
+  else if(q&&q.done&&e.key==="Enter"&&document.activeElement!==$("btnNext")){nextQuestion()}
+});
+renderStart();
+</script>
+</body>
+</html>
