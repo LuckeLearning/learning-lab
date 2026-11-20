@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Present Simple Trainer</title>
+<style>
+
+:root{--bg1:#04111f;--bg2:#0b2a4a;--sky:#5cc6f0;--yellow:#ffd60a;--green:#3ddc84;--red:#ff5a6e;--text:#eaf4ff;--muted:#8fb3d1;--card:rgba(255,255,255,.05);--line:rgba(143,179,209,.22)}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--text);
+  background:radial-gradient(1100px 650px at 12% -10%,#164a78 0%,transparent 60%),radial-gradient(900px 600px at 110% 115%,#0e4566 0%,transparent 55%),linear-gradient(160deg,var(--bg2),var(--bg1));
+  min-height:100dvh;overflow:hidden}
+.wrap{height:100dvh;display:flex;flex-direction:column;max-width:980px;margin:0 auto;padding:clamp(10px,2.2vh,22px) clamp(12px,3vw,28px);gap:clamp(8px,1.5vh,14px)}
+header{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.kicker{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--sky);font-weight:700}
+h1{margin:3px 0 0;font-size:clamp(1.6rem,4.4vw,2.5rem);line-height:1;font-weight:800;letter-spacing:-.01em;
+  background:linear-gradient(180deg,#fff 0%,#e4ecf4 30%,#9fb1c4 52%,#f6f9fc 72%,#b8c6d4 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 10px rgba(92,198,240,.35))}
+h1 span{background:linear-gradient(180deg,#fff6c2,#ffd60a 50%,#e0a800);-webkit-background-clip:text;background-clip:text;color:transparent}
+.stats{display:flex;gap:8px}
+.chip{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:5px 12px;text-align:center;min-width:62px}
+.chip b{display:block;font-size:1.05rem}
+.chip small{font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.progress{height:6px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden;flex:none}
+.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--sky),var(--green));transition:width .4s}
+main{flex:1;min-height:0;display:flex}
+.card{flex:1;min-height:0;background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.03));border:1px solid var(--line);border-radius:22px;
+  padding:clamp(14px,3vh,30px) clamp(14px,3.5vw,40px);display:flex;flex-direction:column;gap:clamp(8px,1.8vh,16px);
+  box-shadow:0 20px 50px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.08);overflow:auto}
+h2{margin:0;font-size:clamp(1.05rem,2.6vw,1.35rem)}
+.lead{margin:0;color:var(--muted);line-height:1.5;font-size:clamp(.9rem,2.1vw,1rem)}
+ol.steps{margin:0;padding-left:1.3em;line-height:1.6;font-size:clamp(.9rem,2.1vw,1rem)}
+ol.steps b{color:var(--yellow)}
+.group{display:flex;flex-direction:column;gap:8px}
+.group .lbl{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--sky);font-weight:700}
+.toggles{display:flex;flex-wrap:wrap;gap:8px}
+.toggle{font:inherit;font-weight:700;font-size:clamp(.88rem,2.1vw,1rem);color:var(--muted);background:rgba(4,17,31,.45);border:2px solid var(--line);border-radius:999px;padding:9px 16px;cursor:pointer;transition:.15s}
+.toggle:hover{border-color:var(--sky)}
+.toggle[aria-pressed="true"]{color:#04111f;border-color:transparent;background:linear-gradient(180deg,#bfeaff,var(--sky))}
+.toggle.t-neg[aria-pressed="true"]{background:linear-gradient(180deg,#ffc2ca,var(--red))}
+.toggle.t-aff[aria-pressed="true"]{background:linear-gradient(180deg,#c4f7da,var(--green))}
+details.rules{background:rgba(4,17,31,.4);border:1px solid var(--line);border-radius:14px;padding:10px 14px}
+details.rules summary{cursor:pointer;font-weight:700;color:var(--sky)}
+.rules table{width:100%;border-collapse:collapse;margin-top:8px;font-size:clamp(.82rem,1.9vw,.95rem)}
+.rules td{padding:6px 6px;border-top:1px solid rgba(255,255,255,.07);vertical-align:top;line-height:1.45}
+.rules td:first-child{font-weight:800;width:2.2em;text-align:center;font-size:1.1em}
+.rules .ex{color:var(--yellow);font-weight:600}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn{font:inherit;font-weight:800;font-size:clamp(.95rem,2.3vw,1.08rem);border:none;border-radius:14px;padding:12px 22px;cursor:pointer;transition:transform .1s,filter .15s}
+.btn:active{transform:translateY(1px) scale(.98)}
+.btn.primary{color:#1a1300;background:linear-gradient(180deg,#fff3a6 0%,#ffd60a 45%,#e6ac00 100%);box-shadow:0 6px 20px rgba(255,214,10,.35),inset 0 1px 0 rgba(255,255,255,.7)}
+.btn.primary.pulse{animation:pulse 1.8s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 6px 20px rgba(255,214,10,.3),0 0 0 0 rgba(255,214,10,.45)}50%{box-shadow:0 6px 26px rgba(255,214,10,.5),0 0 0 10px rgba(255,214,10,0)}}
+.btn.ghost{color:var(--text);background:rgba(255,255,255,.06);border:1px solid var(--line)}
+.btn.ghost:hover{border-color:var(--sky)}
+.btn:disabled{opacity:.4;cursor:default;animation:none}
+.meta{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.badge{font-weight:800;font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;padding:5px 12px;border-radius:999px;color:#04111f}
+.badge.t-aff{background:var(--green)}.badge.t-neg{background:var(--red)}.badge.t-q{background:var(--sky)}
+.count{color:var(--muted);font-weight:700;font-size:.9rem}
+.review{color:var(--yellow);font-weight:700;font-size:.85rem}
+.instr{margin:0;color:var(--muted);font-size:clamp(.92rem,2.2vw,1.05rem)}
+.instr b{color:var(--text)}
+.sentence{font-size:clamp(1.25rem,3.8vw,2.05rem);line-height:2.05;font-weight:650;margin:clamp(4px,2vh,20px) 0}
+.gap{font:inherit;color:var(--yellow);background:rgba(4,17,31,.65);border:none;border-bottom:3px solid var(--sky);border-radius:8px 8px 4px 4px;
+  padding:.05em .3em;margin:0 .05em;text-align:center;outline:none;min-width:3.5ch;max-width:58vw;transition:.15s;line-height:1.3;height:auto;vertical-align:baseline}
+.gap:focus{border-bottom-color:var(--yellow);box-shadow:0 0 0 3px rgba(255,214,10,.18)}
+.gap.ok{border-bottom-color:var(--green);color:var(--green)}
+.gap.bad{border-bottom-color:var(--red);color:var(--red);text-decoration:line-through;text-decoration-thickness:2px}
+.gap.shake{animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.hint{color:var(--muted);font-weight:500;font-size:.72em;white-space:nowrap}
+.fb{border-radius:16px;padding:12px 16px;line-height:1.5;font-size:clamp(.9rem,2.1vw,1.02rem);display:flex;flex-direction:column;gap:6px}
+.fb.ok{background:rgba(61,220,132,.12);border:1px solid rgba(61,220,132,.45)}
+.fb.bad{background:rgba(255,90,110,.12);border:1px solid rgba(255,90,110,.45)}
+.fb.almost{background:rgba(255,214,10,.1);border:1px solid rgba(255,214,10,.45)}
+.fb .head{font-weight:800;font-size:1.08em}
+.fb.ok .head{color:var(--green)}.fb.bad .head{color:var(--red)}.fb.almost .head{color:var(--yellow)}
+.fb .full{font-weight:600}
+.fb mark{background:none;color:var(--yellow);font-weight:800}
+.fb .tip{color:#cfe6f8}
+.fb .tip::before{content:"💡 "}
+.fb .note{color:#ffd0d6;font-weight:600}
+.fb .note::before{content:"⚠️ "}
+.listen{font:inherit;font-size:.85rem;font-weight:700;color:var(--sky);background:none;border:1px solid var(--line);border-radius:999px;padding:3px 12px;cursor:pointer;align-self:flex-start}
+.listen:hover{border-color:var(--sky)}
+.actions{margin-top:auto;display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+.result{text-align:center;align-items:center;justify-content:center}
+.big{font-size:clamp(3rem,10vw,5rem);font-weight:900;line-height:1;background:linear-gradient(180deg,#fff6c2,#ffd60a 50%,#e0a800);-webkit-background-clip:text;background-clip:text;color:transparent}
+.stars{font-size:clamp(1.6rem,5vw,2.4rem);letter-spacing:.15em}
+[hidden]{display:none !important}
+@media (max-height:560px){.sentence{line-height:1.8}.lead{display:none}}
+@media (prefers-reduced-motion: reduce){*{animation:none !important;transition:none !important}}
+
+/* --- v2 additions --- */
+.head-right{display:flex;gap:8px;align-items:stretch}
+.gbtn{font:inherit;font-weight:800;font-size:.85rem;color:#1a1300;background:linear-gradient(180deg,#fff3a6,#ffd60a 50%,#e6ac00);border:none;border-radius:12px;padding:6px 14px;cursor:pointer;box-shadow:0 4px 14px rgba(255,214,10,.3)}
+.gbtn.big{font-size:clamp(.95rem,2.3vw,1.05rem);padding:11px 18px;align-self:flex-start;color:var(--text);background:rgba(255,255,255,.06);border:1px solid var(--line);box-shadow:none}
+.gbtn.big:hover{border-color:var(--yellow)}
+.bank{background:rgba(4,17,31,.5);border:1px dashed rgba(92,198,240,.5);border-radius:16px;padding:10px 12px}
+.bank .lbl{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--sky);font-weight:700;margin-bottom:8px}
+.verbs{display:flex;flex-wrap:wrap;gap:8px}
+.verb{font-weight:700;font-size:clamp(.95rem,2.4vw,1.15rem);padding:6px 14px;border-radius:999px;background:linear-gradient(180deg,#f4f8fc,#c9d6e3);color:#0b2a4a;box-shadow:inset 0 1px 0 #fff,0 2px 6px rgba(0,0,0,.3)}
+.verb.right{background:linear-gradient(180deg,#c4f7da,var(--green));color:#04111f}
+.verb.dim{opacity:.35}
+.glink{font:inherit;font-size:.85rem;font-weight:700;color:var(--yellow);background:none;border:1px solid rgba(255,214,10,.4);border-radius:999px;padding:3px 12px;cursor:pointer}
+.fb .btns{display:flex;gap:8px;flex-wrap:wrap}
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(2,8,16,.82);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:clamp(6px,2vw,24px);z-index:50}
+.modal .panel{position:relative;width:min(1150px,100%);max-height:100%;overflow:auto;border-radius:16px;background:#fff;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.modal img{display:block;width:100%;height:auto}
+.modal .close{position:sticky;top:8px;float:right;margin:8px 8px -48px 0;z-index:2;width:40px;height:40px;border-radius:50%;border:none;background:#0b2a4a;color:#fff;font-size:1.3rem;font-weight:800;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.4)}
+/* present simple poster (same look as the past simple poster) */
+.poster{font-family:"Segoe UI",system-ui,Arial,sans-serif;color:#1d2433;background:#fffdf5;padding:clamp(8px,1.6vw,18px);display:flex;flex-direction:column;gap:clamp(8px,1.4vw,14px)}
+.poster .ban{background:linear-gradient(180deg,#ffd84d,#f5b800);border-radius:10px;text-align:center;padding:6px 10px;font-weight:900;font-size:clamp(1.05rem,3vw,2rem);color:#0b2350;box-shadow:inset 0 -3px 0 rgba(0,0,0,.08)}
+.poster .ban span{color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.35)}
+.poster table{width:100%;border-collapse:collapse;border:2px solid #e9c25a;background:#fff;font-size:clamp(.66rem,1.45vw,1rem)}
+.poster th{background:#e6e8fb;color:#123a8c;font-weight:800;padding:6px 4px;border:1px solid #e3d9b8;font-size:1.08em}
+.poster td{padding:6px 8px;border:1px solid #eadfbf;text-align:center;line-height:1.45;vertical-align:middle}
+.poster tr:nth-child(odd) td{background:#fffbea}
+.poster td.rule{text-align:left;background:#fff6d6 !important;width:24%}
+.poster .bl{color:#1f4fd1;font-weight:700}
+.poster .rd{color:#e0201b;font-weight:800}
+.poster .ok{color:#14963c;font-weight:800}
+.poster .no{color:#e0201b;text-decoration:line-through}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <div class="kicker">English · Grammar Trainer</div>
+      <h1>Present <span>Simple</span></h1>
+    </div>
+    <div class="head-right">
+      <button class="gbtn" id="btnGrammarTop" title="Grammar">📘 Grammar</button>
+      <div class="stats">
+        <div class="chip"><b id="sScore">0/0</b><small>Score</small></div>
+        <div class="chip"><b id="sStreak">0</b><small>Streak</small></div>
+        <div class="chip"><b id="sBest">0</b><small>Best</small></div>
+      </div>
+    </div>
+  </header>
+  <div class="progress"><i id="bar"></i></div>
+
+  <main>
+    <!-- START -->
+    <section class="card" id="vStart">
+      <h2>How it works</h2>
+      <ol class="steps"><li>Choose what you want to practise.</li><li>Read the sentence. <b>Choose the right verb</b> from the box.</li><li><b>Type</b> the correct form and press <b>Enter</b>.</li><li>Negative sentences: use the <b>short form</b> (don't / doesn't).</li><li>10 tasks per round. At the end, you try your mistakes again.</li></ol>
+      <button class="gbtn big" id="btnGrammarStart">📘 Look at the grammar first</button>
+      <div class="group">
+        <div class="lbl">What do you want to practise?</div>
+        <div class="toggles" id="typeToggles">
+          <button class="toggle t-aff" data-type="aff" aria-pressed="true">+ Positive</button>
+          <button class="toggle t-neg" data-type="neg" aria-pressed="true">– Negative</button>
+          <button class="toggle t-q" data-type="q" aria-pressed="true">? Questions</button>
+        </div>
+      </div>
+      <div class="group" id="verbGroup" hidden>
+        <div class="lbl">Which verbs?</div>
+        <div class="toggles" id="verbToggles">
+          <button class="toggle" data-verbs="reg" aria-pressed="false">Regular verbs</button>
+          <button class="toggle" data-verbs="irr" aria-pressed="false">Irregular verbs</button>
+          <button class="toggle" data-verbs="all" aria-pressed="true">All verbs</button>
+        </div>
+      </div>
+      <div class="actions"><button class="btn primary pulse" id="btnStart">Start ▶</button></div>
+    </section>
+
+    <!-- TASK -->
+    <section class="card" id="vTask" hidden>
+      <div class="meta">
+        <span class="badge" id="badge"></span>
+        <span class="review" id="reviewInfo" hidden>🔁 Try your mistakes again</span>
+        <span class="count" id="count"></span>
+      </div>
+      <p class="instr" id="instr"></p>
+      <div class="bank"><div class="lbl">Choose the right verb</div><div class="verbs" id="bank"></div></div>
+      <div class="sentence" id="sentence"></div>
+      <div class="fb" id="fb" hidden></div>
+      <div class="actions">
+        <button class="btn ghost" id="btnShow">Show answer</button>
+        <button class="btn primary" id="btnCheck">Check ✓</button>
+        <button class="btn primary pulse" id="btnNext" hidden>Next →</button>
+      </div>
+    </section>
+
+    <!-- RESULT -->
+    <section class="card result" id="vResult" hidden>
+      <div class="stars" id="rStars"></div>
+      <div class="big" id="rScore"></div>
+      <h2 id="rMsg"></h2>
+      <p class="lead" id="rInfo"></p>
+      <div class="row" style="justify-content:center">
+        <button class="btn ghost" id="btnSettings">⚙ Change settings</button>
+        <button class="btn primary pulse" id="btnAgain">Play again ↻</button>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- GRAMMAR -->
+<div class="modal" id="modal" hidden>
+  <div class="panel" role="dialog" aria-label="Grammar">
+    <button class="close" id="btnClose" aria-label="Close">✕</button>
+    <div class='poster'><div class='ban'>The Present Simple <span>– how to form it</span></div><table><tr><th>Spelling Rules<br><small>(he / she / it)</small></th><th>Affirmative</th><th>Negative</th><th>Questions</th></tr><tr><td class='rule'>Most verbs: add <span class='rd'>“s”</span></td><td>I <span class='bl'>eat</span> an apple.<br>She <span class='bl'>eat</span><span class='rd'>s</span> an apple.</td><td>I <span class='rd'>don’t</span> <span class='bl'>eat</span> meat.<br>She <span class='rd'>doesn’t</span> <span class='bl'>eat</span> meat.</td><td><span class='rd'>Do</span> you <span class='bl'>eat</span> fish?<br><span class='rd'>Does</span> she <span class='bl'>eat</span> fish?</td></tr><tr><td class='rule'>If the verb ends in <span class='bl'>sh</span> or <span class='bl'>ch</span>, add <span class='rd'>“es”</span></td><td>We <span class='bl'>watch</span> films.<br>He <span class='bl'>watch</span><span class='rd'>es</span> films.</td><td>We <span class='rd'>don’t</span> <span class='bl'>watch</span> films.<br>He <span class='rd'>doesn’t</span> <span class='bl'>watch</span> films.</td><td><span class='rd'>Do</span> they <span class='bl'>watch</span> films?<br><span class='rd'>Does</span> he <span class='bl'>watch</span> films?</td></tr><tr><td class='rule'>If the verb ends in a <span class='bl'>consonant + y</span>, omit “y” and add <span class='rd'>“ies”</span></td><td>I <span class='bl'>study</span> maths.<br>She <span class='bl'>stud</span><span class='rd'>ies</span> maths.</td><td>I <span class='rd'>don’t</span> <span class='bl'>study</span> maths.<br>She <span class='rd'>doesn’t</span> <span class='bl'>study</span> maths.</td><td><span class='rd'>Do</span> you <span class='bl'>study</span> maths?<br><span class='rd'>Does</span> she <span class='bl'>study</span> maths?</td></tr><tr><td class='rule'>If the verb ends in a <span class='bl'>vowel + y</span>, just add <span class='rd'>“s”</span></td><td>They <span class='bl'>play</span> chess.<br>He <span class='bl'>play</span><span class='rd'>s</span> chess.</td><td>They <span class='rd'>don’t</span> <span class='bl'>play</span> chess.<br>He <span class='rd'>doesn’t</span> <span class='bl'>play</span> chess.</td><td><span class='rd'>Do</span> they <span class='bl'>play</span> chess?<br><span class='rd'>Does</span> he <span class='bl'>play</span> chess?</td></tr><tr><td class='rule'>Special verbs: <span class='bl'>have</span> → <span class='rd'>has</span>, <span class='bl'>do</span> → <span class='rd'>does</span>, <span class='bl'>go</span> → <span class='rd'>goes</span></td><td>I <span class='bl'>have</span> a cat.<br>She <span class='rd'>has</span> a cat.<br>He <span class='bl'>go</span><span class='rd'>es</span> home.</td><td>She <span class='rd'>doesn’t</span> <span class='bl'>have</span> a cat.<br>He <span class='rd'>doesn’t</span> <span class='bl'>go</span> home.</td><td><span class='rd'>Does</span> she <span class='bl'>have</span> a cat?<br><span class='rd'>Does</span> he <span class='bl'>go</span> home?</td></tr></table><div class='ban'>Don’t forget! <span>– do / does</span></div><table><tr><th>Who?</th><th>Affirmative</th><th>Negative</th><th>Questions</th></tr><tr><td class='rule'><span class='bl'>I / you / we / they</span></td><td>I <span class='bl'>like</span> dogs.</td><td>I <span class='rd'>don’t</span> <span class='bl'>like</span> dogs.</td><td><span class='rd'>Do</span> you <span class='bl'>like</span> dogs?</td></tr><tr><td class='rule'><span class='bl'>he / she / it</span></td><td>She <span class='bl'>like</span><span class='rd'>s</span> dogs.</td><td>She <span class='rd'>doesn’t</span> <span class='bl'>like</span> dogs.</td><td><span class='rd'>Does</span> she <span class='bl'>like</span> dogs?</td></tr><tr><td class='rule'>After <b>doesn’t</b> and <b>Does</b>:<br>the verb has <b>no “s”</b>!</td><td colspan='3'><span class='ok'>✓</span> He doesn’t <b>play</b> … &nbsp; <span class='no'>He doesn’t plays</span><br><span class='ok'>✓</span> Does she <b>like</b> …? &nbsp; <span class='no'>Does she likes</span></td></tr><tr><td class='rule'>Signal words</td><td colspan='3'><span class='rd'>always, usually, often, sometimes, never</span> → before the verb: Tom <span class='rd'>often</span> <span class='bl'>reads</span> comics.<br><span class='rd'>every day, every morning …</span> → at the end: She <span class='bl'>plays</span> tennis <span class='rd'>every day</span>.</td></tr></table></div>
+  </div>
+</div>
+
+<script>
+const D = {"tense": "present", "key": "present-simple-trainer-v2", "items": [{"v": "play", "r": "football after school.", "f": "o", "alt": ["watch"]}, {"v": "play", "r": "the guitar in a band.", "f": "t"}, {"v": "like", "r": "pizza with pineapple.", "f": "t", "alt": ["eat", "cook"]}, {"v": "live", "r": "in a small village.", "alt": ["work", "sleep", "play", "walk", "run", "eat"]}, {"v": "live", "r": "near the school.", "alt": ["work", "sleep", "play", "walk", "run", "eat"]}, {"v": "work", "r": "in a hospital.", "s": {"t": "my mum", "p": "3s"}}, {"v": "work", "r": "in a bank.", "s": {"t": "my parents", "p": "3p"}}, {"v": "go", "r": "to school by bus.", "alt": ["come", "hurry"]}, {"v": "go", "r": "swimming on Fridays.", "f": "o"}, {"v": "do", "r": "homework after dinner.", "f": "o", "alt": ["finish", "start"]}, {"v": "do", "r": "sport every day.", "f": "o", "alt": ["play"]}, {"v": "have", "r": "two brothers.", "f": "t", "alt": ["help", "teach"]}, {"v": "have", "r": "breakfast at seven.", "f": "t", "alt": ["eat", "cook"]}, {"v": "watch", "r": "TV in the evening.", "f": "t"}, {"v": "watch", "r": "YouTube videos every day.", "f": "t"}, {"v": "study", "r": "French at school.", "f": "o", "alt": ["speak", "teach", "read", "write", "understand"]}, {"v": "study", "r": "for tests at the last minute.", "alt": ["work"]}, {"v": "read", "r": "comics.", "f": "t", "alt": ["write"]}, {"v": "read", "r": "the newspaper every morning.", "f": "t", "alt": ["write"]}, {"v": "write", "r": "stories in English.", "f": "t", "alt": ["read"]}, {"v": "write", "r": "emails to friends.", "f": "t", "alt": ["read"]}, {"v": "eat", "r": "meat.", "f": "t", "alt": ["cook"]}, {"v": "eat", "r": "lunch at school.", "f": "t", "alt": ["cook", "finish"]}, {"v": "drink", "r": "a lot of water.", "f": "t"}, {"v": "drink", "r": "coffee in the morning.", "f": "t", "alt": ["cook"], "s": {"t": "my dad", "p": "3s"}}, {"v": "get up", "r": "at 6:30 when the alarm clock rings."}, {"v": "speak", "r": "Italian.", "f": "o", "alt": ["study", "teach", "understand", "write", "read"]}, {"v": "speak", "r": "three languages.", "f": "o", "alt": ["study", "teach", "understand", "write", "read"]}, {"v": "listen", "r": "to music on the way to school.", "alt": ["dance", "sing"]}, {"v": "help", "r": "Grandma in the garden.", "f": "t", "alt": ["watch", "teach"]}, {"v": "cook", "r": "dinner on Saturdays.", "f": "t", "alt": ["eat"]}, {"v": "wash", "r": "the dishes after dinner.", "f": "t", "alt": ["do", "clean"]}, {"v": "wash", "r": "the car on Sundays.", "f": "t", "alt": ["clean", "start", "tidy"]}, {"v": "finish", "r": "school at four o'clock.", "f": "o", "alt": ["leave", "start"]}, {"v": "catch", "r": "the bus at a quarter past seven.", "f": "t"}, {"v": "try", "r": "new food on holiday.", "f": "t", "alt": ["eat", "cook"]}, {"v": "fly", "r": "to London every summer.", "alt": ["go", "come"]}, {"v": "carry", "r": "a heavy bag to school.", "f": "t"}, {"v": "tidy", "r": "the bedroom every week.", "f": "t", "alt": ["clean"]}, {"v": "hurry", "r": "to the bus stop every morning.", "alt": ["go", "run", "walk", "come"]}, {"v": "buy", "r": "clothes online.", "f": "t"}, {"v": "pay", "r": "by card in the shop.", "alt": ["buy"]}, {"v": "enjoy", "r": "maths lessons.", "f": "o", "alt": ["teach", "study"]}, {"v": "want", "r": "a new phone.", "f": "t"}, {"v": "need", "r": "help with the homework.", "f": "t"}, {"v": "know", "r": "the answer.", "f": "o", "alt": ["understand", "write", "read", "say"]}, {"v": "love", "r": "chocolate.", "f": "t", "alt": ["eat", "drink"]}, {"v": "hate", "r": "Mondays.", "f": "o"}, {"v": "come", "r": "home at five.", "alt": ["go", "leave", "walk", "run", "hurry", "fly"]}, {"v": "take", "r": "the train to school.", "f": "t", "alt": ["catch"]}, {"v": "make", "r": "breakfast for the family.", "f": "t", "alt": ["cook"]}, {"v": "ride", "r": "a bike to school.", "f": "t"}, {"v": "sleep", "r": "eight hours a night.", "alt": ["work"]}, {"v": "walk", "r": "the dog every evening.", "f": "t", "alt": ["wash"]}, {"v": "run", "r": "five kilometres in the park.", "alt": ["walk", "swim"]}, {"v": "swim", "r": "in the lake in summer.", "alt": ["play"]}, {"v": "sing", "r": "in a choir."}, {"v": "dance", "r": "hip-hop.", "f": "o", "alt": ["sing"]}, {"v": "use", "r": "a laptop at school.", "f": "t"}, {"v": "understand", "r": "the rules.", "f": "o", "alt": ["know", "read", "make"]}, {"v": "clean", "r": "the bathroom on Saturdays.", "f": "t", "alt": ["tidy"]}, {"v": "say", "r": "\"hello\" to the bus driver."}, {"v": "teach", "r": "English.", "f": "o", "alt": ["speak", "study", "understand"], "s": {"t": "Mrs Miller", "p": "3s"}}, {"v": "teach", "r": "at a ski school.", "alt": ["work"], "s": {"t": "Mr and Mrs Brown", "p": "3p"}}, {"v": "open", "r": "at nine.", "alt": ["close", "start", "finish"], "s": {"t": "the shop", "p": "3s"}}, {"v": "close", "r": "at six.", "alt": ["open", "start", "finish"], "s": {"t": "the shops", "p": "3p"}}, {"v": "start", "r": "at eight.", "alt": ["finish", "open"], "s": {"t": "the film", "p": "3s"}}, {"v": "rain", "r": "a lot in April.", "alt": ["cost"], "s": {"t": "it", "p": "3s"}}, {"v": "leave", "r": "at 7:15.", "alt": ["come", "go"], "s": {"t": "the bus", "p": "3s"}}, {"v": "cost", "r": "20 francs.", "s": {"t": "the tickets", "p": "3p"}}], "subjects": [{"t": "I", "p": "1s"}, {"t": "you", "p": "2"}, {"t": "he", "p": "3s"}, {"t": "she", "p": "3s"}, {"t": "we", "p": "1p"}, {"t": "they", "p": "3p"}, {"t": "Tom", "p": "3s"}, {"t": "Mia", "p": "3s"}, {"t": "my brother", "p": "3s"}, {"t": "my sister", "p": "3s"}, {"t": "my friends", "p": "3p"}, {"t": "Lisa and Sam", "p": "3p"}], "adults": [{"t": "our teacher", "p": "3s"}, {"t": "my parents", "p": "3p"}, {"t": "my aunt", "p": "3s"}, {"t": "Grandpa", "p": "3s"}, {"t": "Mr and Mrs Brown", "p": "3p"}], "instr": {"aff": "Choose the right verb and write the correct form.", "neg": "Choose the right verb. Make the sentence <b>negative</b> (short form: <b>don't / doesn't</b>).", "q": "Choose the right verb and complete the <b>question</b>."}, "shortHint": "do not → <b>don't</b> · does not → <b>doesn't</b>", "apoEx": "doesn<b>'</b>t, don<b>'</b>t"};
+const ROUND = 10, BANK = 6;
+const UNIV = ['like','love','hate','want','need','enjoy','prefer'];
+const THING = ['buy','sell','find','lose','see','take','bring','get','keep','steal','choose','hold','carry','drop','forget','show','have','make','break','throw','give','use','put','leave','send','lend'];
+const $ = id => document.getElementById(id);
+const rnd = n => Math.floor(Math.random() * n);
+const pick = a => a[rnd(a.length)];
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = rnd(i + 1); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+const norm = s => (s || '').toLowerCase().replace(/[’‘´`ʼ′]/g, "'").replace(/\s+/g, ' ').trim().replace(/[.?!,]+$/, '');
+const TYPES = { aff: { label: '+ Positive', cls: 't-aff' }, neg: { label: '– Negative', cls: 't-neg' }, q: { label: '? Question', cls: 't-q' } };
+
+/* past forms for every verb (for "wrong verb" detection) */
+const FORMS = {};
+D.items.forEach(it => { if (!FORMS[it.v]) FORMS[it.v] = it; });
+
+/* ---------- storage ---------- */
+let best = 0;
+try { best = +localStorage.getItem(D.key + '-best') || 0; } catch (e) {}
+function saveBest() { try { localStorage.setItem(D.key + '-best', best); } catch (e) {} }
+
+/* ---------- grammar modal ---------- */
+function openGrammar() { $('modal').hidden = false; $('btnClose').focus(); }
+function closeGrammar() { $('modal').hidden = true; }
+$('btnGrammarTop').onclick = openGrammar;
+$('btnGrammarStart').onclick = openGrammar;
+$('btnClose').onclick = closeGrammar;
+$('modal').onclick = e => { if (e.target.id === 'modal') closeGrammar(); };
+
+/* ---------- present simple: he/she/it form ---------- */
+function s3(v) {
+  const w = v.split(' '), b = w[0];
+  let s;
+  if (b === 'have') s = 'has';
+  else if (/[^aeiou]y$/.test(b)) s = b.slice(0, -1) + 'ies';
+  else if (/(s|sh|ch|x|z|o)$/.test(b)) s = b + 'es';
+  else s = b + 's';
+  w[0] = s; return w.join(' ');
+}
+
+/* ---------- settings ---------- */
+const settings = { types: new Set(['aff', 'neg', 'q']), verbs: 'all' };
+document.querySelectorAll('#typeToggles .toggle').forEach(btn => {
+  btn.onclick = () => {
+    const t = btn.dataset.type;
+    if (settings.types.has(t)) { if (settings.types.size === 1) return; settings.types.delete(t); }
+    else settings.types.add(t);
+    btn.setAttribute('aria-pressed', settings.types.has(t));
+  };
+});
+if (D.tense === 'past') {
+  $('verbGroup').hidden = false;
+  document.querySelectorAll('#verbToggles .toggle').forEach(btn => {
+    btn.onclick = () => {
+      settings.verbs = btn.dataset.verbs;
+      document.querySelectorAll('#verbToggles .toggle').forEach(b => b.setAttribute('aria-pressed', b === btn));
+    };
+  });
+}
+
+/* ---------- state ---------- */
+let S = {};
+function show(view) { ['vStart', 'vTask', 'vResult'].forEach(v => $(v).hidden = v !== view); }
+function updateStats() {
+  $('sScore').textContent = S.correct + '/' + S.answered;
+  $('sStreak').textContent = S.streak;
+  $('sBest').textContent = best;
+  const total = S.queue ? S.queue.length : 1;
+  $('bar').style.width = (S.phase === 'main' ? (S.idx / total) * 100 : 100) + '%';
+}
+
+/* ---------- build tasks ---------- */
+function pool() {
+  let items = D.items;
+  if (D.tense === 'past' && settings.verbs !== 'all')
+    items = items.filter(it => settings.verbs === 'reg' ? it.cat === 'reg' : it.cat !== 'reg');
+  return items;
+}
+
+function chooseSubject(item, type) {
+  if (item.s) return item.s;
+  let list = item.adult ? D.adults : D.subjects;
+  if (type === 'q') list = list.filter(s => s.t !== 'I');
+  if (D.tense === 'present') {
+    const third = Math.random() < 0.5;
+    const f = list.filter(s => (s.p === '3s') === third);
+    if (f.length) list = f;
+  }
+  return pick(list);
+}
+
+/* verbs that must NOT appear as distractors (because they could also fit) */
+function blocked(item) {
+  const b = new Set([item.v, 'be', ...(item.alt || [])]);
+  if (item.f && item.f.includes('o')) UNIV.forEach(v => b.add(v));
+  if (item.f && item.f.includes('t')) { UNIV.forEach(v => b.add(v)); THING.forEach(v => b.add(v)); }
+  return b;
+}
+function makeBank(item) {
+  const bl = blocked(item);
+  const verbs = [...new Set(pool().map(it => it.v))].filter(v => !bl.has(v));
+  return shuffle([item.v, ...shuffle(verbs).slice(0, BANK - 1)]);
+}
+
+function makeTask(item, type, subj, bank) {
+  subj = subj || chooseSubject(item, type);
+  const t = { item, type, subj }, v = item.v;
+  if (D.tense === 'present') {
+    const third = subj.p === '3s'; t.third = third; t.f = s3(v);
+    if (type === 'aff') t.gaps = [{ ans: [third ? t.f : v] }];
+    else if (type === 'neg') t.gaps = [{ ans: [(third ? "doesn't " : "don't ") + v], long: [(third ? 'does not ' : 'do not ') + v] }];
+    else t.gaps = [{ ans: [third ? 'does' : 'do'], aux: true }, { ans: [v] }];
+  } else if (item.cat === 'be') {
+    const ww = (subj.p === '1s' || subj.p === '3s') ? 'was' : 'were'; t.ww = ww;
+    if (type === 'aff') t.gaps = [{ ans: [ww] }];
+    else if (type === 'neg') t.gaps = [{ ans: [ww + "n't"], long: [ww + ' not'] }];
+    else t.gaps = [{ ans: [ww], aux: true }];
+  } else {
+    if (type === 'aff') t.gaps = [{ ans: item.p }];
+    else if (type === 'neg') t.gaps = [{ ans: ["didn't " + v], long: ['did not ' + v] }];
+    else t.gaps = [{ ans: ['did'], aux: true }, { ans: [v] }];
+  }
+  if (bank !== false) t.bank = bank || makeBank(item);
+  return t;
+}
+
+function buildRound() {
+  const types = [...settings.types];
+  // one item per verb, so the same verb does not come twice in a round
+  const seen = new Set(), items = [];
+  for (const it of shuffle(pool())) { if (!seen.has(it.v)) { seen.add(it.v); items.push(it); } if (items.length === ROUND) break; }
+  let typeList = [];
+  while (typeList.length < ROUND) typeList = typeList.concat(shuffle(types));
+  S = { queue: items.map((it, i) => makeTask(it, typeList[i])), idx: 0, phase: 'main', correct: 0, answered: 0, streak: 0, mistakes: [] };
+}
+
+/* ---------- sentence ---------- */
+function parts(t) {
+  const s = t.subj.t, r = t.item.r;
+  if (t.type === 'q') {
+    const rq = r.replace(/\.$/, '?');
+    if (t.gaps.length === 1) return [{ g: 0, cap: true }, s, rq];
+    return [{ g: 0, cap: true }, s, { g: 1 }, rq];
+  }
+  return [cap(s), { g: 0 }, r];
+}
+function renderSentence(t) {
+  $('sentence').innerHTML = parts(t).map(p => {
+    if (typeof p === 'string') return `<span>${p}</span>`;
+    return `<input class="gap" data-g="${p.g}" size="${t.gaps[p.g].aux ? 5 : 13}" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" aria-label="answer ${p.g + 1}">`;
+  }).join(' ');
+}
+function fullSentence(t, markIt) {
+  return parts(t).map(p => {
+    if (typeof p === 'string') return p;
+    let a = t.gaps[p.g].ans[0]; if (p.cap) a = cap(a);
+    return markIt ? `<mark>${a}</mark>` : a;
+  }).join(' ');
+}
+function renderBank(t, done) {
+  $('bank').innerHTML = t.bank.map(v => `<span class="verb${done ? (v === t.item.v ? ' right' : ' dim') : ''}">${v}</span>`).join('');
+}
+
+/* ---------- tips ---------- */
+function regTip(v, p) {
+  if (v === 'travel') return 'travel → <b>travelled</b> (British English) or <b>traveled</b> (American English)';
+  if (/[^aeiou]y$/.test(v)) return `consonant + y → omit "y" and add <b>-ied</b>: ${v} → <b>${p}</b>`;
+  if (/[aeiou]y$/.test(v)) return `vowel + y → add <b>-ed</b>: ${v} → <b>${p}</b>`;
+  if (v.endsWith('e')) return `verb ends in "e" → add <b>-d</b>: ${v} → <b>${p}</b>`;
+  if (p === v + v.slice(-1) + 'ed') return `consonant + vowel + consonant → double the last consonant + <b>-ed</b>: ${v} → <b>${p}</b>`;
+  return `verb ends in a consonant → add <b>-ed</b>: ${v} → <b>${p}</b>`;
+}
+function presTip(v, f) {
+  const b = v.split(' ')[0], s = f.split(' ')[0];
+  if (['have', 'do', 'go'].includes(b)) return `special verb: ${b} → <b>${s}</b>`;
+  if (/[^aeiou]y$/.test(b)) return `he / she / it: consonant + y → <b>-ies</b>: ${b} → <b>${s}</b>`;
+  if (/[aeiou]y$/.test(b)) return `he / she / it: vowel + y → just add <b>-s</b>: ${b} → <b>${s}</b>`;
+  if (s === b + 'es') return `he / she / it: after sh / ch → add <b>-es</b>: ${b} → <b>${s}</b>`;
+  return `he / she / it → add <b>-s</b>: ${b} → <b>${s}</b>`;
+}
+function ruleTip(t) {
+  const v = t.item.v;
+  if (D.tense === 'present') {
+    if (t.type === 'aff') return t.third ? presTip(v, t.f) : `I / you / we / they → <b>no -s</b>: ${v}`;
+    if (t.type === 'neg') return t.third ? `he / she / it → <b>doesn't</b> + verb (no -s!)` : `I / you / we / they → <b>don't</b> + verb`;
+    return t.third ? `<b>Does</b> + he / she / it + verb (no -s!)` : `<b>Do</b> + I / you / we / they + verb`;
+  }
+  if (t.item.cat === 'be') {
+    if (t.type === 'aff') return `I / he / she / it → <b>was</b> · you / we / they → <b>were</b>`;
+    if (t.type === 'neg') return `I / he / she / it → <b>wasn't</b> · you / we / they → <b>weren't</b>`;
+    return `<b>Was</b> + I / he / she / it …? · <b>Were</b> + you / we / they …?`;
+  }
+  if (t.type === 'aff') {
+    const p = t.item.p[0];
+    if (t.item.cat === 'reg') return regTip(v, p);
+    return `irregular verb: ${v} → <b>${p}</b> – learn it by heart!`;
+  }
+  if (t.type === 'neg') return `<b>didn't</b> + verb – the same for all persons`;
+  return `<b>Did</b> + subject + verb?`;
+}
+
+function wrongVerb(t, vals) {
+  for (const b of t.bank) {
+    if (b === t.item.v || !FORMS[b]) continue;
+    const alt = makeTask(FORMS[b], t.type, t.subj, false);
+    if (alt.gaps.length === t.gaps.length && alt.gaps.every((g, i) => g.ans.includes(vals[i]))) return b;
+  }
+  return null;
+}
+function mistakeNote(t, vals) {
+  const wv = wrongVerb(t, vals);
+  if (wv) return `Good form – but <b>${wv}</b> does not fit in this sentence. Choose another verb!`;
+  const it = t.item, v = it.v;
+  if (D.tense === 'present') {
+    const f = t.f;
+    if (t.type === 'aff') {
+      if (t.third && vals[0] === v) return "he / she / it → don't forget the <b>-s</b>!";
+      if (!t.third && vals[0] === f) return 'I / you / we / they → <b>no -s</b>!';
+    } else if (t.type === 'neg') {
+      if (t.third && vals[0].startsWith("don't")) return "he / she / it → <b>doesn't</b>, not don't.";
+      if (!t.third && vals[0].startsWith("doesn't")) return "I / you / we / they → <b>don't</b>, not doesn't.";
+      if (vals[0].endsWith(' ' + f) && f !== v) return "After doesn't, the verb has <b>no -s</b>!";
+    } else {
+      if (t.third && vals[0] === 'do') return 'he / she / it → <b>Does</b>, not Do.';
+      if (!t.third && vals[0] === 'does') return 'I / you / we / they → <b>Do</b>, not Does.';
+      if (vals[1] === f && f !== v) return 'After Does, the verb has <b>no -s</b>!';
+    }
+    return '';
+  }
+  if (it.cat === 'be') {
+    const other = t.ww === 'was' ? 'were' : 'was';
+    if (vals[0] && vals[0].startsWith(other)) return `Here we need <b>${t.ww}</b>, not ${other}.`;
+    return '';
+  }
+  const pastForms = it.p.filter(p => p !== v);
+  if (t.type === 'aff' && vals[0] === v) return 'This is the present form. We need the <b>past</b> form.';
+  if (t.type === 'neg') {
+    const w = vals[0].replace(/^didn't /, '');
+    if (pastForms.includes(w)) return `After didn't, use the verb without -ed / past form: didn't ${v} (not didn't ${w}).`;
+  }
+  if (t.type === 'q' && pastForms.includes(vals[1])) return `After Did, use the verb without -ed / past form: ${v} (not ${vals[1]}).`;
+  return '';
+}
+
+/* ---------- task flow ---------- */
+function showTask() {
+  const t = S.queue[S.idx];
+  S.task = t; S.checked = false;
+  show('vTask');
+  $('badge').textContent = TYPES[t.type].label;
+  $('badge').className = 'badge ' + TYPES[t.type].cls;
+  $('reviewInfo').hidden = S.phase !== 'review';
+  $('count').textContent = (S.phase === 'review' ? 'Mistake ' : 'Task ') + (S.idx + 1) + ' / ' + S.queue.length;
+  $('instr').innerHTML = D.instr[t.type];
+  renderBank(t, false);
+  renderSentence(t);
+  $('fb').hidden = true; $('fb').innerHTML = '';
+  $('btnCheck').hidden = false; $('btnShow').hidden = false; $('btnNext').hidden = true;
+  updateStats();
+  const first = document.querySelector('#sentence .gap');
+  if (first) setTimeout(() => first.focus(), 30);
+}
+function setFb(cls, html) { const fb = $('fb'); fb.className = 'fb ' + cls; fb.innerHTML = html; fb.hidden = false; }
+
+function check(giveUp) {
+  if (S.checked) return;
+  const t = S.task;
+  const inputs = [...document.querySelectorAll('#sentence .gap')];
+  const vals = inputs.map(i => norm(i.value));
+  if (!giveUp) {
+    const empty = inputs.find(i => !norm(i.value));
+    if (empty) { empty.classList.remove('shake'); void empty.offsetWidth; empty.classList.add('shake'); empty.focus(); return; }
+    for (let i = 0; i < t.gaps.length; i++) {
+      const g = t.gaps[i], v = vals[i];
+      if (g.ans.includes(v)) continue;
+      if (g.long && g.long.includes(v)) {
+        setFb('almost', `<div class="head">Almost! Use the short form.</div><div>${D.shortHint}</div>`);
+        inputs[i].focus(); inputs[i].select(); return;
+      }
+      if (g.ans.some(a => a.replace(/'/g, '') === v.replace(/'/g, ''))) {
+        setFb('almost', `<div class="head">Almost! Don't forget the apostrophe ( ' ).</div><div>Example: ${D.apoEx}</div>`);
+        inputs[i].focus(); return;
+      }
+    }
+  }
+  const okList = t.gaps.map((g, i) => !giveUp && g.ans.includes(vals[i]));
+  const ok = okList.every(Boolean);
+  inputs.forEach((inp, i) => { inp.disabled = true; inp.classList.add(okList[i] ? 'ok' : 'bad'); });
+  S.checked = true; S.answered++;
+  if (ok) { S.correct++; S.streak++; if (S.streak > best) { best = S.streak; saveBest(); } }
+  else { S.streak = 0; if (S.phase === 'main') S.mistakes.push(t); }
+  renderBank(t, true);
+  let html = `<div class="head">${ok ? pick(['✓ Correct!', '✓ Well done!', '✓ Great!', "✓ Yes, that's right!"]) : (giveUp ? 'Here is the answer:' : '✗ Not quite.')}</div>`;
+  if (!ok && !giveUp) html += `<div>Your answer: <s>${inputs.map(i => i.value.trim()).join(' … ')}</s></div>`;
+  html += `<div class="full">${fullSentence(t, true)}</div>`;
+  if (!ok && !giveUp) { const n = mistakeNote(t, vals); if (n) html += `<div class="note">${n}</div>`; }
+  html += `<div class="tip">${ruleTip(t)}</div><div class="btns">`;
+  if ('speechSynthesis' in window) html += `<button class="listen" id="btnListen">🔊 Listen</button>`;
+  if (!ok) html += `<button class="glink" id="btnGrammarFb">📘 Look at the grammar</button>`;
+  html += `</div>`;
+  setFb(ok ? 'ok' : 'bad', html);
+  const bl = $('btnListen'); if (bl) bl.onclick = () => speak(fullSentence(t, false));
+  const bg = $('btnGrammarFb'); if (bg) bg.onclick = openGrammar;
+  $('btnCheck').hidden = true; $('btnShow').hidden = true; $('btnNext').hidden = false;
+  updateStats();
+  setTimeout(() => $('btnNext').focus(), 30);
+}
+
+function next() {
+  S.idx++;
+  if (S.idx >= S.queue.length) {
+    if (S.phase === 'main' && S.mistakes.length) {
+      S.mainCorrect = S.correct; S.phase = 'review';
+      S.queue = shuffle(S.mistakes).map(t => makeTask(t.item, t.type, t.subj));
+      S.idx = 0;
+    } else return finish();
+  }
+  showTask();
+}
+function finish() {
+  const sc = S.phase === 'main' ? S.correct : S.mainCorrect;
+  show('vResult');
+  $('bar').style.width = '100%';
+  $('rScore').textContent = sc + ' / ' + ROUND;
+  const stars = sc === ROUND ? 3 : sc >= 7 ? 2 : sc >= 4 ? 1 : 0;
+  $('rStars').textContent = '★'.repeat(stars) + '☆'.repeat(3 - stars);
+  $('rMsg').textContent = sc === ROUND ? 'Perfect! 🏆' : sc >= 8 ? 'Great job! 🎉' : sc >= 5 ? 'Good work – keep practising! 💪' : 'Keep going – practice makes perfect! 🚀';
+  $('rInfo').textContent = S.phase === 'review' ? 'You also practised your mistakes again. Well done!' : (sc === ROUND ? 'No mistakes at all!' : '');
+  setTimeout(() => $('btnAgain').focus(), 30);
+}
+
+/* ---------- speech ---------- */
+let voice = null;
+function loadVoice() { const vs = speechSynthesis.getVoices(); voice = vs.find(v => v.lang === 'en-GB') || vs.find(v => v.lang && v.lang.startsWith('en')) || null; }
+if ('speechSynthesis' in window) { loadVoice(); speechSynthesis.onvoiceschanged = loadVoice; }
+function speak(text) {
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text.replace(/<[^>]+>/g, '')); u.lang = 'en-GB'; u.rate = 0.92; if (voice) u.voice = voice; speechSynthesis.speak(u); } catch (e) {}
+}
+
+/* ---------- events ---------- */
+function start() { buildRound(); showTask(); }
+$('btnStart').onclick = start;
+$('btnAgain').onclick = start;
+$('btnSettings').onclick = () => { show('vStart'); S = { correct: 0, answered: 0, streak: 0, idx: 0, phase: 'main' }; updateStats(); $('bar').style.width = '0'; };
+$('btnCheck').onclick = () => check(false);
+$('btnShow').onclick = () => check(true);
+$('btnNext').onclick = next;
+document.addEventListener('keydown', e => {
+  if (!$('modal').hidden) { if (e.key === 'Escape' || e.key === 'Enter') { e.preventDefault(); closeGrammar(); } return; }
+  if (e.key !== 'Enter' || $('vTask').hidden) return;
+  e.preventDefault();
+  if (S.checked) { next(); return; }
+  const inputs = [...document.querySelectorAll('#sentence .gap')];
+  const i = inputs.indexOf(document.activeElement);
+  if (i > -1 && i < inputs.length - 1 && !norm(inputs[i + 1].value)) { inputs[i + 1].focus(); return; }
+  check(false);
+});
+S = { correct: 0, answered: 0, streak: 0, idx: 0, phase: 'main' };
+updateStats();
+</script>
+</body>
+</html>
